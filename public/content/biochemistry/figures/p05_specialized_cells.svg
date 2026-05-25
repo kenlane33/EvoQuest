@@ -1,0 +1,49 @@
+<svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Specialized cell types</title>
+  <text x="360" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Specialized Cell Types</text>
+  <!-- Nerve -->
+  <g transform="translate(20,35)">
+    <circle cx="30" cy="50" r="18" fill="#E1BEE7" stroke="#7B1FA2" stroke-width="1.5"/>
+    <line x1="48" y1="50" x2="90" y2="50" stroke="#7B1FA2" stroke-width="2"/>
+    <line x1="90" y1="50" x2="110" y2="30" stroke="#7B1FA2" stroke-width="1.5"/>
+    <line x1="90" y1="50" x2="110" y2="70" stroke="#7B1FA2" stroke-width="1.5"/>
+    <text x="55" y="95" text-anchor="middle" font-size="10" fill="#333">Nerve</text>
+  </g>
+  <!-- Muscle -->
+  <g transform="translate(130,35)">
+    <ellipse cx="45" cy="50" rx="40" ry="18" fill="#FFCDD2" stroke="#C62828" stroke-width="1.5"/>
+    <line x1="15" y1="42" x2="75" y2="42" stroke="#C62828" stroke-width="1"/>
+    <line x1="15" y1="50" x2="75" y2="50" stroke="#C62828" stroke-width="1"/>
+    <line x1="15" y1="58" x2="75" y2="58" stroke="#C62828" stroke-width="1"/>
+    <text x="45" y="95" text-anchor="middle" font-size="10" fill="#333">Muscle</text>
+  </g>
+  <!-- Blood -->
+  <g transform="translate(240,35)">
+    <circle cx="45" cy="50" r="28" fill="#FFEBEE" stroke="#D32F2F" stroke-width="1.5"/>
+    <circle cx="45" cy="50" r="10" fill="#EF5350"/>
+    <text x="45" y="95" text-anchor="middle" font-size="10" fill="#333">Blood</text>
+  </g>
+  <!-- Sperm -->
+  <g transform="translate(350,35)">
+    <ellipse cx="25" cy="50" rx="15" ry="12" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.5"/>
+    <path d="M 40 50 L 80 50" stroke="#1565C0" stroke-width="2"/>
+    <path d="M 80 50 L 70 42 M 80 50 L 70 58" stroke="#1565C0" stroke-width="1.5"/>
+    <text x="50" y="95" text-anchor="middle" font-size="10" fill="#333">Sperm</text>
+  </g>
+  <!-- Xylem -->
+  <g transform="translate(460,35)">
+    <rect x="20" y="25" width="50" height="50" fill="#DCEDC8" stroke="#558B2F" stroke-width="1.5"/>
+    <line x1="30" y1="25" x2="30" y2="75" stroke="#558B2F" stroke-width="2"/>
+    <line x1="45" y1="25" x2="45" y2="75" stroke="#558B2F" stroke-width="2"/>
+    <line x1="60" y1="25" x2="60" y2="75" stroke="#558B2F" stroke-width="2"/>
+    <text x="45" y="95" text-anchor="middle" font-size="10" fill="#333">Xylem</text>
+  </g>
+  <!-- Phloem -->
+  <g transform="translate(570,35)">
+    <rect x="20" y="25" width="50" height="50" rx="8" fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+    <circle cx="35" cy="40" r="6" fill="#FFE082"/>
+    <circle cx="55" cy="55" r="6" fill="#FFE082"/>
+    <circle cx="40" cy="65" r="5" fill="#FFE082"/>
+    <text x="45" y="95" text-anchor="middle" font-size="10" fill="#333">Phloem</text>
+  </g>
+</svg>

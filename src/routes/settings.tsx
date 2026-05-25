@@ -1,0 +1,281 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { Link, createFileRoute } from '@tanstack/react-router';
+import { ChevronLeft, Download, Upload } from 'lucide-react';
+import { Button } from '@/components/common/Button';
+import { ToggleField } from '@/components/common/ToggleField';
+import { Card } from '@/components/common/Card';
+import { cn } from '@/lib/cn';
+import {
+  BODY_FONT_OPTIONS,
+  ensureGoogleFontLoaded,
+} from '@/lib/google-fonts';
+import { useAppStore } from '@/store/app-store';
+import type { Settings } from '@/types';
+import { useDevPageLabelsEnabled } from '@/components/dev/DevPageLabel';
+import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { devMark } from '@/lib/dev-mark';
+
+export const Route = createFileRoute('/settings')({
+  component: SettingsPage,
+});
+
+function SettingsPage() {
+  const settings = useAppStore((s) => s.settings);
+  const setSettings = useAppStore((s) => s.setSettings);
+  const exportAllData = useAppStore((s) => s.exportAllData);
+  const importAllData = useAppStore((s) => s.importAllData);
+  const resetAllData = useAppStore((s) => s.resetAllData);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [importMsg, setImportMsg] = useState<string | null>(null);
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [devPageLabels, setDevPageLabels] = useDevPageLabelsEnabled();
+
+  usePageReadAloud(
+    'Settings. Appearance: contrast, font size, reading font. Audio: sound effects, volume, read it with voice Azelma in your browser. Data: export, import backup, reset all progress.',
+  );
+
+  useEffect(() => {
+    for (const font of BODY_FONT_OPTIONS) {
+      ensureGoogleFontLoaded(font.id);
+    }
+  }, []);
+
+  function patchAppearance(patch: Partial<Settings['appearance']>) {
+    setSettings({ appearance: { ...settings.appearance, ...patch } });
+  }
+
+  function handleExport() {
+    const blob = new Blob([exportAllData()], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `evo-quest-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleImport(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const ok = importAllData(String(reader.result));
+      setImportMsg(ok ? 'Import successful.' : 'Import failed — invalid file.');
+    };
+    reader.readAsText(file);
+  }
+
+  return (
+    <main className="page-wrap max-w-(--w-medium) px-4 py-8">
+      <Link
+        to="/"
+        className="mb-6 inline-flex items-center gap-1 text-meta text-(--text-dim) no-underline hover:text-(--text-secondary)"
+      >
+        <ChevronLeft size={16} />
+        Home
+      </Link>
+
+      <h1 className="text-display-lg mb-8 font-black">Settings</h1>
+
+      <section {...devMark('appear')} className="mb-10">
+        <h2 className="mb-4 text-headline-md font-bold">Appearance</h2>
+        <Card className="space-y-5">
+          <Field label="Contrast">
+            <div className="flex gap-2">
+              {(['normal', 'high'] as const).map((v) => (
+                <Button
+                  key={v}
+                  onClick={() => patchAppearance({ contrast: v })}
+                  className={cn(
+                    'rounded-(--r-md) px-4 py-2 text-meta font-bold uppercase',
+                    settings.appearance.contrast === v
+                      ? 'border-0 bg-(--accent-violet) text-(--bg-deep)'
+                      : 'border-0 bg-(--bg-card-active) text-(--text-dim)',
+                  )}
+                >
+                  {v}
+                </Button>
+              ))}
+            </div>
+          </Field>
+
+          <Field label="Font size">
+            <div className="flex gap-2">
+              {(['sm', 'md', 'lg'] as const).map((v) => (
+                <Button
+                  key={v}
+                  onClick={() => patchAppearance({ fontSize: v })}
+                  className={cn(
+                    'rounded-(--r-md) px-4 py-2 text-meta font-bold uppercase',
+                    settings.appearance.fontSize === v
+                      ? 'border-0 bg-(--accent-cyan) text-(--bg-deep)'
+                      : 'border-0 bg-(--bg-card-active) text-(--text-dim)',
+                  )}
+                >
+                  {v}
+                </Button>
+              ))}
+            </div>
+          </Field>
+
+          <Field label="Reading font">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {BODY_FONT_OPTIONS.map((font) => (
+                <Button
+                  key={font.id}
+                  onClick={() => patchAppearance({ bodyFont: font.id })}
+                  className={cn(
+                    'rounded-(--r-md) px-3 py-2.5 text-left text-body font-semibold',
+                    settings.appearance.bodyFont === font.id
+                      ? 'border-0 bg-(--accent-violet) text-(--bg-deep)'
+                      : 'border-0 bg-(--bg-card-active) text-(--text-dim)',
+                  )}
+                  style={{ fontFamily: `"${font.family}", ui-sans-serif, system-ui, sans-serif` }}
+                >
+                  {font.label}
+                </Button>
+              ))}
+            </div>
+          </Field>
+
+          {/* TODO: wire up per accessibility.md §5.2 before re-enabling
+          <ToggleField
+            label="Color-blind safe accents"
+            checked={settings.appearance.colorBlindSafe}
+            onChange={(v) => patchAppearance({ colorBlindSafe: v })}
+          />
+          */}
+        </Card>
+        <p className="mt-3 text-meta text-(--text-faint)">
+          EvoQuest is vibrant dark only — no light theme.
+        </p>
+      </section>
+
+      <section {...devMark('audio')} className="mb-10">
+        <h2 className="mb-4 text-headline-md font-bold">Audio</h2>
+        <Card className="space-y-5">
+          <ToggleField
+            label="Sound effects"
+            checked={settings.audio.enabled}
+            onChange={(v) =>
+              setSettings({ audio: { ...settings.audio, enabled: v } })
+            }
+          />
+          <Field label="Volume">
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={Math.round(settings.audio.volume * 100)}
+              onChange={(e) =>
+                setSettings({
+                  audio: {
+                    ...settings.audio,
+                    volume: Number(e.target.value) / 100,
+                  },
+                })
+              }
+              className="w-full accent-(--accent-cyan)"
+            />
+          </Field>
+          <ToggleField
+            label="Read it (Pocket TTS)"
+            checked={settings.reading.enabled}
+            onChange={(v) =>
+              setSettings({ reading: { ...settings.reading, enabled: v } })
+            }
+          />
+          <ToggleField
+            label="Auto-read"
+            checked={settings.reading.autoRead}
+            onChange={(v) =>
+              setSettings({ reading: { ...settings.reading, autoRead: v } })
+            }
+          />
+          <p className="text-meta text-(--text-faint) -mt-2">
+            Also available in the app header. Speaks page content automatically when it
+            changes (briefs, feedback, welcome steps).
+          </p>
+          <p className="text-meta text-(--text-faint)">
+            Voice: Azelma. Runs in your browser (WASM); the English model downloads
+            once on first use (~200&nbsp;MB).
+          </p>
+        </Card>
+      </section>
+
+      <section {...devMark('dev')} className="mb-10">
+        <h2 className="mb-4 text-headline-md font-bold">Developer</h2>
+        <Card>
+          <ToggleField
+            label="Show state labels for debugging"
+            description="Page code bottom-left + element tags (e.g. home, play:q, grid)"
+            checked={devPageLabels}
+            onChange={setDevPageLabels}
+          />
+        </Card>
+      </section>
+
+      <section {...devMark('data')} className="mb-10">
+        <h2 className="mb-4 text-headline-md font-bold">Data</h2>
+        <Card className="space-y-4">
+          <Button variant="secondary" fullWidth onClick={handleExport}>
+            <Download size={16} />
+            Export all data
+          </Button>
+          <Button variant="secondary" fullWidth onClick={() => fileRef.current?.click()}>
+            <Upload size={16} />
+            Import backup
+          </Button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleImport(f);
+            }}
+          />
+          {importMsg && (
+            <p className="text-meta text-(--text-secondary)">{importMsg}</p>
+          )}
+          {!confirmReset ? (
+            <Button variant="destructive" fullWidth onClick={() => setConfirmReset(true)}>
+              Reset all progress
+            </Button>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-body text-(--status-wrong)">
+                This erases all local progress. Cannot be undone.
+              </p>
+              <Button
+                variant="destructive"
+                fullWidth
+                onClick={() => {
+                  resetAllData();
+                  setConfirmReset(false);
+                }}
+              >
+                Yes, erase everything
+              </Button>
+              <Button variant="ghost" fullWidth onClick={() => setConfirmReset(false)}>
+                Cancel
+              </Button>
+            </div>
+          )}
+        </Card>
+      </section>
+    </main>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="mb-2 text-meta font-bold uppercase tracking-[0.08em] text-(--text-dim)">
+        {label}
+      </div>
+      {children}
+    </div>
+  );
+}

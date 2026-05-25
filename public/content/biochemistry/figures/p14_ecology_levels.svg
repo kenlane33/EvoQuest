@@ -1,0 +1,15 @@
+<svg viewBox="0 0 320 360" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Levels of ecological organization</title>
+  <text x="160" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Levels of Organization</text>
+  <polygon points="160,40 280,100 280,320 40,320 40,100" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+  <polygon points="160,70 250,120 250,300 70,300 70,120" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <polygon points="160,100 220,140 220,280 100,280 100,140" fill="#A5D6A7" stroke="#43A047" stroke-width="1.5"/>
+  <polygon points="160,130 190,160 190,260 130,260 130,160" fill="#81C784" stroke="#66BB6A" stroke-width="1.5"/>
+  <text x="160" y="55" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">Biosphere</text>
+  <text x="160" y="95" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">Ecosystem</text>
+  <text x="160" y="125" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">Community</text>
+  <text x="160" y="155" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">Population</text>
+  <text x="160" y="200" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">Organism</text>
+  <text x="160" y="240" text-anchor="middle" font-size="9" fill="#2E7D32">Organ / Tissue / Cell</text>
+  <text x="160" y="345" text-anchor="middle" font-size="10" fill="#555">Each level includes all levels below it</text>
+</svg>

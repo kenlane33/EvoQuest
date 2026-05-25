@@ -1,0 +1,22 @@
+<svg viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Deer population on an island</title>
+  <text x="250" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Deer Population on an Island</text>
+  <line x1="70" y1="260" x2="460" y2="260" stroke="#333" stroke-width="2"/>
+  <line x1="70" y1="260" x2="70" y2="40" stroke="#333" stroke-width="2"/>
+  <text x="265" y="295" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Number of Months</text>
+  <text x="25" y="150" text-anchor="middle" font-size="12" font-weight="bold" fill="#333" transform="rotate(-90,25,150)">Number of Deer</text>
+  <!-- Y ticks -->
+  <text x="55" y="263" text-anchor="end" font-size="10" fill="#555">0</text>
+  <text x="55" y="223" text-anchor="end" font-size="10" fill="#555">20</text>
+  <text x="55" y="183" text-anchor="end" font-size="10" fill="#555">40</text>
+  <text x="55" y="143" text-anchor="end" font-size="10" fill="#555">60</text>
+  <text x="55" y="103" text-anchor="end" font-size="10" fill="#555">80</text>
+  <text x="55" y="63" text-anchor="end" font-size="10" fill="#555">100</text>
+  <!-- Carrying capacity -->
+  <line x1="70" y1="103" x2="460" y2="103" stroke="#C62828" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="465" y="107" font-size="10" fill="#C62828">K H 80</text>
+  <!-- Logistic S-curve -->
+  <path d="M 70 258 C 120 250 160 220 200 170 C 240 120 280 105 320 102 C 360 100 400 102 440 105" fill="none" stroke="#1565C0" stroke-width="3"/>
+  <circle cx="320" cy="102" r="5" fill="#C62828"/>
+  <text x="330" y="95" font-size="10" fill="#C62828">Plateau at carrying capacity</text>
+</svg>

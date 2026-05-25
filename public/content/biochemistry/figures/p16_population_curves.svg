@@ -1,0 +1,20 @@
+<svg viewBox="0 0 520 280" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Exponential and logistic population growth</title>
+  <text x="260" y="20" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Population Growth Models</text>
+  <!-- Axes -->
+  <line x1="60" y1="230" x2="480" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="60" y1="230" x2="60" y2="40" stroke="#333" stroke-width="1.5"/>
+  <text x="270" y="260" text-anchor="middle" font-size="11" fill="#333">Time</text>
+  <text x="25" y="140" text-anchor="middle" font-size="11" fill="#333" transform="rotate(-90,25,140)">Population</text>
+  <!-- Carrying capacity line -->
+  <line x1="60" y1="80" x2="480" y2="80" stroke="#C62828" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="490" y="84" font-size="10" fill="#C62828">K</text>
+  <ellipse cx="420" cy="75" rx="35" ry="12" fill="none" stroke="#C62828" stroke-width="1.5"/>
+  <text x="420" y="60" text-anchor="middle" font-size="9" fill="#C62828">Carrying capacity</text>
+  <!-- Logistic curve -->
+  <path d="M 60 220 C 120 215 180 200 240 150 C 300 100 360 85 480 82" fill="none" stroke="#1565C0" stroke-width="2.5"/>
+  <text x="400" y="110" font-size="10" fill="#1565C0">Logistic</text>
+  <!-- Exponential curve -->
+  <path d="M 60 220 C 100 210 140 190 180 150 C 220 110 260 70 300 50" fill="none" stroke="#2E7D32" stroke-width="2.5"/>
+  <text x="280" y="45" font-size="10" fill="#2E7D32">Exponential</text>
+</svg>

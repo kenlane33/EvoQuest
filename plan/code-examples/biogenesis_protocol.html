@@ -1,0 +1,2837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Biogenesis Protocol</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #0a0a12;
+  --bg-mid: #12121f;
+  --bg-light: #1a1a2e;
+  --accent-cyan: #00f5ff;
+  --accent-magenta: #ff00ff;
+  --accent-gold: #ffd700;
+  --accent-green: #00ff88;
+  --accent-red: #ff3366;
+  --text-primary: #e0e0ff;
+  --text-dim: #8888aa;
+}
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Particle Background */
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: float 20s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(-10px) translateX(-10px); }
+  75% { transform: translateY(-30px) translateX(5px); }
+}
+
+/* Main Container */
+#game-container {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header HUD */
+.hud {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, rgba(0,245,255,0.1), rgba(255,0,255,0.1));
+  border: 1px solid rgba(0,245,255,0.3);
+  border-radius: 12px;
+}
+
+.stat-block {
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(0,245,255,0.5);
+}
+
+.stat-value.xp { color: var(--accent-gold); text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+.stat-value.shield { color: var(--accent-green); text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+.stat-value.mana { color: var(--accent-magenta); text-shadow: 0 0 10px rgba(255,0,255,0.5); }
+
+/* Progress Bar */
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.progress-bar {
+  height: 20px;
+  background: var(--bg-deep);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--accent-cyan);
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-label {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Title Screen */
+#title-screen {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+#title-screen h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 42px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(0,245,255,0.5)); }
+  50% { filter: drop-shadow(0 0 40px rgba(255,0,255,0.8)); }
+}
+
+#title-screen .subtitle {
+  font-size: 18px;
+  color: var(--text-dim);
+  margin-bottom: 30px;
+  font-style: italic;
+}
+
+#title-screen .lore {
+  max-width: 600px;
+  margin: 0 auto 40px;
+  padding: 20px;
+  background: rgba(0,0,0,0.5);
+  border-left: 3px solid var(--accent-cyan);
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+
+.start-btn {
+  font-family: 'Orbitron', monospace;
+  font-size: 20px;
+  padding: 18px 50px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  border: none;
+  border-radius: 8px;
+  color: var(--bg-deep);
+  cursor: pointer;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.start-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0,245,255,0.6);
+}
+
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: rotate(45deg);
+  animation: btn-shine 3s infinite;
+}
+
+@keyframes btn-shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Phase Screens */
+.phase-screen {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.phase-screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.phase-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.phase-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.phase-subtitle {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+/* HARVEST PHASE */
+#harvest-phase .phase-title { color: var(--accent-green); }
+
+.knowledge-chunk {
+  background: var(--bg-mid);
+  border: 1px solid rgba(0,255,136,0.3);
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.knowledge-chunk::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 5px; height: 100%;
+  background: linear-gradient(180deg, var(--accent-green), var(--accent-cyan));
+}
+
+.chunk-topic {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--accent-green);
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.chunk-content {
+  font-size: 19px;
+  line-height: 1.85;
+  margin-bottom: 20px;
+  white-space: pre-line;
+  color: #e8e8ff;
+  padding: 10px 15px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-cyan);
+}
+
+.chunk-content strong {
+  color: var(--accent-cyan);
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(0,245,255,0.3);
+}
+
+.chunk-content em {
+  color: var(--accent-gold);
+  font-style: normal;
+}
+
+.harvest-btn {
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  color: var(--bg-deep);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.harvest-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(0,255,136,0.4);
+}
+
+/* FORGE PHASE */
+#forge-phase .phase-title { color: var(--accent-magenta); }
+
+.forge-puzzle {
+  background: var(--bg-mid);
+  border: 1px solid rgba(255,0,255,0.3);
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+}
+
+.puzzle-prompt {
+  font-size: 18px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.puzzle-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.puzzle-option {
+  background: var(--bg-light);
+  border: 2px solid rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 15px;
+}
+
+.puzzle-option:hover {
+  border-color: var(--accent-magenta);
+  background: rgba(255,0,255,0.1);
+  transform: scale(1.02);
+}
+
+.puzzle-option.selected {
+  border-color: var(--accent-cyan);
+  background: rgba(0,245,255,0.15);
+}
+
+.puzzle-option.correct {
+  border-color: var(--accent-green);
+  background: rgba(0,255,136,0.2);
+  animation: correct-pulse 0.5s ease;
+}
+
+.puzzle-option.wrong {
+  border-color: var(--accent-red);
+  background: rgba(255,51,102,0.2);
+  animation: wrong-shake 0.5s ease;
+}
+
+@keyframes correct-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes wrong-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+/* Sequence Puzzle */
+.sequence-puzzle {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.sequence-slot {
+  width: 50px;
+  height: 50px;
+  background: var(--bg-deep);
+  border: 2px dashed rgba(255,255,255,0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', monospace;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.sequence-slot.filled {
+  border-style: solid;
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.base-picker {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.base-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid;
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--bg-mid);
+}
+
+.base-btn.A { border-color: #ff6b6b; color: #ff6b6b; }
+.base-btn.T { border-color: #4ecdc4; color: #4ecdc4; }
+.base-btn.U { border-color: #ffe66d; color: #ffe66d; }
+.base-btn.G { border-color: #95e1d3; color: #95e1d3; }
+.base-btn.C { border-color: #a29bfe; color: #a29bfe; }
+
+.base-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px currentColor;
+}
+
+/* Bet Slider */
+.bet-container {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(255,215,0,0.1);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 8px;
+}
+
+.bet-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.bet-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 8px;
+  background: var(--bg-deep);
+  border-radius: 4px;
+  outline: none;
+}
+
+.bet-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255,215,0,0.5);
+}
+
+/* BURN PHASE */
+#burn-phase .phase-title { color: var(--accent-red); }
+
+.battle-arena {
+  background: var(--bg-mid);
+  border: 1px solid rgba(255,51,102,0.3);
+  border-radius: 12px;
+  padding: 25px;
+  position: relative;
+  min-height: 300px;
+}
+
+.enemy-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.enemy {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #2d1f3d, #1a1028);
+  border: 2px solid var(--accent-red);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.enemy.hit {
+  animation: enemy-hit 0.3s ease;
+}
+
+@keyframes enemy-hit {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(0.8); filter: brightness(2); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.enemy.defeated {
+  animation: enemy-defeat 0.5s ease forwards;
+}
+
+@keyframes enemy-defeat {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2) rotate(10deg); }
+  100% { transform: scale(0) rotate(180deg); opacity: 0; }
+}
+
+.enemy-hp {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 6px;
+  background: var(--bg-deep);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.enemy-hp-fill {
+  height: 100%;
+  background: var(--accent-red);
+  transition: width 0.3s ease;
+}
+
+.attack-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.attack-btn {
+  padding: 12px 25px;
+  border: 2px solid;
+  border-radius: 8px;
+  background: transparent;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.attack-btn.mana-attack {
+  border-color: var(--accent-magenta);
+  color: var(--accent-magenta);
+}
+
+.attack-btn.shield-attack {
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+.attack-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.attack-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.attack-cost {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* Last Stand */
+.last-stand-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255,51,102,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: danger-pulse 0.5s infinite;
+}
+
+@keyframes danger-pulse {
+  0%, 100% { background: rgba(255,51,102,0.2); }
+  50% { background: rgba(255,51,102,0.4); }
+}
+
+.last-stand-box {
+  background: var(--bg-mid);
+  border: 3px solid var(--accent-red);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+}
+
+.last-stand-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  color: var(--accent-red);
+  margin-bottom: 15px;
+  animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.parry-btn {
+  margin-top: 20px;
+  padding: 15px 40px;
+  font-size: 18px;
+  background: var(--accent-red);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  animation: parry-pulse 0.3s infinite;
+}
+
+@keyframes parry-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* EARN PHASE */
+#earn-phase .phase-title { color: var(--accent-gold); }
+
+.reward-container {
+  text-align: center;
+}
+
+.loot-chest {
+  font-size: 100px;
+  animation: chest-bounce 1s ease infinite;
+  cursor: pointer;
+  display: inline-block;
+}
+
+@keyframes chest-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.reward-reveal {
+  margin-top: 30px;
+  padding: 25px;
+  background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,0,255,0.1));
+  border: 2px solid var(--accent-gold);
+  border-radius: 12px;
+  animation: reveal-glow 1s ease infinite;
+}
+
+@keyframes reveal-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+  50% { box-shadow: 0 0 40px rgba(255,215,0,0.6); }
+}
+
+.reward-type {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent-gold);
+  margin-bottom: 10px;
+}
+
+.reward-name {
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.reward-description {
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.critical-hit {
+  animation: critical-explosion 0.5s ease;
+}
+
+@keyframes critical-explosion {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); filter: brightness(2); }
+  100% { transform: scale(1); }
+}
+
+/* Skill Tree */
+#skill-tree {
+  margin-top: 30px;
+  padding: 20px;
+  background: var(--bg-mid);
+  border-radius: 12px;
+}
+
+.skill-tree-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--accent-cyan);
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.skill-node {
+  background: var(--bg-deep);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.skill-node.unlocked {
+  border-color: var(--accent-cyan);
+  background: rgba(0,245,255,0.1);
+}
+
+.skill-node.locked {
+  opacity: 0.4;
+}
+
+.skill-icon {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.skill-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.skill-progress {
+  margin-top: 8px;
+  height: 4px;
+  background: var(--bg-mid);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.skill-progress-fill {
+  height: 100%;
+  background: var(--accent-cyan);
+}
+
+/* Floating Damage Numbers */
+.damage-number {
+  position: fixed;
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  pointer-events: none;
+  animation: damage-float 1s ease forwards;
+  z-index: 200;
+}
+
+.damage-number.crit {
+  font-size: 36px;
+  color: var(--accent-gold);
+  text-shadow: 0 0 20px rgba(255,215,0,0.8);
+}
+
+@keyframes damage-float {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-50px) scale(0.5); }
+}
+
+/* Particles for Juice */
+.particle-burst {
+  position: fixed;
+  pointer-events: none;
+  z-index: 150;
+}
+
+.burst-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: burst 0.6s ease forwards;
+}
+
+@keyframes burst {
+  0% { transform: scale(1) translate(0, 0); opacity: 1; }
+  100% { transform: scale(0) translate(var(--tx), var(--ty)); opacity: 0; }
+}
+
+/* Continue Button */
+.continue-btn {
+  margin-top: 25px;
+  padding: 15px 40px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  border: none;
+  border-radius: 8px;
+  color: var(--bg-deep);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.continue-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0,245,255,0.5);
+}
+
+/* Ready Meter */
+.ready-meter {
+  margin-top: 30px;
+  padding: 20px;
+  background: var(--bg-mid);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.ready-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.ready-bar {
+  height: 30px;
+  background: var(--bg-deep);
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--accent-cyan);
+}
+
+.ready-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan), var(--accent-magenta));
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ready-percent {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  color: var(--bg-deep);
+  font-size: 14px;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  line-height: 30px;
+}
+
+/* Power-up indicators */
+.powerups {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.powerup {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-mid);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.powerup.available {
+  border-color: var(--accent-gold);
+  animation: powerup-ready 1s infinite;
+}
+
+@keyframes powerup-ready {
+  0%, 100% { box-shadow: 0 0 5px rgba(255,215,0,0.3); }
+  50% { box-shadow: 0 0 15px rgba(255,215,0,0.6); }
+}
+
+.powerup-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-deep);
+  border: 1px solid var(--accent-cyan);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.powerup:hover .powerup-tooltip {
+  opacity: 1;
+}
+
+/* Screen shake */
+.screen-shake {
+  animation: screenShake 0.3s ease;
+}
+
+@keyframes screenShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+/* Lore Collection */
+.lore-collection {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255,215,0,0.05);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: 8px;
+}
+
+.lore-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent-gold);
+  margin-bottom: 10px;
+}
+
+.lore-fragments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lore-fragment {
+  padding: 5px 12px;
+  background: var(--bg-mid);
+  border-radius: 15px;
+  font-size: 11px;
+  color: var(--text-dim);
+  border: 1px solid rgba(255,215,0,0.3);
+}
+
+.lore-fragment.collected {
+  background: rgba(255,215,0,0.2);
+  color: var(--accent-gold);
+}
+
+/* Audio Indicator */
+.audio-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background: var(--bg-mid);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  z-index: 50;
+}
+
+.audio-bars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 15px;
+}
+
+.audio-bar {
+  width: 3px;
+  background: var(--accent-cyan);
+  border-radius: 2px;
+  animation: audio-bounce 0.5s ease infinite;
+}
+
+.audio-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+.audio-bar:nth-child(2) { height: 12px; animation-delay: 0.1s; }
+.audio-bar:nth-child(3) { height: 8px; animation-delay: 0.2s; }
+.audio-bar:nth-child(4) { height: 15px; animation-delay: 0.3s; }
+
+@keyframes audio-bounce {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.5); }
+}
+
+.audio-indicator.muted .audio-bar {
+  animation: none;
+  height: 3px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  #title-screen h1 { font-size: 28px; }
+  .hud { grid-template-columns: 1fr; }
+  .puzzle-options { grid-template-columns: 1fr; }
+  .attack-buttons { flex-direction: column; }
+  .attack-btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<div id="game-container">
+  <!-- HUD -->
+  <div class="hud" id="hud" style="display: none;">
+    <div class="stat-block">
+      <div class="stat-label">Mana</div>
+      <div class="stat-value mana" id="mana-display">0</div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="progress-label">Wave <span id="wave-num">1</span> / <span id="total-waves">10</span></div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">XP</div>
+      <div class="stat-value xp" id="xp-display">0</div>
+    </div>
+  </div>
+
+  <!-- Power-ups -->
+  <div class="powerups" id="powerups" style="display: none;">
+    <div class="powerup" id="powerup-focus" title="Focus Lens">
+      🔍
+      <span class="powerup-tooltip">Focus Lens: Reveals hint</span>
+    </div>
+    <div class="powerup" id="powerup-bomb" title="Logic Bomb">
+      💣
+      <span class="powerup-tooltip">Logic Bomb: 50% enemy damage</span>
+    </div>
+    <div class="powerup" id="powerup-ghost" title="Ghost Guide">
+      👻
+      <span class="powerup-tooltip">Ghost Guide: Eliminates wrong answer</span>
+    </div>
+  </div>
+
+  <!-- Title Screen -->
+  <div id="title-screen">
+    <h1>THE INHERITANCE PROTOCOL</h1>
+    <p class="subtitle">Master Genetics. Decode Heredity. Pass the Test.</p>
+    
+    <div class="lore">
+      <strong>TRANSMISSION INTERCEPTED:</strong><br><br>
+      The Gene Library is corrupted. Pedigrees are scrambled. Mendel's laws are being forgotten.
+      Inheritance patterns are breaking down. Genetic engineering data is being lost.<br><br>
+      You are the last Genetics Specialist. Harvest knowledge from the Ancient Codex. 
+      Forge it into understanding. Burn through the confusion.<br><br>
+      <em>The inheritance patterns must be restored.</em>
+    </div>
+
+    <div id="start-buttons">
+      <button class="start-btn" onclick="startNewGame()">INITIALIZE PROTOCOL</button>
+      <button class="start-btn" id="continue-btn" onclick="continueGame()" style="display: none; margin-top: 15px; background: linear-gradient(135deg, #ffd700, #ff8c00);">
+        ▶️ CONTINUE (Wave <span id="saved-wave">1</span>)
+      </button>
+    </div>
+  </div>
+
+  <!-- Harvest Phase -->
+  <div id="harvest-phase" class="phase-screen">
+    <div class="phase-header">
+      <div class="phase-title">⚡ HARVEST PHASE</div>
+      <div class="phase-subtitle">Absorb knowledge from the Ancient Codex</div>
+    </div>
+    <div id="knowledge-display"></div>
+  </div>
+
+  <!-- Forge Phase -->
+  <div id="forge-phase" class="phase-screen">
+    <div class="phase-header">
+      <div class="phase-title">🔥 THE FORGE</div>
+      <div class="phase-subtitle">Transform knowledge into power</div>
+    </div>
+    <div id="forge-display"></div>
+  </div>
+
+  <!-- Burn Phase -->
+  <div id="burn-phase" class="phase-screen">
+    <div class="phase-header">
+      <div class="phase-title">⚔️ THE BURN</div>
+      <div class="phase-subtitle">Unleash your forged power</div>
+    </div>
+    <div class="battle-arena" id="battle-arena"></div>
+  </div>
+
+  <!-- Earn Phase -->
+  <div id="earn-phase" class="phase-screen">
+    <div class="phase-header">
+      <div class="phase-title">✨ THE EARN</div>
+      <div class="phase-subtitle">Claim your reward</div>
+    </div>
+    <div class="reward-container" id="reward-display"></div>
+  </div>
+
+  <!-- Ready Meter -->
+  <div class="ready-meter" id="ready-meter" style="display: none;">
+    <div class="ready-title">🎯 TEST READINESS</div>
+    <div class="ready-bar">
+      <div class="ready-fill" id="ready-fill" style="width: 0%"></div>
+      <span class="ready-percent" id="ready-percent">0%</span>
+    </div>
+  </div>
+
+  <!-- Skill Tree -->
+  <div id="skill-tree" style="display: none;">
+    <div class="skill-tree-title">🧬 GENOMIC ABILITIES</div>
+    <div class="skill-grid" id="skill-grid"></div>
+  </div>
+
+  <!-- Lore Collection -->
+  <div class="lore-collection" id="lore-collection" style="display: none;">
+    <div class="lore-title">📜 Lore Fragments Collected</div>
+    <div class="lore-fragments" id="lore-fragments"></div>
+  </div>
+</div>
+
+<!-- Last Stand Overlay -->
+<div class="last-stand-overlay" id="last-stand" style="display: none;">
+  <div class="last-stand-box">
+    <div class="last-stand-title">⚠️ SHIELD BREAK!</div>
+    <p>Quick! Parry the attack!</p>
+    <p style="font-size: 24px; margin: 15px 0;" id="parry-countdown">3</p>
+    <button class="parry-btn" onclick="attemptParry()">🛡️ PARRY NOW!</button>
+  </div>
+</div>
+
+<!-- Audio Indicator -->
+<div class="audio-indicator" id="audio-toggle" onclick="toggleAudio()">
+  <div class="audio-bars">
+    <div class="audio-bar"></div>
+    <div class="audio-bar"></div>
+    <div class="audio-bar"></div>
+    <div class="audio-bar"></div>
+  </div>
+  <span>Audio</span>
+</div>
+
+<script>
+// ==================== GAME STATE ====================
+const GameState = {
+  mana: 0,
+  xp: 0,
+  shield: 100,
+  wave: 1,
+  totalWaves: 10,
+  currentPhase: 'title',
+  betAmount: 0,
+  streak: 0,
+  readiness: 0,
+  audioEnabled: true,
+  
+  skills: {
+    mendelExceptions: { name: 'Mendel Exceptions', icon: '🌸', progress: 0, unlocked: false },
+    sexLinked: { name: 'Sex-Linked', icon: '🔗', progress: 0, unlocked: false },
+    pedigrees: { name: 'Pedigrees', icon: '📊', progress: 0, unlocked: false },
+    geneticEngineering: { name: 'Genetic Eng.', icon: '🧬', progress: 0, unlocked: false },
+    inheritance: { name: 'Inheritance', icon: '🎲', progress: 0, unlocked: false }
+  },
+  
+  powerups: {
+    focus: 1,
+    bomb: 1,
+    ghost: 1
+  },
+  
+  loreCollected: [],
+  currentKnowledge: null,
+  enemies: [],
+  correctAnswers: 0,
+  totalQuestions: 0
+};
+
+// ==================== SAVE/LOAD SYSTEM ====================
+function saveGame() {
+  const saveData = {
+    mana: GameState.mana,
+    xp: GameState.xp,
+    wave: GameState.wave,
+    streak: GameState.streak,
+    readiness: GameState.readiness,
+    audioEnabled: GameState.audioEnabled,
+    skills: GameState.skills,
+    powerups: GameState.powerups,
+    loreCollected: GameState.loreCollected,
+    correctAnswers: GameState.correctAnswers,
+    totalQuestions: GameState.totalQuestions,
+    currentPhase: GameState.currentPhase,
+    savedAt: Date.now()
+  };
+  
+  try {
+    localStorage.setItem('biogenesis_save', JSON.stringify(saveData));
+    console.log('Game saved!');
+  } catch (e) {
+    console.warn('Could not save game:', e);
+  }
+}
+
+function loadGame() {
+  try {
+    const saved = localStorage.getItem('biogenesis_save');
+    if (saved) {
+      const data = JSON.parse(saved);
+      
+      // Restore state
+      GameState.mana = data.mana || 0;
+      GameState.xp = data.xp || 0;
+      GameState.wave = data.wave || 1;
+      GameState.streak = data.streak || 0;
+      GameState.readiness = data.readiness || 0;
+      GameState.audioEnabled = data.audioEnabled !== false;
+      GameState.correctAnswers = data.correctAnswers || 0;
+      GameState.totalQuestions = data.totalQuestions || 0;
+      
+      if (data.skills) {
+        Object.keys(data.skills).forEach(key => {
+          if (GameState.skills[key]) {
+            GameState.skills[key] = data.skills[key];
+          }
+        });
+      }
+      
+      if (data.powerups) {
+        GameState.powerups = data.powerups;
+      }
+      
+      if (data.loreCollected) {
+        GameState.loreCollected = data.loreCollected;
+      }
+      
+      console.log('Game loaded! Wave:', GameState.wave, 'XP:', GameState.xp);
+      return true;
+    }
+  } catch (e) {
+    console.warn('Could not load game:', e);
+  }
+  return false;
+}
+
+function clearSave() {
+  try {
+    localStorage.removeItem('biogenesis_save');
+    console.log('Save cleared!');
+  } catch (e) {
+    console.warn('Could not clear save:', e);
+  }
+}
+
+function hasSavedGame() {
+  try {
+    return localStorage.getItem('biogenesis_save') !== null;
+  } catch (e) {
+    return false;
+  }
+}
+
+// ==================== KNOWLEDGE DATABASE ====================
+const KnowledgeDB = {
+  mendelExceptions: [
+    {
+      topic: "Incomplete Dominance",
+      content: "🌸 <strong>INCOMPLETE DOMINANCE</strong>\n\nOne allele does NOT completely dominate the other!\n\n<strong>Result:</strong> Heterozygous = BLEND of both phenotypes\n\n🔴 Red (RR) + ⚪ White (WW) = 🩷 <strong>PINK (RW)</strong>\n\n<em>Use different letters since neither is dominant!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "In incomplete dominance, what phenotype does a heterozygous individual show?",
+        options: ["A blend of both traits", "Only the dominant trait", "Only the recessive trait", "Neither trait"],
+        correct: 0,
+        explanation: "In incomplete dominance, neither allele is completely dominant, so heterozygotes show a blend (like pink from red + white)."
+      },
+      lore: "The Blending Scroll",
+      skill: "mendelExceptions"
+    },
+    {
+      topic: "Incomplete Dominance Practice",
+      content: "🌺 <strong>SNAPDRAGON EXAMPLE:</strong>\n\n🔴 RR = Red flowers\n🩷 RW = Pink flowers\n⚪ WW = White flowers\n\n<strong>Cross: Pink × White</strong>\nRW × WW\n\n<strong>Result:</strong>\n• 50% RW (Pink)\n• 50% WW (White)",
+      puzzle: {
+        type: "match",
+        prompt: "If you cross a pink snapdragon (RW) with a white snapdragon (WW), what percent will be pink?",
+        options: ["50%", "25%", "75%", "100%"],
+        correct: 0,
+        explanation: "RW × WW gives 50% RW (pink) and 50% WW (white)."
+      },
+      lore: "The Snapdragon Secret",
+      skill: "mendelExceptions"
+    },
+    {
+      topic: "Codominance",
+      content: "🐔 <strong>CODOMINANCE</strong>\n\n<strong>CO-</strong> means \"together\"\n\nBoth alleles are FULLY expressed together!\n\n⬛ Black (BB) + ⬜ White (WW) = \n⬛⬜ <strong>Black AND White spots (BW)</strong>\n\n<em>NOT a blend — you see BOTH phenotypes!</em>\n\n<strong>Use CAPITAL letters for both alleles!</strong>",
+      puzzle: {
+        type: "match",
+        prompt: "In codominance, what does a heterozygous individual show?",
+        options: ["Both phenotypes expressed separately", "A blend of phenotypes", "Only dominant phenotype", "Only recessive phenotype"],
+        correct: 0,
+        explanation: "In codominance, BOTH alleles are fully expressed - like black AND white feathers, not gray (blend)."
+      },
+      lore: "The Codominance Code",
+      skill: "mendelExceptions"
+    },
+    {
+      topic: "Codominance Practice",
+      content: "🐓 <strong>CHICKEN FEATHERS:</strong>\n\n⬛ BB = Black feathers\n⬛⬜ BW = Black & White feathers\n⬜ WW = White feathers\n\n<strong>Cross: Black × Black&White</strong>\nBB × BW\n\n<strong>Result:</strong>\n• 50% BB (Black)\n• 50% BW (Black & White)\n• 0% WW (White)",
+      puzzle: {
+        type: "match",
+        prompt: "Cross a black chicken (BB) with a black & white chicken (BW). What percent are black & white?",
+        options: ["50%", "25%", "75%", "100%"],
+        correct: 0,
+        explanation: "BB × BW gives 50% BB (black) and 50% BW (black & white)."
+      },
+      lore: "The Feather Formula",
+      skill: "mendelExceptions"
+    },
+    {
+      topic: "Incomplete vs Codominance",
+      content: "🎯 <strong>KEY DIFFERENCE:</strong>\n\n🩷 <strong>INCOMPLETE DOMINANCE</strong>\n→ Phenotypes BLEND together\n→ Red + White = PINK\n\n⬛⬜ <strong>CODOMINANCE</strong>\n→ Phenotypes shown SEPARATELY\n→ Black + White = BLACK & WHITE spots\n\n<em>Blend vs. Both!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "A flower that is half red and half white (not pink) shows:",
+        options: ["Codominance", "Incomplete dominance", "Complete dominance", "Recessive inheritance"],
+        correct: 0,
+        explanation: "Codominance shows both phenotypes separately (red AND white patches), not blended (pink)."
+      },
+      lore: "The Dominance Distinction",
+      skill: "mendelExceptions"
+    },
+    {
+      topic: "Multiple Alleles",
+      content: "🩸 <strong>MULTIPLE ALLELES</strong>\n\nSome genes have MORE than 2 alleles!\n\n<strong>Blood Type Example:</strong>\n• Allele <strong>Iᴬ</strong> = Type A protein\n• Allele <strong>Iᴮ</strong> = Type B protein  \n• Allele <strong>i</strong> = No protein (recessive)\n\n<em>A and B are CODOMINANT to each other!\nBoth are DOMINANT over O!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "How many alleles exist for human blood type?",
+        options: ["3 alleles (A, B, O)", "2 alleles", "4 alleles", "1 allele"],
+        correct: 0,
+        explanation: "Blood type has 3 alleles: Iᴬ (A), Iᴮ (B), and i (O). A and B are codominant; O is recessive."
+      },
+      lore: "The Multiple Allele Mystery",
+      skill: "mendelExceptions"
+    },
+    {
+      topic: "Blood Type Genotypes",
+      content: "🩸 <strong>BLOOD TYPE GENOTYPES:</strong>\n\n<strong>Type A:</strong> IᴬIᴬ or Iᴬi\n<strong>Type B:</strong> IᴮIᴮ or Iᴮi\n<strong>Type AB:</strong> IᴬIᴮ (codominant!)\n<strong>Type O:</strong> ii (recessive)\n\n<em>Type O is recessive — masked by A or B!\nType AB shows BOTH proteins!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "A person with Type AB blood has genotype:",
+        options: ["IᴬIᴮ", "IᴬIᴬ", "IᴮIᴮ", "ii"],
+        correct: 0,
+        explanation: "Type AB has one A allele and one B allele (IᴬIᴮ). Both are expressed due to codominance."
+      },
+      lore: "The Blood Type Blueprint",
+      skill: "mendelExceptions"
+    },
+    {
+      topic: "Blood Type Practice",
+      content: "🩸 <strong>BLOOD TYPE CROSS:</strong>\n\n<strong>Father:</strong> Type A (IᴬIᴬ)\n<strong>Mother:</strong> Type O (ii)\n\n<strong>Punnett Square:</strong>\n     Iᴬ    Iᴬ\ni   Iᴬi   Iᴬi\ni   Iᴬi   Iᴬi\n\n<strong>Result:</strong>\n• 100% Iᴬi = Type A\n• 0% Type O",
+      puzzle: {
+        type: "match",
+        prompt: "If a homozygous Type A (IᴬIᴬ) and Type O (ii) have children, what blood type will they be?",
+        options: ["All Type A", "All Type O", "50% A, 50% O", "All Type AB"],
+        correct: 0,
+        explanation: "IᴬIᴬ × ii = all Iᴬi (Type A). The A allele is dominant over the O allele."
+      },
+      lore: "The Inheritance of Blood",
+      skill: "mendelExceptions"
+    }
+  ],
+
+  sexLinked: [
+    {
+      topic: "Karyotypes",
+      content: "🧬 <strong>KARYOTYPE</strong>\n\nA picture showing ALL chromosomes in a cell!\n\n<strong>Used to:</strong>\n• Count chromosomes\n• Identify genetic conditions\n• Determine sex\n\n<strong>Humans have 46 chromosomes:</strong>\n• 22 pairs of <strong>AUTOSOMES</strong> (1-22)\n• 1 pair of <strong>SEX CHROMOSOMES</strong>",
+      puzzle: {
+        type: "match",
+        prompt: "What is a karyotype?",
+        options: ["A picture of all chromosomes", "A type of gene", "A DNA sequence", "A protein structure"],
+        correct: 0,
+        explanation: "A karyotype is a photograph of all chromosomes in a cell, arranged by size and shape."
+      },
+      lore: "The Karyotype Key",
+      skill: "sexLinked"
+    },
+    {
+      topic: "Autosomes vs Sex Chromosomes",
+      content: "🧬 <strong>TWO TYPES OF CHROMOSOMES:</strong>\n\n📦 <strong>AUTOSOMES</strong> (Chromosomes 1-22)\n→ Do NOT determine sex\n→ 22 pairs = 44 chromosomes\n\n⚥ <strong>SEX CHROMOSOMES</strong>\n→ Determine sex of individual\n→ <strong>XX = Female ♀</strong>\n→ <strong>XY = Male ♂</strong>",
+      puzzle: {
+        type: "match",
+        prompt: "Which chromosomes determine if someone is male or female?",
+        options: ["Sex chromosomes (X and Y)", "Autosomes (1-22)", "Chromosome 21", "All chromosomes equally"],
+        correct: 0,
+        explanation: "Sex chromosomes (XX or XY) determine biological sex. Autosomes (1-22) carry other traits."
+      },
+      lore: "The Chromosome Classification",
+      skill: "sexLinked"
+    },
+    {
+      topic: "Sex-Linked Traits",
+      content: "🔗 <strong>SEX-LINKED TRAITS</strong>\n\nGenes found ONLY on sex chromosomes!\n\n<strong>Usually on the X chromosome:</strong>\n• Colorblindness\n• Hemophilia\n• Muscular dystrophy\n\n<em>Males (XY) are more affected because they only have ONE X chromosome!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "Why are males more often affected by X-linked disorders?",
+        options: ["They only have one X chromosome", "They have two X chromosomes", "Y chromosome is larger", "They have no X chromosome"],
+        correct: 0,
+        explanation: "Males (XY) have only ONE X, so one recessive allele will show. Females (XX) have a backup copy."
+      },
+      lore: "The X-Link Secret",
+      skill: "sexLinked"
+    },
+    {
+      topic: "Colorblindness Genotypes",
+      content: "👁️ <strong>RED-GREEN COLORBLINDNESS</strong>\n\nX-linked RECESSIVE trait!\n\n<strong>Genotypes:</strong>\n👨 XᴮY = Normal vision male\n👨 XᵇY = <strong>Colorblind male</strong>\n👩 XᴮXᴮ = Normal vision female\n👩 XᴮXᵇ = Carrier female (normal vision)\n👩 XᵇXᵇ = <strong>Colorblind female</strong> (rare!)\n\n<em>Females need TWO recessive alleles!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "A carrier female for colorblindness has genotype:",
+        options: ["XᴮXᵇ", "XᵇXᵇ", "XᴮY", "XᵇY"],
+        correct: 0,
+        explanation: "A carrier has one normal allele (Xᴮ) and one colorblind allele (Xᵇ). She has normal vision but can pass it on."
+      },
+      lore: "The Colorblind Code",
+      skill: "sexLinked"
+    },
+    {
+      topic: "Sex-Linked Cross",
+      content: "👁️ <strong>SEX-LINKED CROSS:</strong>\n\n<strong>Normal father × Carrier mother</strong>\nXᴮY × XᴮXᵇ\n\n        Xᴮ       Y\nXᴮ    XᴮXᴮ    XᴮY\nXᵇ    XᴮXᵇ    XᵇY\n\n<strong>Result:</strong>\n• 2 Females (1 normal, 1 carrier)\n• 2 Males (1 normal, 1 colorblind)\n• <strong>Ratio: 3 normal : 1 colorblind</strong>",
+      puzzle: {
+        type: "match",
+        prompt: "If a carrier mother (XᴮXᵇ) and normal father (XᴮY) have children, what fraction of SONS will be colorblind?",
+        options: ["1/2 (50%)", "1/4 (25%)", "All sons", "No sons"],
+        correct: 0,
+        explanation: "Sons get X from mom: 50% get Xᴮ (normal), 50% get Xᵇ (colorblind). Half the sons are affected."
+      },
+      lore: "The Inheritance Pattern",
+      skill: "sexLinked"
+    },
+    {
+      topic: "Identifying Sex-Linked Traits",
+      content: "🔍 <strong>HOW TO IDENTIFY SEX-LINKED TRAITS:</strong>\n\n<strong>Look for these 3 clues:</strong>\n\n1️⃣ <strong>More MALES affected</strong> than females\n\n2️⃣ <strong>Only FEMALES are carriers</strong>\n(males can't be carriers for X-linked)\n\n3️⃣ Trait passes from <strong>MOTHER to SON</strong>\n\n<em>If 50/50 males/females affected → probably autosomal!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "Which is a sign of a sex-linked trait?",
+        options: ["More males affected than females", "Equal males and females affected", "More females affected", "Only females affected"],
+        correct: 0,
+        explanation: "Sex-linked (X-linked) recessive traits affect more males because they only need one copy of the allele."
+      },
+      lore: "The Detection Protocol",
+      skill: "sexLinked"
+    }
+  ],
+
+  pedigrees: [
+    {
+      topic: "What is a Pedigree?",
+      content: "📊 <strong>PEDIGREE</strong>\n\nA chart showing genetic history of a family!\n\n<strong>Symbols:</strong>\n⬜ <strong>Square = Male</strong>\n⭕ <strong>Circle = Female</strong>\n⬛/🔴 <strong>Filled in = AFFECTED</strong>\n◐ <strong>Half filled = CARRIER</strong>\n\n<em>Used by genetic counselors to track inheritance!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "In a pedigree, what does a filled-in circle represent?",
+        options: ["An affected female", "An affected male", "A carrier female", "An unaffected person"],
+        correct: 0,
+        explanation: "Circles = females. Filled in = affected by the trait. So a filled circle = affected female."
+      },
+      lore: "The Pedigree Primer",
+      skill: "pedigrees"
+    },
+    {
+      topic: "Pedigree Connections",
+      content: "📊 <strong>PEDIGREE CONNECTIONS:</strong>\n\n💑 <strong>Horizontal line</strong> = Married couple\n\n👨‍👩‍👧‍👦 <strong>Vertical line down</strong> = Their children\n\n👫 <strong>Siblings</strong> = Connected horizontally below parents\n\n👯 <strong>Identical twins</strong> = Lines meet at a point\n\n👫 <strong>Fraternal twins</strong> = Lines don't meet",
+      puzzle: {
+        type: "match",
+        prompt: "In a pedigree, a horizontal line between two symbols means:",
+        options: ["They are married/mated", "They are siblings", "They are parent and child", "They are twins"],
+        correct: 0,
+        explanation: "A horizontal line connecting two people indicates they are a couple (married or mating partners)."
+      },
+      lore: "The Connection Guide",
+      skill: "pedigrees"
+    },
+    {
+      topic: "Autosomal vs X-Linked",
+      content: "🔍 <strong>IS IT AUTOSOMAL OR X-LINKED?</strong>\n\n📊 <strong>AUTOSOMAL:</strong>\n→ ~50/50 males and females affected\n→ Found on chromosomes 1-22\n\n🔗 <strong>X-LINKED:</strong>\n→ MORE males affected\n→ Only females are carriers\n→ Passed from mother to son\n\n<em>Count the affected individuals by sex!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "If a pedigree shows equal numbers of affected males and females, the trait is likely:",
+        options: ["Autosomal", "X-linked", "Y-linked", "Mitochondrial"],
+        correct: 0,
+        explanation: "Autosomal traits affect males and females equally. X-linked traits affect more males."
+      },
+      lore: "The Location Locator",
+      skill: "pedigrees"
+    },
+    {
+      topic: "Dominant vs Recessive",
+      content: "🔍 <strong>IS IT DOMINANT OR RECESSIVE?</strong>\n\n👑 <strong>DOMINANT:</strong>\n→ Affected child = at least ONE affected parent\n→ Does NOT skip generations\n→ Appears in every generation\n\n🔻 <strong>RECESSIVE:</strong>\n→ Can SKIP generations\n→ Affected children from unaffected parents\n→ Parents are carriers (heterozygous)\n\n<em>If two unaffected parents have affected child → RECESSIVE!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "If two unaffected parents have an affected child, the trait is:",
+        options: ["Recessive", "Dominant", "Codominant", "X-linked only"],
+        correct: 0,
+        explanation: "If unaffected parents have an affected child, both must be carriers (Aa × Aa), making it recessive."
+      },
+      lore: "The Dominance Detective",
+      skill: "pedigrees"
+    },
+    {
+      topic: "Autosomal Dominant",
+      content: "👑 <strong>AUTOSOMAL DOMINANT:</strong>\n\n<strong>Characteristics:</strong>\n• Affects males & females equally\n• Does NOT skip generations\n• Affected person has affected parent\n• Appears in EVERY generation\n\n<strong>Example:</strong> Huntington's Disease\n\n<em>If you have the allele, you WILL show it!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "Huntington's Disease is autosomal dominant. If a parent has it, what's the chance their child will have it (other parent unaffected)?",
+        options: ["50%", "100%", "25%", "0%"],
+        correct: 0,
+        explanation: "Autosomal dominant: Aa × aa = 50% Aa (affected), 50% aa (unaffected)."
+      },
+      lore: "The Dominant Decree",
+      skill: "pedigrees"
+    },
+    {
+      topic: "Autosomal Recessive",
+      content: "🔻 <strong>AUTOSOMAL RECESSIVE:</strong>\n\n<strong>Characteristics:</strong>\n• Affects males & females equally\n• Often SKIPS generations\n• Affected child can have unaffected parents\n• ~1/4 affected when both parents are carriers\n\n<strong>Example:</strong> Cystic Fibrosis\n\n<em>Parents can be hidden carriers!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "Cystic fibrosis is autosomal recessive. If both parents are carriers (Aa), what fraction of children will be affected?",
+        options: ["1/4 (25%)", "1/2 (50%)", "3/4 (75%)", "All of them"],
+        correct: 0,
+        explanation: "Aa × Aa = 1 AA : 2 Aa : 1 aa. Only aa (1/4) is affected."
+      },
+      lore: "The Recessive Record",
+      skill: "pedigrees"
+    },
+    {
+      topic: "Pedigree Analysis Steps",
+      content: "📋 <strong>HOW TO ANALYZE A PEDIGREE:</strong>\n\n<strong>Step 1:</strong> Is it AUTOSOMAL or X-LINKED?\n→ Count males vs females affected\n\n<strong>Step 2:</strong> Is it DOMINANT or RECESSIVE?\n→ Check if it skips generations\n→ Can unaffected parents have affected kids?\n\n<strong>Step 3:</strong> Determine genotypes!\n→ Work backwards from affected individuals",
+      puzzle: {
+        type: "match",
+        prompt: "What is the FIRST step in analyzing a pedigree?",
+        options: ["Determine if autosomal or X-linked", "Count total people", "Find the oldest generation", "Identify all carriers"],
+        correct: 0,
+        explanation: "First determine if the trait is autosomal (equal sex ratio) or X-linked (more males affected)."
+      },
+      lore: "The Analysis Algorithm",
+      skill: "pedigrees"
+    }
+  ],
+
+  geneticEngineering: [
+    {
+      topic: "Selective Breeding",
+      content: "🌾 <strong>SELECTIVE BREEDING</strong>\n\nAllowing only organisms with <strong>desired traits</strong> to reproduce!\n\n<strong>Used for thousands of years:</strong>\n• Different dog breeds 🐕\n• Crop plants 🌽\n• Livestock 🐄\n\n<em>Takes advantage of natural genetic variation!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "Selective breeding involves:",
+        options: ["Choosing organisms with desired traits to reproduce", "Inserting genes from other species", "Cloning identical organisms", "Random mating"],
+        correct: 0,
+        explanation: "Selective breeding = choosing which organisms reproduce based on their desirable traits."
+      },
+      lore: "The Breeder's Art",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "Hybridization vs Inbreeding",
+      content: "🧬 <strong>TWO TYPES OF SELECTIVE BREEDING:</strong>\n\n🔀 <strong>HYBRIDIZATION</strong>\n→ Crossing DIFFERENT individuals\n→ Combines best traits of both\n→ Offspring often HARDIER\n\n🔁 <strong>INBREEDING</strong>\n→ Breeding SIMILAR individuals\n→ Maintains desired traits\n→ Risk: increases genetic DEFECTS\n\n<em>Purebred dogs = inbreeding!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "What is a risk of inbreeding?",
+        options: ["Increased genetic defects", "Offspring are too hardy", "Traits become too varied", "Organisms become too large"],
+        correct: 0,
+        explanation: "Inbreeding increases the chance of recessive genetic defects appearing because similar alleles are brought together."
+      },
+      lore: "The Breeding Balance",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "Restriction Enzymes",
+      content: "✂️ <strong>RESTRICTION ENZYMES</strong>\n\nMolecular \"scissors\" that CUT DNA!\n\n<strong>How they work:</strong>\n• Recognize specific DNA sequences\n• Cut at that exact spot\n• Create \"sticky ends\"\n\n<strong>Example:</strong> EcoRI\n→ Finds sequence GAATTC\n→ Cuts between G and A\n\n<em>Used to cut DNA for genetic engineering!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "What do restriction enzymes do?",
+        options: ["Cut DNA at specific sequences", "Copy DNA", "Join DNA pieces together", "Read DNA sequences"],
+        correct: 0,
+        explanation: "Restriction enzymes are molecular scissors that cut DNA at specific recognition sequences."
+      },
+      lore: "The Molecular Scissors",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "PCR - Polymerase Chain Reaction",
+      content: "📋 <strong>PCR</strong> = Polymerase Chain Reaction\n\nA <strong>genetic copy machine</strong>!\n\n<strong>What it does:</strong>\n• Makes MILLIONS of copies of DNA\n• From a tiny sample\n• In just a few hours\n\n<strong>Used for:</strong>\n• Crime scene evidence\n• Paternity tests\n• Disease diagnosis\n\n<em>Amplifies DNA exponentially!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "PCR is used to:",
+        options: ["Make many copies of DNA", "Cut DNA into pieces", "Separate DNA by size", "Insert genes into cells"],
+        correct: 0,
+        explanation: "PCR (Polymerase Chain Reaction) amplifies/copies specific DNA sequences millions of times."
+      },
+      lore: "The Amplification Protocol",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "Gel Electrophoresis",
+      content: "📊 <strong>GEL ELECTROPHORESIS</strong>\n\nSeparates DNA by SIZE!\n\n<strong>How it works:</strong>\n• DNA is placed in gel\n• Electric current applied\n• DNA moves toward (+) positive end\n• <strong>SMALLER pieces move FARTHER</strong>\n• <strong>LARGER pieces stay near top</strong>\n\n<em>Creates a \"DNA fingerprint\" pattern!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "In gel electrophoresis, which DNA fragments travel the farthest?",
+        options: ["Smaller fragments", "Larger fragments", "All travel equally", "Medium fragments"],
+        correct: 0,
+        explanation: "Smaller DNA pieces move more easily through the gel, traveling farther from the start."
+      },
+      lore: "The Separation Science",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "DNA Fingerprinting",
+      content: "🔍 <strong>DNA FINGERPRINTING</strong>\n\nUsing DNA patterns to IDENTIFY individuals!\n\n<strong>Uses:</strong>\n• 🔬 Crime scene investigation\n• 👨‍👩‍👧 Paternity testing\n• 🏥 Disease diagnosis\n• 📜 Historical identification\n\n<strong>Process:</strong>\n1. Extract DNA\n2. Use PCR to amplify\n3. Cut with restriction enzymes\n4. Separate with gel electrophoresis\n5. Compare patterns!",
+      puzzle: {
+        type: "match",
+        prompt: "DNA fingerprinting is used to:",
+        options: ["Identify individuals", "Change DNA sequences", "Create new organisms", "Cure diseases"],
+        correct: 0,
+        explanation: "DNA fingerprinting analyzes unique DNA patterns to identify specific individuals."
+      },
+      lore: "The Identity Key",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "Recombinant DNA",
+      content: "🔗 <strong>RECOMBINANT DNA</strong>\n\nDNA from DIFFERENT sources combined!\n\n<strong>How it's made:</strong>\n1. Cut DNA from two sources\n2. Use same restriction enzyme\n3. \"Sticky ends\" match up\n4. Ligase joins them together\n\n<strong>Result:</strong> New combined DNA!\n\n<em>Example: Human insulin gene in bacteria!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "Recombinant DNA is:",
+        options: ["DNA from different sources combined", "DNA that has been copied", "DNA that has been deleted", "Natural DNA"],
+        correct: 0,
+        explanation: "Recombinant DNA is created by combining DNA from two or more different sources."
+      },
+      lore: "The Recombination Recipe",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "Transgenic Organisms & GMOs",
+      content: "🌽 <strong>TRANSGENIC ORGANISMS / GMOs</strong>\n\nOrganisms with DNA from ANOTHER SPECIES!\n\n<strong>Examples:</strong>\n• 🌽 Roundup Ready crops (herbicide resistant)\n• 🍌 Bananas with vaccines\n• 🍚 Golden Rice (vitamin A enriched)\n• 💊 Bacteria making human insulin\n\n<strong>Benefits:</strong>\n• Increased crop yields\n• Pest resistance\n• Medical products",
+      puzzle: {
+        type: "match",
+        prompt: "A GMO is an organism that:",
+        options: ["Has DNA from another species inserted", "Was selectively bred", "Is a clone", "Has natural mutations"],
+        correct: 0,
+        explanation: "GMO (Genetically Modified Organism) = transgenic = has genes from another species inserted."
+      },
+      lore: "The Transgenic Transformation",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "Human Genome Project",
+      content: "🧬 <strong>HUMAN GENOME PROJECT</strong>\n\nMassive effort to map ALL human DNA!\n\n<strong>Goals:</strong>\n1. Identify every gene location\n2. Sequence all 6 billion base pairs\n\n<strong>Completed:</strong> 2003 (draft in 2000)\n\n<strong>Applications:</strong>\n• Understanding genetic diseases\n• Personalized medicine\n• Ancestry testing",
+      puzzle: {
+        type: "match",
+        prompt: "The Human Genome Project's goal was to:",
+        options: ["Map and sequence all human DNA", "Clone humans", "Create new humans", "Cure all diseases immediately"],
+        correct: 0,
+        explanation: "The Human Genome Project identified and mapped all genes and sequenced the entire human genome."
+      },
+      lore: "The Genome Map",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "Cloning",
+      content: "🐑 <strong>CLONING</strong>\n\nCreating genetically IDENTICAL organisms!\n\n<strong>How Dolly was cloned (1996):</strong>\n1. Take body cell from Sheep A\n2. Remove nucleus from egg cell of Sheep B\n3. Insert Sheep A's nucleus into egg\n4. Implant in surrogate mother\n5. Baby is clone of Sheep A!\n\n<em>Clone = identical genetic copy!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "A clone is:",
+        options: ["A genetically identical copy", "An organism with mixed DNA", "A mutated organism", "A hybrid organism"],
+        correct: 0,
+        explanation: "A clone is genetically identical to the original organism - same DNA sequence."
+      },
+      lore: "The Clone Chronicles",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "Gene Therapy",
+      content: "💉 <strong>GENE THERAPY</strong>\n\nReplacing DEFECTIVE genes with working ones!\n\n<strong>How it works:</strong>\n1. Identify faulty gene\n2. Create working copy\n3. Use virus to deliver new gene\n4. New gene inserted into cells\n\n<strong>Used to treat:</strong>\n• Cystic fibrosis\n• Some cancers\n• Inherited disorders\n\n<em>Fixing genetic problems at the source!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "Gene therapy involves:",
+        options: ["Replacing defective genes with working ones", "Removing all genes", "Cloning organisms", "Selective breeding"],
+        correct: 0,
+        explanation: "Gene therapy = inserting functional genes to replace mutant/defective alleles that cause disease."
+      },
+      lore: "The Therapy Technique",
+      skill: "geneticEngineering"
+    },
+    {
+      topic: "CRISPR",
+      content: "✂️ <strong>CRISPR</strong>\n\n\"Clustered Regularly Interspaced Short Palindromic Repeats\"\n\n<strong>Revolutionary gene EDITING tool!</strong>\n\n<strong>What it does:</strong>\n• Cuts DNA at PRECISE locations\n• Can delete, replace, or insert genes\n• Faster & cheaper than older methods\n\n<strong>Potential uses:</strong>\n• Cure genetic diseases\n• Create disease-resistant crops\n• Eliminate mosquito-borne diseases",
+      puzzle: {
+        type: "match",
+        prompt: "CRISPR is a technology used to:",
+        options: ["Edit genes precisely", "Copy DNA", "Separate DNA", "View chromosomes"],
+        correct: 0,
+        explanation: "CRISPR is a precise gene-editing tool that can cut, delete, replace, or insert specific DNA sequences."
+      },
+      lore: "The CRISPR Revolution",
+      skill: "geneticEngineering"
+    }
+  ],
+
+  inheritance: [
+    {
+      topic: "Mendel's Three Laws",
+      content: "📜 <strong>MENDEL'S THREE LAWS:</strong>\n\n1️⃣ <strong>Law of Dominance</strong>\n→ Dominant allele masks recessive\n\n2️⃣ <strong>Law of Segregation</strong>\n→ Each parent passes ONE allele randomly\n\n3️⃣ <strong>Law of Independent Assortment</strong>\n→ Different genes sort INDEPENDENTLY\n→ One trait doesn't affect another",
+      puzzle: {
+        type: "match",
+        prompt: "Which law states that alleles separate during gamete formation?",
+        options: ["Law of Segregation", "Law of Dominance", "Law of Independent Assortment", "Law of Inheritance"],
+        correct: 0,
+        explanation: "Law of Segregation: During gamete formation, allele pairs separate, and each gamete gets ONE allele."
+      },
+      lore: "The Mendel Mandate",
+      skill: "inheritance"
+    },
+    {
+      topic: "Law of Independent Assortment",
+      content: "🎲 <strong>LAW OF INDEPENDENT ASSORTMENT</strong>\n\nAllele pairs separate <strong>INDEPENDENTLY</strong> of each other!\n\n<strong>What this means:</strong>\n• One trait does NOT affect another\n• Blue eyes ≠ automatic blonde hair\n• Each gene sorts separately\n\n<em>Genes on DIFFERENT chromosomes assort independently!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "The Law of Independent Assortment means:",
+        options: ["Different genes are inherited independently", "All genes are inherited together", "Genes never separate", "Only one gene is inherited"],
+        correct: 0,
+        explanation: "Independent assortment = genes for different traits separate independently during gamete formation."
+      },
+      lore: "The Independence Decree",
+      skill: "inheritance"
+    },
+    {
+      topic: "Calculating Gametes",
+      content: "🧮 <strong>HOW MANY GAMETES?</strong>\n\nCount different alleles, multiply together!\n\n<strong>Example: AaBbCcDD</strong>\n\nAa = 2 options (A or a)\nBb = 2 options (B or b)\nCc = 2 options (C or c)\nDD = 1 option (only D)\n\n<strong>Total: 2 × 2 × 2 × 1 = 8 gametes</strong>\n\n<em>Heterozygous = 2, Homozygous = 1</em>",
+      puzzle: {
+        type: "match",
+        prompt: "How many different gametes can AaBbCC produce?",
+        options: ["4 gametes", "8 gametes", "2 gametes", "6 gametes"],
+        correct: 0,
+        explanation: "Aa = 2, Bb = 2, CC = 1. Total = 2 × 2 × 1 = 4 different gamete types."
+      },
+      lore: "The Gamete Calculator",
+      skill: "inheritance"
+    },
+    {
+      topic: "Polygenic Traits",
+      content: "📊 <strong>POLYGENIC TRAITS</strong>\n\n\"Poly\" = MANY genes control ONE trait!\n\n<strong>Characteristics:</strong>\n• Continuous range of phenotypes\n• Not just \"tall or short\"\n• Creates a spectrum/gradient\n\n<strong>Examples:</strong>\n• 🧑 Skin color\n• 👁️ Eye color\n• 📏 Height\n• 🧠 Intelligence",
+      puzzle: {
+        type: "match",
+        prompt: "Polygenic traits are controlled by:",
+        options: ["Many genes", "One gene", "No genes", "Only recessive genes"],
+        correct: 0,
+        explanation: "Polygenic = 'many genes' - multiple genes work together to produce one trait with a range of phenotypes."
+      },
+      lore: "The Polygenic Pattern",
+      skill: "inheritance"
+    },
+    {
+      topic: "Polygenic Inheritance - Skin Color",
+      content: "🧑 <strong>SKIN COLOR EXAMPLE:</strong>\n\nControlled by 3+ genes!\n\n<strong>Rule:</strong>\n• CAPITAL letters = more pigment\n• lowercase letters = less pigment\n\n<strong>Examples:</strong>\nAABBCC = darkest\nAaBbCc = medium\naabbcc = lightest\n\n<em>More capital letters = more pigment = darker skin!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "In polygenic skin color, which genotype would produce the DARKEST skin?",
+        options: ["AABBCC", "aabbcc", "AaBbCc", "AAbbcc"],
+        correct: 0,
+        explanation: "Each capital letter adds pigment. AABBCC has all capital letters = maximum pigment = darkest."
+      },
+      lore: "The Pigment Protocol",
+      skill: "inheritance"
+    },
+    {
+      topic: "Polygenic Height",
+      content: "📏 <strong>HEIGHT IS POLYGENIC:</strong>\n\nMultiple genes contribute!\n\n<strong>Rule:</strong>\n• More CAPITAL letters = TALLER\n• More lowercase letters = shorter\n\n<strong>Order tallest to shortest:</strong>\nAABBCC > AaBbCc > aabbcc\n\n<em>This creates a bell curve distribution in populations!</em>",
+      puzzle: {
+        type: "match",
+        prompt: "If AaBbCc × AaBbCc, which offspring genotype would be TALLEST?",
+        options: ["AABBCC", "aabbcc", "AaBbCc", "Aabbcc"],
+        correct: 0,
+        explanation: "More capital letters = taller. AABBCC has the most capital letters = tallest possible."
+      },
+      lore: "The Height Hierarchy",
+      skill: "inheritance"
+    }
+  ]
+};
+
+// ==================== ENEMY DATABASE ====================
+const EnemyDB = [
+  { name: "Confusion Blob", emoji: "👾", hp: 30, damage: 10 },
+  { name: "Pedigree Phantom", emoji: "👻", hp: 40, damage: 15 },
+  { name: "Allele Error", emoji: "🦠", hp: 35, damage: 12 },
+  { name: "Dominance Ghost", emoji: "💀", hp: 45, damage: 18 },
+  { name: "Recessive Wraith", emoji: "🧟", hp: 50, damage: 20 }
+];
+
+// ==================== LORE FRAGMENTS ====================
+const LoreFragments = [
+  // Mendel Exceptions (8)
+  "The Blending Scroll", "The Snapdragon Secret", "The Codominance Code",
+  "The Feather Formula", "The Dominance Distinction", "The Multiple Allele Mystery",
+  "The Blood Type Blueprint", "The Inheritance of Blood",
+  // Sex-Linked (6)
+  "The Karyotype Key", "The Chromosome Classification", "The X-Link Secret",
+  "The Colorblind Code", "The Inheritance Pattern", "The Detection Protocol",
+  // Pedigrees (7)
+  "The Pedigree Primer", "The Connection Guide", "The Location Locator",
+  "The Dominance Detective", "The Dominant Decree", "The Recessive Record",
+  "The Analysis Algorithm",
+  // Genetic Engineering (12)
+  "The Breeder's Art", "The Breeding Balance", "The Molecular Scissors",
+  "The Amplification Protocol", "The Separation Science", "The Identity Key",
+  "The Recombination Recipe", "The Transgenic Transformation", "The Genome Map",
+  "The Clone Chronicles", "The Therapy Technique", "The CRISPR Revolution",
+  // Inheritance (6)
+  "The Mendel Mandate", "The Independence Decree", "The Gamete Calculator",
+  "The Polygenic Pattern", "The Pigment Protocol", "The Height Hierarchy"
+];
+
+// ==================== AUDIO SYSTEM ====================
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+let audioInitialized = false;
+
+function initAudio() {
+  if (audioCtx) return;
+  
+  try {
+    audioCtx = new AudioContext();
+    
+    // Resume context if suspended (needed for Chrome)
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    
+    audioInitialized = true;
+    console.log('Audio initialized!', audioCtx.state);
+  } catch (e) {
+    console.warn('Could not initialize audio:', e);
+  }
+}
+
+// Initialize audio on ANY user interaction
+document.addEventListener('click', function initOnClick() {
+  if (!audioInitialized) {
+    initAudio();
+  } else if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}, { once: false });
+
+document.addEventListener('keydown', function initOnKey() {
+  if (!audioInitialized) {
+    initAudio();
+  } else if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}, { once: false });
+
+function playSound(type) {
+  if (!GameState.audioEnabled) return;
+  
+  // Initialize audio if needed
+  if (!audioCtx) {
+    initAudio();
+  }
+  
+  if (!audioCtx) return;
+  
+  // Make sure context is running
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  
+  try {
+    const now = audioCtx.currentTime;
+    
+    switch(type) {
+      case 'correct': {
+        // Cheerful ascending arpeggio
+        const notes = [523, 659, 784]; // C5, E5, G5
+        notes.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.25, now + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.15);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.15);
+        });
+        break;
+      }
+      
+      case 'wrong': {
+        // Descending buzz
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(100, now + 0.3);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+        break;
+      }
+      
+      case 'attack': {
+        // Laser zap
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(200, now + 0.1);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.12);
+        break;
+      }
+      
+      case 'levelup': {
+        // Victory fanfare
+        const notes = [392, 523, 659, 784]; // G4, C5, E5, G5
+        notes.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.2, now + i * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.25);
+          osc.start(now + i * 0.1);
+          osc.stop(now + i * 0.1 + 0.25);
+        });
+        break;
+      }
+      
+      case 'crit': {
+        // Epic power chord
+        const freqs = [440, 554, 659]; // A4, C#5, E5
+        freqs.forEach(freq => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        });
+        // Add shimmer
+        const shimmer = audioCtx.createOscillator();
+        const shimmerGain = audioCtx.createGain();
+        shimmer.connect(shimmerGain);
+        shimmerGain.connect(audioCtx.destination);
+        shimmer.type = 'sine';
+        shimmer.frequency.setValueAtTime(1200, now);
+        shimmer.frequency.exponentialRampToValueAtTime(2400, now + 0.3);
+        shimmerGain.gain.setValueAtTime(0.1, now);
+        shimmerGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        shimmer.start(now);
+        shimmer.stop(now + 0.3);
+        break;
+      }
+      
+      case 'click': {
+        // UI click
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = 1000;
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+        osc.start(now);
+        osc.stop(now + 0.05);
+        break;
+      }
+      
+      case 'harvest': {
+        // Magical absorption sound
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.2);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+        break;
+      }
+    }
+  } catch (e) {
+    console.warn('Sound play error:', e);
+  }
+}
+
+function toggleAudio() {
+  GameState.audioEnabled = !GameState.audioEnabled;
+  document.getElementById('audio-toggle').classList.toggle('muted', !GameState.audioEnabled);
+  
+  // Play a test sound when enabling
+  if (GameState.audioEnabled) {
+    playSound('click');
+  }
+  
+  saveGame();
+}
+
+// ==================== PARTICLE SYSTEM ====================
+function createParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#00f5ff', '#ff00ff', '#00ff88', '#ffd700'];
+  
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    particle.style.width = (Math.random() * 6 + 2) + 'px';
+    particle.style.height = particle.style.width;
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.animationDelay = Math.random() * 20 + 's';
+    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+    container.appendChild(particle);
+  }
+}
+
+function createBurst(x, y, color) {
+  const burst = document.createElement('div');
+  burst.className = 'particle-burst';
+  burst.style.left = x + 'px';
+  burst.style.top = y + 'px';
+  
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'burst-particle';
+    p.style.background = color;
+    const angle = (i / 12) * Math.PI * 2;
+    const distance = 50 + Math.random() * 30;
+    p.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+    p.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+    burst.appendChild(p);
+  }
+  
+  document.body.appendChild(burst);
+  setTimeout(() => burst.remove(), 600);
+}
+
+function showDamageNumber(x, y, amount, isCrit = false) {
+  const dmg = document.createElement('div');
+  dmg.className = 'damage-number' + (isCrit ? ' crit' : '');
+  dmg.textContent = (isCrit ? '💥 ' : '') + amount;
+  dmg.style.left = x + 'px';
+  dmg.style.top = y + 'px';
+  dmg.style.color = isCrit ? '#ffd700' : '#ff3366';
+  document.body.appendChild(dmg);
+  setTimeout(() => dmg.remove(), 1000);
+}
+
+function screenShake() {
+  document.getElementById('game-container').classList.add('screen-shake');
+  setTimeout(() => document.getElementById('game-container').classList.remove('screen-shake'), 300);
+}
+
+// ==================== UI UPDATES ====================
+function updateHUD() {
+  document.getElementById('mana-display').textContent = GameState.mana;
+  document.getElementById('xp-display').textContent = GameState.xp;
+  document.getElementById('wave-num').textContent = GameState.wave;
+  document.getElementById('progress-fill').style.width = ((GameState.wave - 1) / GameState.totalWaves * 100) + '%';
+  
+  // Update readiness
+  if (GameState.totalQuestions > 0) {
+    GameState.readiness = Math.round((GameState.correctAnswers / GameState.totalQuestions) * 100);
+    document.getElementById('ready-fill').style.width = GameState.readiness + '%';
+    document.getElementById('ready-percent').textContent = GameState.readiness + '%';
+  }
+}
+
+function updateSkillTree() {
+  const grid = document.getElementById('skill-grid');
+  grid.innerHTML = '';
+  
+  for (const [key, skill] of Object.entries(GameState.skills)) {
+    const node = document.createElement('div');
+    node.className = 'skill-node ' + (skill.progress >= 100 ? 'unlocked' : skill.progress > 0 ? '' : 'locked');
+    node.innerHTML = `
+      <div class="skill-icon">${skill.icon}</div>
+      <div class="skill-name">${skill.name}</div>
+      <div class="skill-progress"><div class="skill-progress-fill" style="width: ${skill.progress}%"></div></div>
+    `;
+    grid.appendChild(node);
+  }
+}
+
+function updateLoreCollection() {
+  const container = document.getElementById('lore-fragments');
+  container.innerHTML = '';
+  
+  LoreFragments.forEach(lore => {
+    const frag = document.createElement('span');
+    frag.className = 'lore-fragment ' + (GameState.loreCollected.includes(lore) ? 'collected' : '');
+    frag.textContent = GameState.loreCollected.includes(lore) ? lore : '???';
+    container.appendChild(frag);
+  });
+}
+
+function updatePowerups() {
+  document.getElementById('powerup-focus').classList.toggle('available', GameState.powerups.focus > 0);
+  document.getElementById('powerup-bomb').classList.toggle('available', GameState.powerups.bomb > 0);
+  document.getElementById('powerup-ghost').classList.toggle('available', GameState.powerups.ghost > 0);
+}
+
+// ==================== GAME PHASES ====================
+function initTitleScreen() {
+  // Check for saved game
+  if (hasSavedGame()) {
+    loadGame();
+    document.getElementById('continue-btn').style.display = 'block';
+    document.getElementById('saved-wave').textContent = GameState.wave;
+  }
+}
+
+function startNewGame() {
+  // Reset everything for new game
+  GameState.mana = 0;
+  GameState.xp = 0;
+  GameState.wave = 1;
+  GameState.streak = 0;
+  GameState.correctAnswers = 0;
+  GameState.totalQuestions = 0;
+  GameState.readiness = 0;
+  
+  Object.keys(GameState.skills).forEach(k => {
+    GameState.skills[k].progress = 0;
+    GameState.skills[k].unlocked = false;
+  });
+  
+  GameState.loreCollected = [];
+  GameState.powerups = { focus: 2, bomb: 2, ghost: 2 }; // Start with more powerups
+  
+  clearSave();
+  startGame();
+}
+
+function continueGame() {
+  // loadGame was already called in initTitleScreen
+  startGame();
+}
+
+function startGame() {
+  initAudio();
+  createParticles();
+  
+  document.getElementById('title-screen').style.display = 'none';
+  document.getElementById('hud').style.display = 'grid';
+  document.getElementById('powerups').style.display = 'flex';
+  document.getElementById('ready-meter').style.display = 'block';
+  document.getElementById('skill-tree').style.display = 'block';
+  document.getElementById('lore-collection').style.display = 'block';
+  
+  updateHUD();
+  updateSkillTree();
+  updateLoreCollection();
+  updatePowerups();
+  
+  startHarvestPhase();
+}
+
+function startHarvestPhase() {
+  GameState.currentPhase = 'harvest';
+  showPhase('harvest-phase');
+  
+  // Pick random knowledge
+  const topics = Object.keys(KnowledgeDB);
+  const topic = topics[Math.floor(Math.random() * topics.length)];
+  const chunks = KnowledgeDB[topic];
+  const knowledge = chunks[Math.floor(Math.random() * chunks.length)];
+  
+  GameState.currentKnowledge = knowledge;
+  
+  const display = document.getElementById('knowledge-display');
+  display.innerHTML = `
+    <div class="knowledge-chunk">
+      <div class="chunk-topic">📖 ${knowledge.topic}</div>
+      <div class="chunk-content">${knowledge.content}</div>
+      <button class="harvest-btn" onclick="harvestKnowledge()">⚡ HARVEST THIS KNOWLEDGE</button>
+    </div>
+  `;
+}
+
+function harvestKnowledge() {
+  playSound('harvest');
+  createBurst(window.innerWidth / 2, window.innerHeight / 2, '#00ff88');
+  
+  setTimeout(() => startForgePhase(), 500);
+}
+
+function startForgePhase() {
+  GameState.currentPhase = 'forge';
+  showPhase('forge-phase');
+  
+  const puzzle = GameState.currentKnowledge.puzzle;
+  const display = document.getElementById('forge-display');
+  
+  if (puzzle.type === 'match') {
+    display.innerHTML = `
+      <div class="forge-puzzle">
+        <div class="puzzle-prompt">${puzzle.prompt}</div>
+        <div class="bet-container">
+          <div class="bet-label">
+            <span>Risk XP for bonus mana:</span>
+            <span id="bet-value">0 XP</span>
+          </div>
+          <input type="range" class="bet-slider" min="0" max="${Math.min(GameState.xp, 50)}" value="0" 
+                 oninput="updateBet(this.value)">
+        </div>
+        <div class="puzzle-options" id="puzzle-options">
+          ${puzzle.options.map((opt, i) => `
+            <div class="puzzle-option" onclick="selectOption(${i})">${opt}</div>
+          `).join('')}
+        </div>
+        <button class="continue-btn" onclick="submitAnswer()" id="submit-btn" disabled>FORGE INTO POWER</button>
+      </div>
+    `;
+  } else if (puzzle.type === 'sequence') {
+    display.innerHTML = `
+      <div class="forge-puzzle">
+        <div class="puzzle-prompt">${puzzle.prompt}</div>
+        <div class="bet-container">
+          <div class="bet-label">
+            <span>Risk XP for bonus mana:</span>
+            <span id="bet-value">0 XP</span>
+          </div>
+          <input type="range" class="bet-slider" min="0" max="${Math.min(GameState.xp, 50)}" value="0" 
+                 oninput="updateBet(this.value)">
+        </div>
+        <div class="sequence-puzzle" id="sequence-slots">
+          ${puzzle.template.map((_, i) => `<div class="sequence-slot" data-index="${i}"></div>`).join('')}
+        </div>
+        <div class="base-picker">
+          <button class="base-btn A" onclick="pickBase('A')">A</button>
+          <button class="base-btn U" onclick="pickBase('U')">U</button>
+          <button class="base-btn G" onclick="pickBase('G')">G</button>
+          <button class="base-btn C" onclick="pickBase('C')">C</button>
+        </div>
+        <button class="continue-btn" onclick="submitSequence()" id="submit-btn" style="margin-top: 20px;" disabled>FORGE INTO POWER</button>
+      </div>
+    `;
+    GameState.sequenceAnswer = [];
+  }
+}
+
+let selectedOption = null;
+
+function selectOption(index) {
+  document.querySelectorAll('.puzzle-option').forEach((opt, i) => {
+    opt.classList.toggle('selected', i === index);
+  });
+  selectedOption = index;
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function updateBet(value) {
+  GameState.betAmount = parseInt(value);
+  document.getElementById('bet-value').textContent = value + ' XP';
+}
+
+function submitAnswer() {
+  const puzzle = GameState.currentKnowledge.puzzle;
+  const isCorrect = selectedOption === puzzle.correct;
+  
+  GameState.totalQuestions++;
+  
+  const options = document.querySelectorAll('.puzzle-option');
+  options[selectedOption].classList.add(isCorrect ? 'correct' : 'wrong');
+  
+  if (isCorrect) {
+    GameState.correctAnswers++;
+    handleCorrectAnswer();
+  } else {
+    handleWrongAnswer();
+  }
+}
+
+function pickBase(base) {
+  const slots = document.querySelectorAll('.sequence-slot');
+  const nextEmpty = Array.from(slots).findIndex(s => !s.classList.contains('filled'));
+  
+  if (nextEmpty !== -1) {
+    slots[nextEmpty].textContent = base;
+    slots[nextEmpty].classList.add('filled');
+    GameState.sequenceAnswer.push(base);
+    
+    playSound('correct');
+    
+    const puzzle = GameState.currentKnowledge.puzzle;
+    if (GameState.sequenceAnswer.length === puzzle.answer.length) {
+      document.getElementById('submit-btn').disabled = false;
+    }
+  }
+}
+
+function submitSequence() {
+  const puzzle = GameState.currentKnowledge.puzzle;
+  const isCorrect = GameState.sequenceAnswer.join('') === puzzle.answer.join('');
+  
+  GameState.totalQuestions++;
+  
+  if (isCorrect) {
+    GameState.correctAnswers++;
+    handleCorrectAnswer();
+  } else {
+    handleWrongAnswer();
+  }
+}
+
+function handleCorrectAnswer() {
+  playSound('correct');
+  
+  const isCrit = Math.random() < 0.20; // 20% crit chance (up from 15%)
+  
+  // BASE MANA: 35 + streak bonus + bet bonus (much higher than before!)
+  let manaGain = 35 + (GameState.streak * 5) + (GameState.betAmount * 2);
+  let xpGain = 15 + (GameState.streak * 2);
+  
+  if (isCrit) {
+    manaGain = Math.floor(manaGain * 2.5); // 2.5x on crit
+    xpGain *= 3;
+    playSound('crit');
+    createBurst(window.innerWidth / 2, window.innerHeight / 2, '#ffd700');
+    screenShake();
+  } else {
+    createBurst(window.innerWidth / 2, window.innerHeight / 2, '#ff00ff');
+  }
+  
+  GameState.mana += manaGain;
+  GameState.xp += xpGain;
+  GameState.streak++;
+  
+  // Update skill progress
+  const skill = GameState.currentKnowledge.skill;
+  if (GameState.skills[skill]) {
+    GameState.skills[skill].progress = Math.min(100, GameState.skills[skill].progress + 33);
+    if (GameState.skills[skill].progress >= 100) {
+      GameState.skills[skill].unlocked = true;
+    }
+  }
+  
+  showDamageNumber(window.innerWidth / 2, window.innerHeight / 2 - 100, '+' + manaGain + ' Mana', isCrit);
+  
+  updateHUD();
+  updateSkillTree();
+  saveGame(); // Auto-save on correct answer
+  
+  setTimeout(() => startBurnPhase(), 1000);
+}
+
+function handleWrongAnswer() {
+  playSound('wrong');
+  screenShake();
+  GameState.streak = 0;
+  GameState.xp = Math.max(0, GameState.xp - GameState.betAmount);
+  
+  // Trigger Last Stand
+  triggerLastStand();
+}
+
+let parryWindow = null;
+let parryTimeout = null;
+
+function triggerLastStand() {
+  document.getElementById('last-stand').style.display = 'flex';
+  let countdown = 3;
+  document.getElementById('parry-countdown').textContent = countdown;
+  
+  parryWindow = true;
+  
+  const interval = setInterval(() => {
+    countdown--;
+    document.getElementById('parry-countdown').textContent = countdown;
+    if (countdown <= 0) {
+      clearInterval(interval);
+      failParry();
+    }
+  }, 500);
+  
+  parryTimeout = setTimeout(() => {
+    parryWindow = false;
+    failParry();
+  }, 1500);
+}
+
+function attemptParry() {
+  if (!parryWindow) return;
+  
+  clearTimeout(parryTimeout);
+  document.getElementById('last-stand').style.display = 'none';
+  
+  playSound('attack');
+  createBurst(window.innerWidth / 2, window.innerHeight / 2, '#00ff88');
+  
+  // Parry successful - still get decent mana!
+  GameState.mana += 25;
+  
+  updateHUD();
+  saveGame();
+  setTimeout(() => startBurnPhase(), 500);
+}
+
+function failParry() {
+  document.getElementById('last-stand').style.display = 'none';
+  parryWindow = false;
+  
+  // Penalty but still get enough mana to fight
+  GameState.mana += 20; // Enough for basic attacks
+  
+  updateHUD();
+  saveGame();
+  setTimeout(() => startBurnPhase(), 500);
+}
+
+function startBurnPhase() {
+  GameState.currentPhase = 'burn';
+  showPhase('burn-phase');
+  
+  // Generate enemies based on wave (BALANCED - fewer enemies, lower HP)
+  const numEnemies = Math.min(2, 1 + Math.floor(GameState.wave / 5)); // Max 2 enemies, slower scaling
+  GameState.enemies = [];
+  
+  for (let i = 0; i < numEnemies; i++) {
+    const template = EnemyDB[Math.floor(Math.random() * EnemyDB.length)];
+    GameState.enemies.push({
+      ...template,
+      id: i,
+      currentHp: Math.floor(template.hp * 0.6) + (GameState.wave * 2) // Much lower HP
+    });
+  }
+  
+  renderBattle();
+}
+
+function renderBattle() {
+  const arena = document.getElementById('battle-arena');
+  
+  const enemiesAlive = GameState.enemies.filter(e => e.currentHp > 0);
+  
+  if (enemiesAlive.length === 0) {
+    // Victory!
+    setTimeout(() => startEarnPhase(), 500);
+    return;
+  }
+  
+  // Calculate if player can attack
+  const canAffordAnyAttack = GameState.mana >= 15;
+  
+  arena.innerHTML = `
+    <div class="enemy-container">
+      ${GameState.enemies.map(e => e.currentHp > 0 ? `
+        <div class="enemy" id="enemy-${e.id}">
+          ${e.emoji}
+          <div class="enemy-hp">
+            <div class="enemy-hp-fill" style="width: ${(e.currentHp / (e.hp + GameState.wave * 5)) * 100}%"></div>
+          </div>
+        </div>
+      ` : '').join('')}
+    </div>
+    <div class="attack-buttons">
+      <button class="attack-btn" onclick="attack('punch', 0)" style="border-color: #888; color: #888;">
+        <span>👊 Basic Strike</span>
+        <span class="attack-cost">FREE → 10 DMG</span>
+      </button>
+      <button class="attack-btn mana-attack" onclick="attack('blast', 15)" ${GameState.mana < 15 ? 'disabled' : ''}>
+        <span>🔥 Mana Blast</span>
+        <span class="attack-cost">15 Mana → 25 DMG</span>
+      </button>
+      <button class="attack-btn mana-attack" onclick="attack('surge', 30)" ${GameState.mana < 30 ? 'disabled' : ''}>
+        <span>⚡ Power Surge</span>
+        <span class="attack-cost">30 Mana → 60 DMG</span>
+      </button>
+      <button class="attack-btn shield-attack" onclick="attack('heal', 20)" ${GameState.mana < 20 ? 'disabled' : ''}>
+        <span>💚 Regenerate</span>
+        <span class="attack-cost">20 Mana → +50 XP</span>
+      </button>
+    </div>
+    <div style="margin-top: 20px; text-align: center;">
+      <button onclick="retreatFromBattle()" style="background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+        🏃 Tactical Retreat (Skip to next wave)
+      </button>
+    </div>
+  `;
+}
+
+function attack(type, cost) {
+  if (GameState.mana < cost) return;
+  
+  GameState.mana -= cost;
+  playSound('attack');
+  
+  let damage = 0;
+  
+  switch(type) {
+    case 'punch':
+      damage = 10;
+      break;
+    case 'blast':
+      damage = 25;
+      break;
+    case 'surge':
+      damage = 60;
+      break;
+    case 'heal':
+      GameState.xp += 50;
+      createBurst(window.innerWidth / 2, window.innerHeight / 2, '#00ff88');
+      updateHUD();
+      renderBattle();
+      return;
+  }
+  
+  // Hit first enemy
+  const target = GameState.enemies.find(e => e.currentHp > 0);
+  if (target) {
+    target.currentHp -= damage;
+    
+    const enemyEl = document.getElementById(`enemy-${target.id}`);
+    if (enemyEl) {
+      const rect = enemyEl.getBoundingClientRect();
+      showDamageNumber(rect.left + rect.width / 2, rect.top, damage);
+      createBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, '#ff3366');
+      
+      if (target.currentHp <= 0) {
+        enemyEl.classList.add('defeated');
+        GameState.xp += 20;
+      } else {
+        enemyEl.classList.add('hit');
+        setTimeout(() => enemyEl.classList.remove('hit'), 300);
+      }
+    }
+  }
+  
+  screenShake();
+  updateHUD();
+  
+  setTimeout(() => renderBattle(), 300);
+}
+
+function retreatFromBattle() {
+  // Skip battle but no rewards
+  GameState.xp += 5; // Small consolation XP
+  playSound('wrong');
+  setTimeout(() => {
+    GameState.wave++;
+    if (GameState.wave > GameState.totalWaves) {
+      showVictory();
+    } else {
+      updateHUD();
+      startHarvestPhase();
+    }
+  }, 500);
+}
+
+function startEarnPhase() {
+  GameState.currentPhase = 'earn';
+  showPhase('earn-phase');
+  
+  const display = document.getElementById('reward-display');
+  display.innerHTML = `
+    <div class="loot-chest" onclick="openChest()">🎁</div>
+    <p style="margin-top: 20px; color: var(--text-dim);">Click to claim your reward!</p>
+  `;
+}
+
+function openChest() {
+  playSound('levelup');
+  
+  const lore = GameState.currentKnowledge.lore;
+  const isNew = !GameState.loreCollected.includes(lore);
+  
+  if (isNew) {
+    GameState.loreCollected.push(lore);
+  }
+  
+  const xpReward = 30 + (isNew ? 75 : 0); // Boosted rewards
+  GameState.xp += xpReward;
+  
+  // Bonus mana from chest!
+  const manaBonus = 15 + (isNew ? 10 : 0);
+  GameState.mana += manaBonus;
+  
+  // Random powerup chance (increased to 30%)
+  const powerupChance = Math.random();
+  let powerupReward = null;
+  if (powerupChance < 0.30) {
+    const types = ['focus', 'bomb', 'ghost'];
+    powerupReward = types[Math.floor(Math.random() * types.length)];
+    GameState.powerups[powerupReward]++;
+  }
+  
+  const display = document.getElementById('reward-display');
+  display.innerHTML = `
+    <div class="reward-reveal ${isNew ? 'critical-hit' : ''}">
+      <div class="reward-type">${isNew ? '⭐ NEW LORE DISCOVERED!' : '📜 Lore Fragment'}</div>
+      <div class="reward-name">"${lore}"</div>
+      <div class="reward-description">
+        ${GameState.currentKnowledge.puzzle.explanation}
+      </div>
+      <div style="margin-top: 15px; color: var(--accent-gold);">
+        +${xpReward} XP | +${manaBonus} Mana
+        ${powerupReward ? `<br>🎁 +1 ${powerupReward === 'focus' ? 'Focus Lens' : powerupReward === 'bomb' ? 'Logic Bomb' : 'Ghost Guide'}!` : ''}
+      </div>
+    </div>
+    <button class="continue-btn" onclick="nextWave()">CONTINUE →</button>
+  `;
+  
+  if (isNew) {
+    createBurst(window.innerWidth / 2, window.innerHeight / 2, '#ffd700');
+  }
+  
+  updateHUD();
+  updateLoreCollection();
+  updatePowerups();
+  saveGame(); // Save after rewards
+}
+
+function nextWave() {
+  GameState.wave++;
+  saveGame(); // Save at wave transition
+  
+  if (GameState.wave > GameState.totalWaves) {
+    // Game complete!
+    clearSave(); // Clear save on victory
+    showVictory();
+  } else {
+    updateHUD();
+    startHarvestPhase();
+  }
+}
+
+function showVictory() {
+  const display = document.getElementById('reward-display');
+  showPhase('earn-phase');
+  
+  playSound('levelup');
+  playSound('crit');
+  
+  display.innerHTML = `
+    <div style="text-align: center;">
+      <h1 style="font-family: 'Orbitron', monospace; font-size: 36px; color: var(--accent-gold); margin-bottom: 20px;">
+        🏆 PROTOCOL COMPLETE!
+      </h1>
+      <p style="font-size: 18px; margin-bottom: 30px;">The Central Dogma has been restored!</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+        <div class="stat-block">
+          <div class="stat-label">Final XP</div>
+          <div class="stat-value xp">${GameState.xp}</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Test Readiness</div>
+          <div class="stat-value" style="color: ${GameState.readiness >= 80 ? 'var(--accent-green)' : GameState.readiness >= 60 ? 'var(--accent-gold)' : 'var(--accent-red)'}">
+            ${GameState.readiness}%
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Lore Collected</div>
+          <div class="stat-value">${GameState.loreCollected.length}/${LoreFragments.length}</div>
+        </div>
+      </div>
+      
+      <button class="start-btn" onclick="resetGame()">PLAY AGAIN</button>
+    </div>
+  `;
+  
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      createBurst(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 
+        ['#ffd700', '#00f5ff', '#ff00ff'][Math.floor(Math.random() * 3)]);
+    }, i * 200);
+  }
+}
+
+function resetGame() {
+  GameState.mana = 0;
+  GameState.xp = 0;
+  GameState.wave = 1;
+  GameState.streak = 0;
+  GameState.correctAnswers = 0;
+  GameState.totalQuestions = 0;
+  GameState.readiness = 0;
+  
+  Object.keys(GameState.skills).forEach(k => {
+    GameState.skills[k].progress = 0;
+    GameState.skills[k].unlocked = false;
+  });
+  
+  GameState.loreCollected = [];
+  GameState.powerups = { focus: 1, bomb: 1, ghost: 1 };
+  
+  updateHUD();
+  updateSkillTree();
+  updateLoreCollection();
+  updatePowerups();
+  
+  startHarvestPhase();
+}
+
+function showPhase(phaseId) {
+  document.querySelectorAll('.phase-screen').forEach(p => p.classList.remove('active'));
+  document.getElementById(phaseId).classList.add('active');
+}
+
+// Power-up handlers
+document.getElementById('powerup-focus').addEventListener('click', () => {
+  if (GameState.powerups.focus > 0 && GameState.currentPhase === 'forge') {
+    GameState.powerups.focus--;
+    updatePowerups();
+    // Show hint
+    alert('💡 HINT: ' + GameState.currentKnowledge.puzzle.explanation.split('.')[0] + '.');
+  }
+});
+
+document.getElementById('powerup-bomb').addEventListener('click', () => {
+  if (GameState.powerups.bomb > 0 && GameState.currentPhase === 'burn') {
+    GameState.powerups.bomb--;
+    updatePowerups();
+    // Deal 50% damage to all enemies
+    GameState.enemies.forEach(e => {
+      if (e.currentHp > 0) {
+        e.currentHp = Math.ceil(e.currentHp / 2);
+      }
+    });
+    screenShake();
+    playSound('attack');
+    renderBattle();
+  }
+});
+
+document.getElementById('powerup-ghost').addEventListener('click', () => {
+  if (GameState.powerups.ghost > 0 && GameState.currentPhase === 'forge') {
+    GameState.powerups.ghost--;
+    updatePowerups();
+    // Eliminate one wrong answer
+    const puzzle = GameState.currentKnowledge.puzzle;
+    if (puzzle.type === 'match') {
+      const wrongOptions = document.querySelectorAll('.puzzle-option');
+      for (let i = 0; i < wrongOptions.length; i++) {
+        if (i !== puzzle.correct && !wrongOptions[i].classList.contains('eliminated')) {
+          wrongOptions[i].style.opacity = '0.3';
+          wrongOptions[i].style.pointerEvents = 'none';
+          wrongOptions[i].classList.add('eliminated');
+          break;
+        }
+      }
+    }
+  }
+});
+
+// Initialize
+createParticles();
+initTitleScreen(); // Check for saved game
+</script>
+
+</body>
+</html>

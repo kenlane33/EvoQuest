@@ -1,0 +1,36 @@
+<svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Gel electrophoresis of deer species</title>
+  <text x="240" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Gel Electrophoresis  Deer Species</text>
+  <rect x="80" y="40" width="320" height="200" fill="#FAFAFA" stroke="#333" stroke-width="1.5"/>
+  <!-- Wells -->
+  <rect x="100" y="45" width="20" height="8" fill="#333"/>
+  <rect x="160" y="45" width="20" height="8" fill="#333"/>
+  <rect x="220" y="45" width="20" height="8" fill="#333"/>
+  <rect x="280" y="45" width="20" height="8" fill="#333"/>
+  <rect x="340" y="45" width="20" height="8" fill="#333"/>
+  <!-- Bands species 1 (ancestor) - long fragments -->
+  <rect x="102" y="80" width="16" height="4" fill="#1565C0"/>
+  <rect x="102" y="120" width="16" height="4" fill="#1565C0"/>
+  <rect x="102" y="160" width="16" height="4" fill="#1565C0"/>
+  <rect x="102" y="200" width="16" height="4" fill="#1565C0"/>
+  <!-- Species 2 -->
+  <rect x="162" y="90" width="16" height="4" fill="#2E7D32"/>
+  <rect x="162" y="140" width="16" height="4" fill="#2E7D32"/>
+  <rect x="162" y="190" width="16" height="4" fill="#2E7D32"/>
+  <!-- Species 3 - closest to 1 -->
+  <rect x="222" y="82" width="16" height="4" fill="#F9A825"/>
+  <rect x="222" y="122" width="16" height="4" fill="#F9A825"/>
+  <rect x="222" y="162" width="16" height="4" fill="#F9A825"/>
+  <rect x="222" y="202" width="16" height="4" fill="#F9A825"/>
+  <!-- Species 4 -->
+  <rect x="282" y="100" width="16" height="4" fill="#C62828"/>
+  <rect x="282" y="150" width="16" height="4" fill="#C62828"/>
+  <!-- Labels -->
+  <text x="110" y="255" text-anchor="middle" font-size="10" fill="#333">1</text>
+  <text x="170" y="255" text-anchor="middle" font-size="10" fill="#333">2</text>
+  <text x="230" y="255" text-anchor="middle" font-size="10" fill="#333">3</text>
+  <text x="290" y="255" text-anchor="middle" font-size="10" fill="#333">4</text>
+  <text x="350" y="255" text-anchor="middle" font-size="10" fill="#333">Ladder</text>
+  <text x="30" y="130" font-size="10" fill="#555" transform="rotate(-90,30,130)">Fragment size</text>
+  <text x="240" y="275" text-anchor="middle" font-size="10" fill="#555">Shortest shared bands = most closely related</text>
+</svg>

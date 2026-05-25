@@ -1,0 +1,92 @@
+<svg viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <style>
+      text { fill: #222; }
+      .axis-label { font-size: 13px; font-weight: bold; }
+      .tick-label { font-size: 11px; }
+      .title { font-size: 15px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="250" y="24" text-anchor="middle" class="title">Effect of Temperature on Enzyme Activity</text>
+
+  <!-- Axes -->
+  <line x1="70" y1="260" x2="460" y2="260" stroke="#333" stroke-width="2"/>
+  <line x1="70" y1="260" x2="70" y2="40" stroke="#333" stroke-width="2"/>
+
+  <!-- Arrowheads -->
+  <polygon points="460,260 452,255 452,265" fill="#333"/>
+  <polygon points="70,40 65,48 75,48" fill="#333"/>
+
+  <!-- Y-axis label -->
+  <text x="20" y="150" text-anchor="middle" class="axis-label" transform="rotate(-90,20,150)">Rate of Reaction</text>
+
+  <!-- X-axis label -->
+  <text x="265" y="300" text-anchor="middle" class="axis-label">Temperature (°C)</text>
+
+  <!-- X-axis ticks -->
+  <line x1="110" y1="260" x2="110" y2="266" stroke="#333" stroke-width="1.5"/>
+  <text x="110" y="278" text-anchor="middle" class="tick-label">0</text>
+
+  <line x1="160" y1="260" x2="160" y2="266" stroke="#333" stroke-width="1.5"/>
+  <text x="160" y="278" text-anchor="middle" class="tick-label">10</text>
+
+  <line x1="210" y1="260" x2="210" y2="266" stroke="#333" stroke-width="1.5"/>
+  <text x="210" y="278" text-anchor="middle" class="tick-label">20</text>
+
+  <line x1="260" y1="260" x2="260" y2="266" stroke="#333" stroke-width="1.5"/>
+  <text x="260" y="278" text-anchor="middle" class="tick-label">30</text>
+
+  <line x1="310" y1="260" x2="310" y2="266" stroke="#333" stroke-width="1.5"/>
+  <text x="310" y="278" text-anchor="middle" class="tick-label">40</text>
+
+  <line x1="360" y1="260" x2="360" y2="266" stroke="#333" stroke-width="1.5"/>
+  <text x="360" y="278" text-anchor="middle" class="tick-label">50</text>
+
+  <line x1="410" y1="260" x2="410" y2="266" stroke="#333" stroke-width="1.5"/>
+  <text x="410" y="278" text-anchor="middle" class="tick-label">60</text>
+
+  <!-- Y-axis ticks -->
+  <line x1="64" y1="215" x2="70" y2="215" stroke="#333" stroke-width="1.5"/>
+  <line x1="64" y1="170" x2="70" y2="170" stroke="#333" stroke-width="1.5"/>
+  <line x1="64" y1="125" x2="70" y2="125" stroke="#333" stroke-width="1.5"/>
+  <line x1="64" y1="80" x2="70" y2="80" stroke="#333" stroke-width="1.5"/>
+
+  <!-- Grid lines (light) -->
+  <line x1="70" y1="215" x2="460" y2="215" stroke="#ddd" stroke-width="0.5"/>
+  <line x1="70" y1="170" x2="460" y2="170" stroke="#ddd" stroke-width="0.5"/>
+  <line x1="70" y1="125" x2="460" y2="125" stroke="#ddd" stroke-width="0.5"/>
+  <line x1="70" y1="80" x2="460" y2="80" stroke="#ddd" stroke-width="0.5"/>
+
+  <!-- Bell curve: enzyme activity peaking ~45°C -->
+  <path d="M 110,258
+           C 130,256 150,250 170,240
+           C 190,228 210,205 230,175
+           C 250,140 270,100 295,70
+           C 310,55 320,52 335,55
+           C 350,60 360,75 375,110
+           C 390,150 400,200 410,240
+           C 415,250 420,256 430,258"
+        fill="none" stroke="#2E86C1" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Shaded area under curve -->
+  <path d="M 110,258
+           C 130,256 150,250 170,240
+           C 190,228 210,205 230,175
+           C 250,140 270,100 295,70
+           C 310,55 320,52 335,55
+           C 350,60 360,75 375,110
+           C 390,150 400,200 410,240
+           C 415,250 420,256 430,258
+           L 430,260 L 110,260 Z"
+        fill="#2E86C1" fill-opacity="0.12"/>
+
+  <!-- Optimum marker: dashed line at ~45°C -->
+  <line x1="335" y1="52" x2="335" y2="260" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="335" y="46" text-anchor="middle" font-size="11" fill="#E74C3C" font-weight="bold">Optimum (~45°C)</text>
+
+  <!-- Denatured label -->
+  <text x="415" y="230" font-size="10" fill="#888" font-style="italic">Enzyme</text>
+  <text x="415" y="242" font-size="10" fill="#888" font-style="italic">denatured</text>
+</svg>

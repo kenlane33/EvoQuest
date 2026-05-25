@@ -1,0 +1,25 @@
+<svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Cladogram of mammals</title>
+  <text x="200" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Cladogram  Rodents and Rabbits</text>
+  <!-- Tree -->
+  <line x1="60" y1="260" x2="340" y2="260" stroke="#333" stroke-width="2"/>
+  <line x1="100" y1="260" x2="100" y2="180" stroke="#333" stroke-width="2"/>
+  <line x1="100" y1="180" x2="200" y2="180" stroke="#333" stroke-width="2"/>
+  <line x1="200" y1="180" x2="200" y2="100" stroke="#333" stroke-width="2"/>
+  <line x1="200" y1="100" x2="280" y2="100" stroke="#333" stroke-width="2"/>
+  <!-- Branches to tips -->
+  <line x1="140" y1="260" x2="140" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="180" y1="260" x2="180" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="240" y1="260" x2="240" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="300" y1="260" x2="300" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="240" y1="180" x2="240" y2="150" stroke="#333" stroke-width="1.5"/>
+  <line x1="280" y1="100" x2="280" y2="70" stroke="#333" stroke-width="1.5"/>
+  <!-- Labels -->
+  <text x="140" y="250" text-anchor="middle" font-size="10" fill="#333">Mouse</text>
+  <text x="180" y="250" text-anchor="middle" font-size="10" fill="#333">Rat</text>
+  <text x="240" y="250" text-anchor="middle" font-size="10" fill="#333">Squirrel</text>
+  <text x="300" y="250" text-anchor="middle" font-size="10" fill="#333">Beaver</text>
+  <text x="240" y="170" text-anchor="middle" font-size="10" fill="#333">Rabbit</text>
+  <text x="280" y="60" text-anchor="middle" font-size="10" fill="#333">Human</text>
+  <text x="200" y="300" text-anchor="middle" font-size="10" fill="#555">Most recent common ancestor shared by closest branches</text>
+</svg>

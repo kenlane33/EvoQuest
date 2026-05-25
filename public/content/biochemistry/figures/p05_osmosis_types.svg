@@ -1,0 +1,126 @@
+<svg viewBox="0 0 720 345" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <style>
+      .box-label { font-size: 14px; font-weight: bold; fill: #222; }
+      .cond-label { font-size: 13px; font-weight: bold; }
+      .state-label { font-size: 12px; font-weight: bold; fill: #333; }
+      .small-label { font-size: 10px; fill: #555; }
+    </style>
+    <!-- OUT arrows (red/coral) -->
+    <marker id="arrOut" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0,0 10,4 0,8" fill="#D32F2F"/>
+    </marker>
+    <!-- IN arrows (blue) -->
+    <marker id="arrIn" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0,0 10,4 0,8" fill="#1565C0"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="360" y="24" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">8. Types of Osmosis in Plant Cells</text>
+
+  <!-- ============ CELL A: Plasmolyzed / Hypertonic ============ -->
+  <g transform="translate(20,40)">
+    <!-- Box label -->
+    <rect x="70" y="0" width="60" height="22" fill="white" stroke="#333" stroke-width="1.5"/>
+    <text x="100" y="16" text-anchor="middle" class="box-label">A</text>
+
+    <!-- Cell Wall (outer box) -->
+    <rect x="15" y="22" width="170" height="190" rx="6" ry="6" fill="#F5F5F5" stroke="#5D4037" stroke-width="3"/>
+
+    <!-- Cell Membrane (pulled away / shrunken) -->
+    <ellipse cx="100" cy="125" rx="48" ry="60" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+
+    <!-- Small shrunken vacuole -->
+    <ellipse cx="100" cy="130" rx="22" ry="28" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1.2"/>
+
+    <!-- Two OUT arrows from left side: from cell interior, curving out past wall -->
+    <!-- Upper-left out -->
+    <path d="M 80,90 C 50,70 25,55 -10,42" fill="none" stroke="#D32F2F" stroke-width="2.5" marker-end="url(#arrOut)"/>
+    <!-- Lower-left out -->
+    <path d="M 80,160 C 50,178 25,190 -10,198" fill="none" stroke="#D32F2F" stroke-width="2.5" marker-end="url(#arrOut)"/>
+
+    <!-- H2O label outside left -->
+    <text x="-12" y="130" font-size="13" font-weight="bold" fill="#D32F2F">H&#x2082;O</text>
+
+    <!-- Labels below -->
+    <text x="100" y="235" text-anchor="middle" class="state-label">Plasmolyzed</text>
+    <text x="100" y="255" text-anchor="middle" class="cond-label" fill="#C62828">Hypertonic</text>
+    <text x="100" y="272" text-anchor="middle" class="small-label">(water leaves cell)</text>
+  </g>
+
+  <!-- ============ CELL B: Flaccid / Isotonic ============ -->
+  <g transform="translate(255,40)">
+    <!-- Box label -->
+    <rect x="70" y="0" width="60" height="22" fill="white" stroke="#333" stroke-width="1.5"/>
+    <text x="100" y="16" text-anchor="middle" class="box-label">B</text>
+
+    <!-- Cell Wall -->
+    <rect x="15" y="22" width="170" height="190" rx="6" ry="6" fill="#F5F5F5" stroke="#5D4037" stroke-width="3"/>
+
+    <!-- Cell Membrane (slightly inside wall) -->
+    <rect x="25" y="32" width="150" height="170" rx="12" ry="12" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+
+    <!-- Medium vacuole -->
+    <ellipse cx="100" cy="120" rx="45" ry="55" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1.2"/>
+
+    <!-- H2O label inside -->
+    <text x="82" y="125" font-size="12" font-weight="bold" fill="#558B2F">H&#x2082;O</text>
+
+    <!-- Two arrows from left: one IN (blue), one OUT (red) -->
+    <!-- In: from outside-left, curving into cell -->
+    <path d="M -10,75 C 8,80 18,90 38,97" fill="none" stroke="#1565C0" stroke-width="2.5" marker-end="url(#arrIn)"/>
+    <!-- Out: from inside cell, curving out left -->
+    <path d="M 38,143 C 18,150 8,160 -10,168" fill="none" stroke="#D32F2F" stroke-width="2.5" marker-end="url(#arrOut)"/>
+
+    <!-- H2O label outside left -->
+    <text x="-12" y="130" font-size="12" font-weight="bold" fill="#558B2F">H&#x2082;O</text>
+
+    <!-- Labels below -->
+    <text x="100" y="235" text-anchor="middle" class="state-label">Flaccid</text>
+    <text x="100" y="255" text-anchor="middle" class="cond-label" fill="#F57F17">Isotonic</text>
+    <text x="100" y="272" text-anchor="middle" class="small-label">(water balanced)</text>
+  </g>
+
+  <!-- ============ CELL C: Turgid / Hypotonic ============ -->
+  <g transform="translate(490,40)">
+    <!-- Box label -->
+    <rect x="70" y="0" width="60" height="22" fill="white" stroke="#333" stroke-width="1.5"/>
+    <text x="100" y="16" text-anchor="middle" class="box-label">C</text>
+
+    <!-- Cell Wall -->
+    <rect x="15" y="22" width="170" height="190" rx="6" ry="6" fill="#F5F5F5" stroke="#5D4037" stroke-width="3"/>
+
+    <!-- Cell Membrane (pressed tight against wall) -->
+    <rect x="19" y="26" width="162" height="182" rx="8" ry="8" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+
+    <!-- Large vacuole (filling most of cell) -->
+    <ellipse cx="100" cy="117" rx="65" ry="75" fill="#A5D6A7" stroke="#43A047" stroke-width="1.5"/>
+
+    <!-- H2O + Vacuole labels inside -->
+    <text x="78" y="105" font-size="13" font-weight="bold" fill="#1565C0">H&#x2082;O</text>
+    <text x="100" y="135" text-anchor="middle" font-size="10" fill="#2E7D32" font-style="italic">Vacuole</text>
+
+    <!-- Two IN arrows from left side: from outside, curving in through wall into cell -->
+    <!-- Upper-left in -->
+    <path d="M -10,42 C 25,55 50,70 80,95" fill="none" stroke="#1565C0" stroke-width="2.5" marker-end="url(#arrIn)"/>
+    <!-- Lower-left in -->
+    <path d="M -10,198 C 25,185 50,170 80,145" fill="none" stroke="#1565C0" stroke-width="2.5" marker-end="url(#arrIn)"/>
+
+    <!-- H2O label outside left -->
+    <text x="-12" y="130" font-size="13" font-weight="bold" fill="#1565C0">H&#x2082;O</text>
+
+    <!-- Labels below -->
+    <text x="100" y="235" text-anchor="middle" class="state-label">Turgid</text>
+    <text x="100" y="255" text-anchor="middle" class="cond-label" fill="#2E7D32">Hypotonic</text>
+    <text x="100" y="272" text-anchor="middle" class="small-label">(water enters cell)</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(260,325)">
+    <line x1="0" y1="0" x2="25" y2="0" stroke="#1565C0" stroke-width="2.5" marker-end="url(#arrIn)"/>
+    <text x="30" y="4" font-size="9" fill="#555">Water entering cell</text>
+    <line x1="130" y1="0" x2="155" y2="0" stroke="#D32F2F" stroke-width="2.5" marker-end="url(#arrOut)"/>
+    <text x="160" y="4" font-size="9" fill="#555">Water leaving cell</text>
+  </g>
+</svg>

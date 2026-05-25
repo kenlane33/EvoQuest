@@ -1,0 +1,19 @@
+<svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Biological magnification of DDT</title>
+  <text x="180" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Biological Magnification of DDT</text>
+  <polygon points="180,45 300,95 60,95" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="180" y="80" text-anchor="middle" font-size="9" fill="#1B5E20">Phytoplankton</text>
+  <text x="180" y="92" text-anchor="middle" font-size="8" fill="#555">0.04 ppm</text>
+  <polygon points="180,95 270,145 90,145" fill="#A5D6A7" stroke="#43A047" stroke-width="1.5"/>
+  <text x="180" y="128" text-anchor="middle" font-size="9" fill="#1B5E20">Zooplankton</text>
+  <text x="180" y="140" text-anchor="middle" font-size="8" fill="#555">0.16 ppm</text>
+  <polygon points="180,145 240,195 120,195" fill="#81C784" stroke="#66BB6A" stroke-width="1.5"/>
+  <text x="180" y="178" text-anchor="middle" font-size="9" fill="#1B5E20">Small fish</text>
+  <text x="180" y="190" text-anchor="middle" font-size="8" fill="#555">0.5 ppm</text>
+  <polygon points="180,195 210,245 150,245" fill="#FFA726" stroke="#E65100" stroke-width="1.5"/>
+  <text x="180" y="228" text-anchor="middle" font-size="9" fill="#fff">Large fish</text>
+  <text x="180" y="240" text-anchor="middle" font-size="8" fill="#fff">2 ppm</text>
+  <polygon points="180,245 195,285 165,285" fill="#EF5350" stroke="#C62828" stroke-width="1.5"/>
+  <text x="180" y="278" text-anchor="middle" font-size="8" fill="#fff">Birds</text>
+  <text x="180" y="305" text-anchor="middle" font-size="10" fill="#555">Top predators accumulate the highest DDT concentrations</text>
+</svg>

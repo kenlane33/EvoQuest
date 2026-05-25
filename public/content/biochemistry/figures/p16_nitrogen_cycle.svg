@@ -1,0 +1,32 @@
+<svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Nitrogen cycle</title>
+  <text x="240" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Nitrogen Cycle</text>
+  <!-- Atmosphere N2 -->
+  <ellipse cx="240" cy="55" rx="80" ry="25" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
+  <text x="240" y="60" text-anchor="middle" font-size="11" fill="#1565C0">N‚ (atmosphere)</text>
+  <!-- Fixation -->
+  <path d="M 180 75 L 120 130" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#na)"/>
+  <text x="130" y="110" font-size="9" fill="#2E7D32">Fixation</text>
+  <!-- Soil ammonia -->
+  <rect x="80" y="130" width="80" height="40" rx="6" fill="#C8E6C9" stroke="#388E3C"/>
+  <text x="120" y="155" text-anchor="middle" font-size="10" fill="#1B5E20">NHƒ / NH„z</text>
+  <!-- Nitrification -->
+  <path d="M 165 150 L 215 150" stroke="#333" stroke-width="1.5"/>
+  <rect x="215" y="130" width="80" height="40" rx="6" fill="#FFF9C4" stroke="#F9A825"/>
+  <text x="255" y="155" text-anchor="middle" font-size="10" fill="#E65100">NOƒ{</text>
+  <!-- Plants -->
+  <path d="M 255 170 L 255 210" stroke="#333" stroke-width="1.5"/>
+  <ellipse cx="255" cy="240" rx="50" ry="25" fill="#66BB6A" stroke="#2E7D32"/>
+  <text x="255" y="245" text-anchor="middle" font-size="10" fill="#fff">Plants</text>
+  <!-- Animals -->
+  <path d="M 305 240 L 360 240" stroke="#333" stroke-width="1.5"/>
+  <ellipse cx="400" cy="240" rx="45" ry="22" fill="#FFCCBC" stroke="#E64A19"/>
+  <text x="400" y="245" text-anchor="middle" font-size="10" fill="#BF360C">Animals</text>
+  <!-- Decomposition -->
+  <path d="M 400 260 L 400 290 L 120 290 L 120 175" stroke="#795548" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="260" y="305" text-anchor="middle" font-size="9" fill="#795548">Decomposition ’ ammonia</text>
+  <!-- Denitrification -->
+  <path d="M 295 130 L 350 75" stroke="#C62828" stroke-width="1.5"/>
+  <text x="340" y="105" font-size="9" fill="#C62828">Denitrification</text>
+  <defs><marker id="na" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0,0 6,2.5 0,5" fill="#2E7D32"/></marker></defs>
+</svg>

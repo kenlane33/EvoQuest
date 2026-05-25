@@ -1,0 +1,34 @@
+<svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Evidence of evolution</title>
+  <text x="360" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Evidence of Evolution</text>
+  <!-- Fossil -->
+  <g transform="translate(20,35)">
+    <rect x="0" y="0" width="150" height="120" fill="#F5F5F5" stroke="#795548" stroke-width="1.5" rx="4"/>
+    <ellipse cx="75" cy="70" rx="45" ry="25" fill="#8D6E63"/>
+    <text x="75" y="115" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Fossil Record</text>
+  </g>
+  <!-- Vestigial -->
+  <g transform="translate(190,35)">
+    <rect x="0" y="0" width="150" height="120" fill="#F5F5F5" stroke="#795548" stroke-width="1.5" rx="4"/>
+    <path d="M 40 80 Q 75 40 110 80" fill="none" stroke="#333" stroke-width="2"/>
+    <text x="75" y="55" text-anchor="middle" font-size="9" fill="#555">Human coccyx</text>
+    <text x="75" y="115" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Vestigial Structures</text>
+  </g>
+  <!-- Homologous -->
+  <g transform="translate(360,35)">
+    <rect x="0" y="0" width="150" height="120" fill="#F5F5F5" stroke="#795548" stroke-width="1.5" rx="4"/>
+    <path d="M 30 90 L 30 50 L 50 40" stroke="#333" stroke-width="2" fill="none"/>
+    <path d="M 75 90 L 75 45 L 95 35" stroke="#333" stroke-width="2" fill="none"/>
+    <path d="M 120 90 L 120 55 L 135 48" stroke="#333" stroke-width="2" fill="none"/>
+    <text x="75" y="115" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Homologous Structures</text>
+  </g>
+  <!-- Embryology -->
+  <g transform="translate(530,35)">
+    <rect x="0" y="0" width="150" height="120" fill="#F5F5F5" stroke="#795548" stroke-width="1.5" rx="4"/>
+    <ellipse cx="40" cy="70" rx="22" ry="30" fill="#FFCCBC" stroke="#333"/>
+    <ellipse cx="75" cy="70" rx="22" ry="30" fill="#FFCCBC" stroke="#333"/>
+    <ellipse cx="110" cy="70" rx="22" ry="30" fill="#FFCCBC" stroke="#333"/>
+    <text x="75" y="115" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Embryology</text>
+  </g>
+  <text x="360" y="175" text-anchor="middle" font-size="10" fill="#555">Fish, reptile, bird, mammal embryos show similar early stages</text>
+</svg>
