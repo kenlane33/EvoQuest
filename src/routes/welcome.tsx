@@ -66,7 +66,7 @@ function WelcomePage() {
       const hint = showMnemonic
         ? `${DEMO_HINT.root}. ${DEMO_HINT.mnemonic}`
         : DEMO_HINT.root;
-      return `Welcome demo. ${base} Hint: ${hint}. An idea unfolds.`;
+      return `Let's EvoQuest. Check out this example. ${base} Hint: ${hint}. An idea unfolds.`;
     }
     if (step === 1) {
       return 'Your achievement grid. Every cell is a piece of biology.';
@@ -86,6 +86,15 @@ function WelcomePage() {
 
       {step === 0 && (
         <div className="w-full max-w-(--w-narrow) animate-slide-up text-center">
+          <header {...devMark('intro')} className="mb-8">
+            <h1 className="text-headline-lg font-black text-(--text-primary)">
+              Let&apos;s EvoQuest…
+            </h1>
+            <p className="mt-2 text-body text-(--text-dim)">
+              …check out this example.
+            </p>
+          </header>
+
           <Card {...devMark('q')} className="mb-6 text-left">
             <p className="text-body-lg leading-relaxed text-(--text-primary)">
               {DEMO_PROMPT_PARTS[0]}

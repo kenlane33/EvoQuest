@@ -1,8 +1,12 @@
 // Pocket TTS ONNX Web Worker
-console.log("Pocket TTS Worker Starting...");
 self.postMessage({ type: "status", status: "Worker Thread Started", state: "idle" });
 
 let ort = null;
+let timelineEnabled = false;
+const workerTimelineOrigin = performance.now();
+let lastWorkerTimelineMs = workerTimelineOrigin;
+let cacheHits = 0;
+let cacheMisses = 0;
 
 const DEFAULT_LANGUAGE = "english_2026-04";
 const LANGUAGE_BUNDLES = ["english_2026-04", "german", "italian", "portuguese", "spanish"];
@@ -62,6 +66,21 @@ function bundlePath(language, filename) {
     return `${bundleDir(language)}/${filename}`;
 }
 
+function ttsWorkerMark(label, detail = {}) {
+    if (!timelineEnabled) {
+        return;
+    }
+    const now = performance.now();
+    postMessage({
+        type: "timeline",
+        label,
+        sinceOrigin: now - workerTimelineOrigin,
+        sincePrev: now - lastWorkerTimelineMs,
+        detail,
+    });
+    lastWorkerTimelineMs = now;
+}
+
 async function openModelCache() {
     if (typeof caches === "undefined") {
         return null;
@@ -78,9 +97,12 @@ async function cachedFetch(url) {
     if (cache) {
         const hit = await cache.match(url);
         if (hit) {
+            cacheHits++;
             return hit;
         }
     }
+
+    cacheMisses++;
 
     const response = await fetch(url);
     if (!response.ok || !cache) {
@@ -593,6 +615,7 @@ async function loadOrt() {
         ? Math.min(navigator.hardwareConcurrency || 4, 8)
         : 1;
     precomputeFlowBuffers();
+    ttsWorkerMark("ort-loaded");
 }
 
 async function releaseSession(session) {
@@ -608,6 +631,10 @@ async function loadBundle(language, { initialLoad = false } = {}) {
     if (!LANGUAGE_BUNDLES.includes(language)) {
         throw new Error(`Unsupported language bundle: ${language}`);
     }
+
+    cacheHits = 0;
+    cacheMisses = 0;
+    ttsWorkerMark("bundle-load-start", { language, initialLoad });
 
     await loadOrt();
 
@@ -699,6 +726,13 @@ async function loadBundle(language, { initialLoad = false } = {}) {
 
     isReady = true;
 
+    ttsWorkerMark("bundle-loaded", {
+        language,
+        cacheHits,
+        cacheMisses,
+        initialLoad,
+    });
+
     postMessage({
         type: "voices_loaded",
         voices: bundleMetadata.predefined_voices || Object.keys(predefinedVoiceRecords),
@@ -728,6 +762,10 @@ self.onmessage = async (e) => {
             }
             if (data?.modelCacheName) {
                 modelCacheName = data.modelCacheName;
+            }
+            if (data?.timelineEnabled) {
+                timelineEnabled = true;
+                ttsWorkerMark("worker-start");
             }
             return;
         }
@@ -804,6 +842,7 @@ self.onmessage = async (e) => {
 
 async function startGeneration(text, voiceName) {
     isGenerating = true;
+    ttsWorkerMark("generation-start", { voice: voiceName, chars: text?.length ?? 0 });
     postMessage({ type: "status", status: "Generating...", state: "running" });
     postMessage({ type: "generation_started", data: { time: performance.now() } });
 
@@ -977,6 +1016,13 @@ async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
                 chunkDecodedFrames += decodeSize;
                 const audioFloat32 = new Float32Array(decodeResult[mimiDecoderSession.outputNames[0]].data);
                 const isLastChunk = shouldStop && chunkIdx === chunks.length - 1;
+
+                if (isFirstAudioChunk) {
+                    ttsWorkerMark("first-chunk-sent", {
+                        samples: audioFloat32.length,
+                        genTimeMs: chunkGenTimeMs,
+                    });
+                }
 
                 postMessage({
                     type: "audio_chunk",

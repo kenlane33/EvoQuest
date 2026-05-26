@@ -17,11 +17,12 @@ export function setDevPageLabelsEnabled(on: boolean): void {
 let devLabelCopyBuffer: string[] = [];
 
 /** Append a label to the dev copy buffer and write the joined text to the clipboard. */
-export function copyDevLabel(label: string): void {
+export function copyDevLabel(label: string): readonly string[] {
   const trimmed = label.trim();
-  if (!trimmed || typeof navigator === 'undefined') return;
+  if (!trimmed || typeof navigator === 'undefined') return devLabelCopyBuffer;
   devLabelCopyBuffer.push(trimmed);
   void navigator.clipboard.writeText(devLabelCopyBuffer.join('\n'));
+  return devLabelCopyBuffer;
 }
 
 export function resetDevLabelCopyBuffer(): void {
@@ -30,6 +31,10 @@ export function resetDevLabelCopyBuffer(): void {
 
 export function devLabelCopyCount(): number {
   return devLabelCopyBuffer.length;
+}
+
+export function getDevLabelCopyStack(): readonly string[] {
+  return devLabelCopyBuffer;
 }
 
 const PLAY_PHASE_LABEL: Record<string, string> = {

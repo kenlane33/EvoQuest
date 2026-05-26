@@ -9,8 +9,8 @@ import { EtymologyCard } from '@/components/etymology/EtymologyCard';
 import { feedbackHeadlineForAttempt } from '@/audio/feedback-phrases';
 import {
   buildFeedbackReadBundle,
+  feedbackAutoReadText,
   feedbackDescReadText,
-  feedbackPageReadText,
 } from '@/audio/feedback-read-text';
 import { getQuizReadText } from '@/audio/quiz-read-text';
 import { canAutoReadAloud } from '@/audio/read-aloud';
@@ -31,6 +31,8 @@ import { useFeedbackAutoRead } from '@/hooks/use-feedback-auto-read';
 import { useFeedbackReadPreload } from '@/hooks/use-feedback-read-preload';
 import { useImmediateFeedbackSpeak } from '@/hooks/use-immediate-feedback-speak';
 import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { calibrationNote, shouldAskConfidence } from '@/engine/calibration';
+import { ConfidencePrompt } from '@/components/play/ConfidencePrompt';
 import { AnswerFeedbackFlash } from '@/components/play/AnswerFeedbackFlash';
 import { PauseModal } from '@/components/play/PauseModal';
 import { getUnitById } from '@/content/catalog';
@@ -45,14 +47,19 @@ import {
   getSafePlayHeading,
   shouldShowPlayEtymology,
 } from '@/lib/quiz-answer-leak';
+import { getQuizPlayFigures } from '@/lib/quiz-figures';
+import { QuizPlayFigures } from '@/components/play/QuizPlayFigures';
 import { useAppStore } from '@/store/app-store';
 import type {
   ActiveSession,
   Attempt,
   Feedback,
+  FillData,
   InnerQuestion,
   KnowledgeUnit,
+  MatchData,
   QuizTemplate,
+  ScenarioData,
   SessionState,
   SpeedRevealData,
 } from '@/types';
@@ -175,9 +182,10 @@ function FillQuestion({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const t = setTimeout(() => inputRef.current?.focus(), 300);
+    if (disabled || done) return;
+    const t = setTimeout(() => inputRef.current?.focus(), 100);
     return () => clearTimeout(t);
-  }, []);
+  }, [disabled, done]);
 
   function submit() {
     if (!val.trim() || done || disabled) return;
@@ -261,12 +269,121 @@ function FillQuestion({
   );
 }
 
+function shuffleOptions<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function MatchQuestion({
+  data,
+  disabled,
+  onAnswer,
+  descText,
+}: {
+  data: MatchData;
+  disabled: boolean;
+  onAnswer: (correct: boolean) => void;
+  descText?: string;
+}) {
+  const options = useMemo(
+    () => shuffleOptions([data.correct, ...data.distractors]),
+    [data.correct, data.distractors],
+  );
+  const [picked, setPicked] = useState<string | null>(null);
+
+  function choose(option: string) {
+    if (disabled || picked !== null) return;
+    setPicked(option);
+    onAnswer(norm(option) === norm(data.correct));
+  }
+
+  const readText = descText || `Match the term: ${data.term}`;
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-start gap-2">
+        <p className="min-w-0 flex-1 text-body-lg font-semibold text-(--text-primary)">
+          {data.term}
+        </p>
+        <SpeakButton slot="desc" text={readText} label="Read question" className="mt-0.5" />
+      </div>
+      <p className="text-meta text-(--text-dim)">Pick the best match.</p>
+      <div className="flex flex-col gap-2">
+        {options.map((opt) => {
+          const isCorrect = picked !== null && norm(opt) === norm(data.correct);
+          const isWrong = picked === opt && !isCorrect;
+          return (
+            <Button
+              key={opt}
+              variant="ghost"
+              fullWidth
+              disabled={disabled || picked !== null}
+              onClick={() => choose(opt)}
+              className={cn(
+                'justify-start rounded-(--r-lg) border px-4 py-3 text-left text-body font-semibold hover:bg-transparent',
+                isCorrect &&
+                  'border-[color-mix(in_oklab,var(--status-correct)_35%,transparent)] bg-[color-mix(in_oklab,var(--status-correct)_15%,transparent)] text-(--status-correct)',
+                isWrong &&
+                  'border-[color-mix(in_oklab,var(--status-wrong)_35%,transparent)] bg-[color-mix(in_oklab,var(--status-wrong)_15%,transparent)] text-(--status-wrong)',
+                picked === null &&
+                  'border-(--border-light) bg-(--bg-card) hover:border-(--border-medium) hover:bg-(--bg-card-hi)',
+              )}
+            >
+              {opt}
+            </Button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ScenarioQuestion({
+  data,
+  disabled,
+  onAnswer,
+  descText,
+}: {
+  data: ScenarioData;
+  disabled: boolean;
+  onAnswer: (correct: boolean) => void;
+  descText?: string;
+}) {
+  const correctIndex = useMemo(() => {
+    const idx = data.options.findIndex((o) => norm(o) === norm(data.answer));
+    return idx >= 0 ? idx : 0;
+  }, [data.answer, data.options]);
+
+  const prompt = `${data.story}\n\n${data.question}`;
+
+  return (
+    <MultipleChoiceQuestion
+      question={{
+        kind: 'multiple-choice',
+        prompt,
+        options: data.options,
+        correctIndex,
+      }}
+      disabled={disabled}
+      onAnswer={onAnswer}
+      descText={descText || prompt}
+    />
+  );
+}
+
 function FeedbackNextButton({
   label,
   onNext,
+  ready = true,
 }: {
   label: string;
   onNext: () => void;
+  /** Pulse green when feedback auto-read has finished; always clickable. */
+  ready?: boolean;
 }) {
   const { stop } = useQuestionSpeak();
 
@@ -274,7 +391,11 @@ function FeedbackNextButton({
     <Button
       variant="secondary"
       fullWidth
-      className="mt-6"
+      className={cn(
+        'mt-6 transition-[border-color,background-color,box-shadow,color] duration-300',
+        ready &&
+          'animate-next-ready-pulse border-[color-mix(in_oklab,var(--status-correct)_55%,var(--border-light))] bg-[color-mix(in_oklab,var(--status-correct)_14%,var(--bg-card-hi))] text-(--status-correct) hover:border-(--status-correct) hover:bg-[color-mix(in_oklab,var(--status-correct)_22%,var(--bg-card-hi))]',
+      )}
       onClick={() => {
         stop();
         onNext();
@@ -335,21 +456,24 @@ function ContinueCountdownButton({
 function TemplateRenderer({
   data,
   answered,
+  blocked,
   onAnswer,
   descText,
   onHintShown,
 }: {
   data: SpeedRevealData;
   answered: boolean;
+  blocked?: boolean;
   onAnswer: (correct: boolean) => void;
   descText?: string;
   onHintShown?: (shown: boolean) => void;
 }) {
+  const disabled = answered || Boolean(blocked);
   if (data.question.kind === 'multiple-choice') {
     return (
       <MultipleChoiceQuestion
         question={data.question}
-        disabled={answered}
+        disabled={disabled}
         onAnswer={onAnswer}
         descText={descText}
       />
@@ -358,7 +482,7 @@ function TemplateRenderer({
   return (
     <FillQuestion
       question={data.question}
-      disabled={answered}
+      disabled={disabled}
       onAnswer={onAnswer}
       descText={descText}
       onHintShown={onHintShown}
@@ -373,10 +497,13 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
   const setSessionState = useAppStore((s) => s.setSessionState);
   const updateUnitProgress = useAppStore((s) => s.updateUnitProgress);
   const addJourney = useAppStore((s) => s.addJourney);
+  const appendCalibration = useAppStore((s) => s.appendCalibration);
   const clearSession = useAppStore((s) => s.clearSession);
 
   const [answered, setAnswered] = useState(false);
   const [pendingCorrect, setPendingCorrect] = useState<boolean | null>(null);
+  const [confidenceValue, setConfidenceValue] = useState<number | null>(null);
+  const [confidenceCommitted, setConfidenceCommitted] = useState(false);
   const [elapsedSec, setElapsedSec] = useState(0);
   const [fillHintShown, setFillHintShown] = useState(false);
   const [mnemonicPhase, setMnemonicPhase] = useState<'waiting' | 'revealing' | 'done'>('waiting');
@@ -427,16 +554,29 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       setPendingCorrect(null);
       setFillHintShown(false);
       setMnemonicPhase('waiting');
+      setConfidenceValue(null);
+      setConfidenceCommitted(false);
     }
   }, [sessionState.phase, session?.currentIndex]);
+
+  const askConfidence = useMemo(() => {
+    if (!session) return false;
+    return shouldAskConfidence(
+      settings.practice.confidenceFrequency,
+      session.currentIndex,
+    );
+  }, [session, settings.practice.confidenceFrequency]);
+
+  const confidenceReady = !askConfidence || confidenceCommitted;
 
   const handleAnswerSelect = useCallback(
     (correct: boolean) => {
       if (!session || sessionState.phase !== 'play' || pendingCorrect !== null) return;
+      if (!confidenceReady) return;
       setAnswered(true);
       setPendingCorrect(correct);
     },
-    [session, sessionState.phase, pendingCorrect],
+    [session, sessionState.phase, pendingCorrect, confidenceReady],
   );
 
   const handleContinueToFeedback = useCallback(() => {
@@ -454,7 +594,18 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       templateId: item.templateId,
       correct,
       ms: Date.now() - startRef.current,
+      confidence: confidenceValue ?? undefined,
     };
+
+    if (confidenceValue != null) {
+      appendCalibration({
+        attemptId: attempt.attemptId,
+        unitId: item.unitId,
+        templateKind: item.templateKind,
+        confidence: confidenceValue,
+        correct,
+      });
+    }
 
     const nextStreak = correct ? session.currentStreak + 1 : 0;
     const nextSession: ActiveSession = {
@@ -479,11 +630,22 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       correct,
       unitId: item.unitId,
       templateKind: item.templateKind,
-      explanation: unit?.teach.poweredIdea,
+      explanation:
+        confidenceValue != null
+          ? `${unit?.teach.poweredIdea ?? ''} ${calibrationNote(confidenceValue, correct)}`.trim()
+          : unit?.teach.poweredIdea,
     };
 
     setSessionState({ phase: 'feedback', session: nextSession, feedback });
-  }, [session, sessionState.phase, pendingCorrect, setSessionState, updateUnitProgress]);
+  }, [
+    session,
+    sessionState.phase,
+    pendingCorrect,
+    confidenceValue,
+    setSessionState,
+    updateUnitProgress,
+    appendCalibration,
+  ]);
 
   const goNext = useCallback(() => {
     stopPocketTtsEngine();
@@ -633,6 +795,11 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     return getSafePlayHeading(activeUnit, acceptableAnswers);
   }, [activeUnit, acceptableAnswers]);
 
+  const quizPlayFigures = useMemo(() => {
+    if (!activeUnit || !activeQuiz) return [];
+    return getQuizPlayFigures(activeUnit, activeQuiz);
+  }, [activeUnit, activeQuiz]);
+
   const showPlayEtymology = useMemo(() => {
     if (!activePlayCtx) return false;
     return shouldShowPlayEtymology(activePlayCtx.root, acceptableAnswers, answered);
@@ -640,8 +807,8 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
 
   const fillHintText = useMemo(() => {
     if (!activeQuiz) return undefined;
-    const data = activeQuiz.data as { question?: { hint?: string } };
-    const hint = data.question?.hint;
+    const data = activeQuiz.data as { question?: { hint?: string }; hint?: string };
+    const hint = data.question?.hint ?? data.hint;
     return typeof hint === 'string' && hint.trim() ? hint.trim() : undefined;
   }, [activeQuiz]);
 
@@ -748,7 +915,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
 
     if (sessionState.phase === 'feedback') {
       if (feedbackReadBundle) {
-        return feedbackPageReadText(feedbackReadBundle);
+        return feedbackAutoReadText(feedbackReadBundle);
       }
       return '';
     }
@@ -793,10 +960,15 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     return `${sessionState.phase}:${session.currentIndex}:${session.journeyId}`;
   }, [sessionState.phase, session]);
 
-  useFeedbackAutoRead(
+  const feedbackAutoReadDone = useFeedbackAutoRead(
     feedbackReadBundle,
     sessionState.phase === 'feedback' ? pageReadAutoKey : null,
   );
+
+  const feedbackNextReady =
+    !canAutoReadAloud(settings.reading) ||
+    !feedbackDescText ||
+    feedbackAutoReadDone;
 
   const briefAutoAdvance = canAutoReadAloud(settings.reading);
 
@@ -869,7 +1041,6 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     );
   }
 
-  const item = activeItem!;
   const unit = activeUnit!;
   const quiz = activeQuiz;
   const playCtx = activePlayCtx;
@@ -983,14 +1154,54 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
               </div>
             ) : null}
 
-            <div {...devMark('q.body')} className="mt-6">
+            {askConfidence && !confidenceCommitted ? (
+              <div className="mb-6">
+                <ConfidencePrompt
+                  onCommit={(value) => {
+                    setConfidenceValue(value);
+                    setConfidenceCommitted(true);
+                  }}
+                />
+              </div>
+            ) : null}
+
+            <div {...devMark('q.body')} className={cn('mt-6', !confidenceReady && 'pointer-events-none opacity-40')}>
               {quiz.kind === 'speed-reveal-mnemonic' ? (
-                <TemplateRenderer
-                  data={quiz.data}
-                  answered={answered}
+                <>
+                  <QuizPlayFigures figures={quizPlayFigures} />
+                  <TemplateRenderer
+                    data={quiz.data}
+                    answered={answered}
+                    blocked={!confidenceReady}
+                    onAnswer={handleAnswerSelect}
+                    descText={questionDescText}
+                    onHintShown={setFillHintShown}
+                  />
+                </>
+              ) : quiz.kind === 'fill' ? (
+                <>
+                  <QuizPlayFigures figures={quizPlayFigures} />
+                  <FillQuestion
+                    question={{ kind: 'fill', ...(quiz.data as FillData) }}
+                    disabled={answered || !confidenceReady}
+                    onAnswer={handleAnswerSelect}
+                    descText={questionDescText}
+                    onHintShown={setFillHintShown}
+                  />
+                </>
+              ) : quiz.kind === 'match' ? (
+                <MatchQuestion
+                  data={quiz.data as MatchData}
+                  disabled={answered || !confidenceReady}
                   onAnswer={handleAnswerSelect}
                   descText={questionDescText}
-                  onHintShown={setFillHintShown}
+                />
+              ) : quiz.kind === 'scenario' ? (
+                <ScenarioQuestion
+                  data={quiz.data as ScenarioData}
+                  disabled={answered || !confidenceReady}
+                  onAnswer={handleAnswerSelect}
+                  descText={questionDescText}
                 />
               ) : templateReg ? (
                 <>
@@ -1154,6 +1365,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
               <FeedbackNextButton
               label={session.currentIndex + 1 >= total ? 'SEE RESULTS →' : 'NEXT →'}
               onNext={goNext}
+              ready={feedbackNextReady}
               />
             </div>
           </div>

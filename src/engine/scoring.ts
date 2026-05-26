@@ -50,9 +50,12 @@ export function updateUnitProgress(
       ...base.lastFiveOutcomes,
       { correct: attempt.correct, ms: attempt.ms, templateKind: attempt.templateKind },
     ].slice(-5),
-    templatesEncountered: base.templatesEncountered.includes(attempt.templateKind)
-      ? base.templatesEncountered
-      : [...base.templatesEncountered, attempt.templateKind],
+    templatesEncountered: (() => {
+      const key = attempt.templateId ?? attempt.templateKind;
+      return base.templatesEncountered.includes(key)
+        ? base.templatesEncountered
+        : [...base.templatesEncountered, key];
+    })(),
   };
 
   return { ...next, tier: computeTier(next) };

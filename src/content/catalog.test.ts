@@ -32,6 +32,22 @@ describe('content catalog', () => {
     expect(unit?.teach.figures?.length).toBeGreaterThan(0);
   });
 
+  it('groups Biology EOC tiles first with sub-wings', () => {
+    expect(WING_GROUPS[0]?.wingId).toBe('biochem');
+    expect(WING_GROUPS[0]?.title).toBe('Biology EOC Review');
+    expect(WING_GROUPS[0]?.subgroups?.length).toBe(7);
+    expect(WING_GROUPS[0]?.tiles.length).toBe(35);
+  });
+
+  it('builds full EOC branch queue from module id', () => {
+    const queue = buildGameQueue(
+      { kind: 'branch', nodeId: 'mod.biochemistry.bundled' },
+      EMPTY_USER_STATE,
+    );
+    expect(queue).toHaveLength(153);
+    expect(queue.every((item) => item.unitId.startsWith('biochem.'))).toBe(true);
+  });
+
   it('builds game queue through catalog helper', () => {
     const queue = buildGameQueue({ kind: 'quick-mix', length: 4 }, EMPTY_USER_STATE);
     expect(queue).toHaveLength(4);

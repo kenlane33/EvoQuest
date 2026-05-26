@@ -4,6 +4,7 @@
  */
 
 import { POCKET_TTS_DEFAULT_LANGUAGE } from '@/audio/pocket-tts';
+import { ttsMark } from '@/audio/pocket-tts-timeline';
 
 export const POCKET_TTS_BUNDLE_BASE =
   'https://huggingface.co/spaces/KevinAHM/pocket-tts-web/resolve/main/onnx';
@@ -91,6 +92,7 @@ export async function prefetchPocketTtsBundle(
 ): Promise<void> {
   if (typeof window === 'undefined' || !window.crossOriginIsolated) return;
 
+  ttsMark('prefetch-start', { language });
   const metadataUrl = pocketTtsBundleAssetUrl(language, 'bundle.json');
   await cachePocketTtsAsset(metadataUrl);
 
@@ -103,4 +105,5 @@ export async function prefetchPocketTtsBundle(
   const urls = pocketTtsBundleAssetUrls(language, metadata);
 
   await Promise.all(urls.map((url) => cachePocketTtsAsset(url)));
+  ttsMark('prefetch-done', { language, assets: urls.length });
 }

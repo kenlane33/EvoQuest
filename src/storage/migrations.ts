@@ -5,6 +5,7 @@ import {
   type StorageKey,
 } from '@/storage/keys';
 import { POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
+import { HINT_COUNTDOWN_MS, HINT_REVEAL_MS } from '@/types/schemas';
 
 export type Migration<From = unknown, To = unknown> = {
   fromVersion: number;
@@ -88,6 +89,50 @@ const settingsV4ToV5: Migration = {
   describe: 'Fold dyslexiaFont toggle into bodyFont opendyslexic option',
 };
 
+const settingsV5ToV6: Migration = {
+  fromVersion: 5,
+  toVersion: 6,
+  forward: (old) => {
+    const prev = old as Record<string, unknown>;
+    const reveals = (prev.reveals ?? {}) as Record<string, unknown>;
+    const raw = reveals.revealMs;
+    const revealMs =
+      typeof raw === 'number'
+        ? Math.min(HINT_REVEAL_MS.max, Math.max(HINT_REVEAL_MS.min, raw))
+        : HINT_REVEAL_MS.default;
+    return {
+      ...prev,
+      reveals: {
+        ...reveals,
+        revealMs,
+      },
+    };
+  },
+  describe: 'Clamp reveals.revealMs to supported 4–60s range',
+};
+
+const settingsV6ToV7: Migration = {
+  fromVersion: 6,
+  toVersion: 7,
+  forward: (old) => {
+    const prev = old as Record<string, unknown>;
+    const reveals = (prev.reveals ?? {}) as Record<string, unknown>;
+    const raw = reveals.countdownMs;
+    const countdownMs =
+      typeof raw === 'number'
+        ? Math.min(HINT_COUNTDOWN_MS.max, Math.max(HINT_COUNTDOWN_MS.min, raw))
+        : HINT_COUNTDOWN_MS.default;
+    return {
+      ...prev,
+      reveals: {
+        ...reveals,
+        countdownMs,
+      },
+    };
+  },
+  describe: 'Clamp reveals.countdownMs to supported 2–60s range',
+};
+
 /** Append-only migration chains — one per storage key. */
 export const MIGRATIONS: Record<StorageKey, MigrationChain> = {
   ...Object.fromEntries(
@@ -98,6 +143,8 @@ export const MIGRATIONS: Record<StorageKey, MigrationChain> = {
     settingsV2ToV3,
     settingsV3ToV4,
     settingsV4ToV5,
+    settingsV5ToV6,
+    settingsV6ToV7,
   ],
 } as Record<StorageKey, MigrationChain>;
 

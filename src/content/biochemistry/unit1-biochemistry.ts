@@ -42,17 +42,47 @@ Carbohydrates have a 1:2:1 ratio of C:H:O (CHâ‚‚O). Proteins are polymers of ami
               },
               quizzes: [
                 fillQuiz(
+                  'quiz.biochem.macromols.monomer-carb',
+                  'The monomer of carbohydrates is a _____.',
+                  ['monosaccharide', 'monosaccharides'],
+                ),
+                fillQuiz(
                   'quiz.biochem.macromols.monomer-protein',
                   'Proteins are polymers of _____.',
                   ['amino acids', 'amino acid'],
                   'Monomer of proteins',
                   true,
                 ),
+                fillQuiz(
+                  'quiz.biochem.macromols.monomer-lipid',
+                  'Lipids are built from fatty acids and _____.',
+                  ['glycerol'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.macromols.monomer-nucleic',
+                  'The monomer of nucleic acids is a _____.',
+                  ['nucleotide', 'nucleotides'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.macromols.elements-protein',
+                  'Proteins contain carbon, hydrogen, oxygen, and _____.',
+                  ['nitrogen', 'n'],
+                ),
                 mcQuiz(
                   'quiz.biochem.macromols.energy-carb',
                   'Which macromolecule is the primary short-term energy source?',
                   ['Carbohydrates', 'Proteins', 'Lipids', 'Nucleic acids'],
                   0,
+                ),
+                fillQuiz(
+                  'quiz.biochem.macromols.function-lipid',
+                  'Lipids are used for long-term _____ storage.',
+                  ['energy'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.macromols.function-nucleic',
+                  'Nucleic acids store and transmit _____.',
+                  ['genetic information', 'genetic info', 'genetic'],
                 ),
               ],
               achievement: ach(
@@ -97,6 +127,56 @@ Which codes for amino acids? The **sequence of nucleotides in mRNA** (codons) â€
               },
               quizzes: [
                 fillQuiz(
+                  'quiz.biochem.examples.glucose',
+                  'Glucose is a _____.',
+                  ['carbohydrate', 'carb', 'carbohydrates'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.insulin',
+                  'Insulin is an example of a _____.',
+                  ['protein', 'proteins'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.phospholipids',
+                  'Phospholipids are _____.',
+                  ['lipids', 'lipid'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.dna-class',
+                  'DNA is a _____.',
+                  ['nucleic acid', 'nucleic acids'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.cellulose',
+                  'Cellulose is a _____.',
+                  ['carbohydrate', 'carb', 'carbohydrates'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.enzymes-class',
+                  'Enzymes are _____.',
+                  ['proteins', 'protein'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.steroids',
+                  'Steroids are _____.',
+                  ['lipids', 'lipid'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.rna',
+                  'RNA is a _____.',
+                  ['nucleic acid', 'nucleic acids'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.hemoglobin',
+                  'Hemoglobin is a _____.',
+                  ['protein', 'proteins'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.examples.glycogen',
+                  'Glycogen is a _____.',
+                  ['carbohydrate', 'carb', 'carbohydrates'],
+                ),
+                fillQuiz(
                   'quiz.biochem.examples.starch',
                   'Starch is a _____.',
                   ['carbohydrate', 'carb', 'carbohydrates'],
@@ -105,7 +185,7 @@ Which codes for amino acids? The **sequence of nucleotides in mRNA** (codons) â€
                 ),
                 mcQuiz(
                   'quiz.biochem.examples.codon',
-                  'Which codes for specific amino acids?',
+                  'Which of the following codes for specific amino acids?',
                   [
                     'Sequence of nucleotides in mRNA',
                     'Nitrogenous bases alone',
@@ -157,6 +237,13 @@ Which codes for amino acids? The **sequence of nucleotides in mRNA** (codons) â€
                 poweredIdea: 'Enzymes are protein catalysts with shape-specific active sites.',
               },
               quizzes: [
+                fillQuiz(
+                  'quiz.biochem.enzymes.what-is',
+                  'An enzyme is a _____ that acts as a biological catalyst.',
+                  ['protein', 'proteins'],
+                  'Speeds up chemical reactions',
+                  true,
+                ),
                 srFill(
                   'quiz.biochem.enzymes.definition',
                   {
@@ -168,9 +255,44 @@ Which codes for amino acids? The **sequence of nucleotides in mRNA** (codons) â€
                   true,
                 ),
                 fillQuiz(
+                  'quiz.biochem.enzymes.lock-key',
+                  'The lock and key model explains enzyme _____.',
+                  ['specificity', 'specific'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.catalyst',
+                  'Enzymes are biological _____ â€” they speed up reactions without being consumed.',
+                  ['catalysts', 'catalyst'],
+                ),
+                fillQuiz(
                   'quiz.biochem.enzymes.lactase',
                   'Lactase breaks down _____.',
                   ['lactose'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.lactase-function',
+                  'Lactase allows _____ to be absorbed into the blood.',
+                  ['lactose'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.pepsin',
+                  'Pepsin breaks down _____.',
+                  ['proteins', 'protein'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.pepsin-function',
+                  'Pepsin breaks large proteins into smaller _____.',
+                  ['peptides', 'peptide chains', 'peptide'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.amylase',
+                  'Salivary amylase breaks down _____.',
+                  ['starch', 'complex carbs', 'complex carbohydrates', 'carbohydrates'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.amylase-function',
+                  'Salivary amylase converts starch into smaller _____.',
+                  ['carbohydrates', 'carbs', 'carbohydrate'],
                 ),
               ],
               achievement: ach(
@@ -218,9 +340,16 @@ On the graph above, the optimum temperature is approximately **45Â°C**. At very 
                 ),
                 fillQuiz(
                   'quiz.biochem.enzymes.optimum',
-                  'From the graph, the optimum temperature is about _____Â°C.',
+                  'Based on the graph, the optimum temperature is about _____Â°C.',
                   ['45', 'forty-five'],
                   'Peak of the curve',
+                  true,
+                ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.denatured',
+                  'At what temperature is this enzyme denatured? About _____Â°C.',
+                  ['50', 'fifty', '55', 'sixty', '60'],
+                  'Where activity drops sharply on the right',
                 ),
               ],
               achievement: ach(

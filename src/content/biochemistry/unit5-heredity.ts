@@ -1,6 +1,6 @@
 import type { Wing } from '@/types';
 import { unit } from '@/content/helpers';
-import { FIG, ach, fillQuiz, mcQuiz, punnettQuiz, pedigreeQuiz } from '@/content/biochemistry/quiz-helpers';
+import { FIG, ach, fillQuiz, mcQuiz, punnettQuiz, pedigreeQuiz, scenarioQuiz } from '@/content/biochemistry/quiz-helpers';
 
 export const heredityWing: Wing = {
   id: 'biochem.heredity',
@@ -72,6 +72,22 @@ export const heredityWing: Wing = {
                   'AB blood type is an example of _____.',
                   ['Codominance', 'Incomplete dominance', 'Sex linkage', 'Polygenic inheritance'],
                   0,
+                ),
+                mcQuiz(
+                  'quiz.biochem.heredity.incomplete',
+                  'Pink flowers from red × white parents show _____.',
+                  ['Incomplete dominance', 'Codominance', 'Sex linkage', 'Multiple alleles only'],
+                  0,
+                ),
+                scenarioQuiz(
+                  'quiz.biochem.heredity.pku-genetics',
+                  {
+                    story: 'PKU (phenylketonuria) is caused by a recessive allele — diet must limit phenylalanine.',
+                    question: 'PKU is primarily caused by:',
+                    answer: 'Genetics',
+                    options: ['Genetics', 'Environment only', 'Neither', 'Both equally'],
+                    explanation: 'PKU is inherited genetically, though diet manages symptoms.',
+                  },
                 ),
                 pedigreeQuiz(
                   'quiz.biochem.heredity.cf-pedigree',
@@ -158,6 +174,12 @@ Compare hemoglobin amino acid sequences similarly — fewer differences = closer
                   'Smaller DNA fragments travel _____ on a gel.',
                   ['farther', 'further', 'farther down'],
                 ),
+                mcQuiz(
+                  'quiz.biochem.gel.deer-related',
+                  'On the deer gel, which species is most closely related to the common ancestor (species 1)?',
+                  ['Species 3', 'Species 2', 'Species 4', 'The ladder'],
+                  0,
+                ),
               ],
               achievement: ach(
                 'biochem.heredity.gel-electrophoresis',
@@ -197,6 +219,12 @@ When the blood stain lane matches a suspect's band pattern exactly, that suspect
                   'Matching band patterns on a gel indicate matching _____.',
                   ['dna', 'genetic material'],
                   true,
+                ),
+                mcQuiz(
+                  'quiz.biochem.fingerprint.suspect',
+                  'Whose DNA matches the crime scene blood stain?',
+                  ['Suspect B', 'Suspect A', 'The victim', 'None of them'],
+                  0,
                 ),
               ],
               achievement: ach(
@@ -246,6 +274,16 @@ When the blood stain lane matches a suspect's band pattern exactly, that suspect
                   'quiz.biochem.biotech.insulin',
                   'Bacteria have been engineered to produce human _____.',
                   ['insulin'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.biotech.restriction',
+                  '_____ enzymes cut DNA at specific sequences.',
+                  ['restriction'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.biotech.transgenic',
+                  'A _____ organism contains genes from another species.',
+                  ['transgenic'],
                 ),
               ],
               achievement: ach(

@@ -5,6 +5,7 @@ import { ChevronLeft, Map } from 'lucide-react';
 import { AchievementGrid } from '@/components/achievements/AchievementGrid';
 import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';
+import { CalibrationPanel } from '@/components/journeys/CalibrationPanel';
 import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';
@@ -15,6 +16,7 @@ export const Route = createFileRoute('/journeys/')({
 
 function JourneysPage() {
   const journeys = useAppStore((s) => s.journeys);
+  const calibrationRecords = useAppStore((s) => s.calibrationRecords);
   const unitProgress = useAppStore((s) => s.unitProgress);
   const embarkNewQuest = useAppStore((s) => s.embarkNewQuest);
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ function JourneysPage() {
           .slice(0, 8)
           .map(
             (j) =>
-              `${j.finalScore.correct} of ${j.finalScore.total} correct, best streak ${j.bestStreak}`,
+              `${j.finalScore.correct} of ${j.finalScore.total} correct, best streak ${j.finalScore.bestStreak}`,
           )
           .join('. ');
 
@@ -102,6 +104,8 @@ function JourneysPage() {
           </ul>
         )}
       </section>
+
+      <CalibrationPanel records={calibrationRecords} />
 
       <section {...devMark('map')}>
         <h2 className="mb-4 text-headline-md font-bold text-(--text-primary)">

@@ -431,6 +431,71 @@ export const CounterfactualLabDataSchema = z.object({
   mnemonic: z.string().max(140).optional(),
 });
 
+export const ProcedureBlockSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  icon: z.string().optional(),
+  narration: z.string(),
+});
+
+export const ProcedureBuilderDataSchema = z.object({
+  goal: z.string(),
+  initialState: z.string(),
+  targetState: z.string(),
+  blocks: z.array(ProcedureBlockSchema).min(3).max(8),
+  canonicalOrder: z.array(z.string()).min(3),
+  alternateOrders: z.array(z.array(z.string())).optional(),
+  poweredIdea: z.string(),
+  root: z.string().optional(),
+  mnemonic: z.string().max(140).optional(),
+});
+
+export const ConceptNodeSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  icon: z.string().optional(),
+});
+
+export const EdgeImportanceSchema = z.enum(['critical', 'standard', 'nice-to-have']);
+
+export const CanonicalEdgeSchema = z.object({
+  from: z.string(),
+  to: z.string(),
+  label: z.string(),
+  importance: EdgeImportanceSchema,
+  reasonIfMissing: z.string(),
+});
+
+export const ConceptMapBuilderDataSchema = z.object({
+  focalConcept: z.string(),
+  nodes: z.array(ConceptNodeSchema).min(3).max(12),
+  decoyNodes: z.array(ConceptNodeSchema).optional(),
+  canonicalEdges: z.array(CanonicalEdgeSchema).min(2),
+  allowedLabels: z.array(z.string()).min(2),
+  poweredIdea: z.string(),
+  root: z.string().optional(),
+  mnemonic: z.string().max(140).optional(),
+});
+
+export const PalaceTotemSchema = z.object({
+  id: z.string(),
+  x: z.number().int().min(0),
+  y: z.number().int().min(0),
+  icon: z.string(),
+  label: z.string(),
+  question: InnerQuestionSchema,
+});
+
+export const PalaceWalkDataSchema = z.object({
+  roomTitle: z.string(),
+  layout: z.array(z.array(z.number().int().min(0).max(1))).min(3),
+  spawn: z.object({ x: z.number().int().min(0), y: z.number().int().min(0) }),
+  totems: z.array(PalaceTotemSchema).min(2).max(10),
+  poweredIdea: z.string(),
+  root: z.string().optional(),
+  mnemonic: z.string().max(140).optional(),
+});
+
 export const QuizTemplateSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('speed-reveal-mnemonic'),
@@ -527,6 +592,24 @@ export const QuizTemplateSchema = z.discriminatedUnion('kind', [
     id: z.string(),
     preferred: z.boolean().optional(),
     data: CounterfactualLabDataSchema,
+  }),
+  z.object({
+    kind: z.literal('procedure-builder'),
+    id: z.string(),
+    preferred: z.boolean().optional(),
+    data: ProcedureBuilderDataSchema,
+  }),
+  z.object({
+    kind: z.literal('concept-map-builder'),
+    id: z.string(),
+    preferred: z.boolean().optional(),
+    data: ConceptMapBuilderDataSchema,
+  }),
+  z.object({
+    kind: z.literal('palace-walk'),
+    id: z.string(),
+    preferred: z.boolean().optional(),
+    data: PalaceWalkDataSchema,
   }),
 ]);
 
@@ -691,6 +774,30 @@ export const MorphemeProgressSchema = z.object({
 
 // ── Settings & related state ──────────────────────────────────
 
+export const HINT_REVEAL_SEC = {
+  min: 4,
+  max: 60,
+  default: 20,
+} as const;
+
+export const HINT_REVEAL_MS = {
+  min: HINT_REVEAL_SEC.min * 1000,
+  max: HINT_REVEAL_SEC.max * 1000,
+  default: HINT_REVEAL_SEC.default * 1000,
+} as const;
+
+export const HINT_COUNTDOWN_SEC = {
+  min: 2,
+  max: 60,
+  default: 8,
+} as const;
+
+export const HINT_COUNTDOWN_MS = {
+  min: HINT_COUNTDOWN_SEC.min * 1000,
+  max: HINT_COUNTDOWN_SEC.max * 1000,
+  default: HINT_COUNTDOWN_SEC.default * 1000,
+} as const;
+
 export const SettingsSchema = z.object({
   appearance: z.object({
     contrast: z.enum(['normal', 'high']),
@@ -725,8 +832,16 @@ export const SettingsSchema = z.object({
     serverUrl: z.string(),
   }),
   reveals: z.object({
-    countdownMs: z.number().int().positive(),
-    revealMs: z.number().int().positive(),
+    countdownMs: z
+      .number()
+      .int()
+      .min(HINT_COUNTDOWN_MS.min)
+      .max(HINT_COUNTDOWN_MS.max),
+    revealMs: z
+      .number()
+      .int()
+      .min(HINT_REVEAL_MS.min)
+      .max(HINT_REVEAL_MS.max),
   }),
   practice: z.object({
     confidenceFrequency: z.enum(['every', 'every-3', 'never']),
@@ -852,6 +967,14 @@ export type InheritancePattern = z.infer<typeof InheritancePatternSchema>;
 export type PedigreeDetectiveData = z.infer<typeof PedigreeDetectiveDataSchema>;
 export type CladogramCrafterData = z.infer<typeof CladogramCrafterDataSchema>;
 export type CounterfactualLabData = z.infer<typeof CounterfactualLabDataSchema>;
+export type ProcedureBlock = z.infer<typeof ProcedureBlockSchema>;
+export type ProcedureBuilderData = z.infer<typeof ProcedureBuilderDataSchema>;
+export type ConceptNode = z.infer<typeof ConceptNodeSchema>;
+export type EdgeImportance = z.infer<typeof EdgeImportanceSchema>;
+export type CanonicalEdge = z.infer<typeof CanonicalEdgeSchema>;
+export type ConceptMapBuilderData = z.infer<typeof ConceptMapBuilderDataSchema>;
+export type PalaceTotem = z.infer<typeof PalaceTotemSchema>;
+export type PalaceWalkData = z.infer<typeof PalaceWalkDataSchema>;
 export type QuizTemplate = z.infer<typeof QuizTemplateSchema>;
 export type KnowledgeUnit = z.infer<typeof KnowledgeUnitSchema>;
 export type Drawer = z.infer<typeof DrawerSchema>;

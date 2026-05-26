@@ -1,6 +1,6 @@
 import type { Wing } from '@/types';
 import { unit } from '@/content/helpers';
-import { FIG, ach, fillQuiz, mcQuiz, cladogramQuiz } from '@/content/biochemistry/quiz-helpers';
+import { FIG, ach, fillQuiz, mcQuiz, cladogramQuiz, matchQuiz } from '@/content/biochemistry/quiz-helpers';
 
 export const evolutionWing: Wing = {
   id: 'biochem.evolution',
@@ -65,6 +65,17 @@ Human and chimpanzee share the most similar sequences — most closely related.`
                   'Forelimbs of mammals with different functions are _____.',
                   ['Homologous structures', 'Vestigial structures', 'Analogous only', 'Embryos'],
                   0,
+                ),
+                mcQuiz(
+                  'quiz.biochem.evidence.hemoglobin',
+                  'Which species shares the most similar hemoglobin fragment with humans?',
+                  ['Chimpanzee', 'Horse', 'Gorilla', 'Zebra'],
+                  0,
+                ),
+                fillQuiz(
+                  'quiz.biochem.evidence.fossil',
+                  'Preserved remains that show change over time are _____ evidence.',
+                  ['fossil', 'fossils', 'the fossil record'],
                 ),
               ],
               achievement: ach(
@@ -156,6 +167,23 @@ Human and chimpanzee share the most similar sequences — most closely related.`
                   'The formation of a new species is called _____.',
                   ['speciation'],
                 ),
+                matchQuiz(
+                  'quiz.biochem.speciation.convergent',
+                  'Convergent evolution',
+                  'Unrelated species evolve similar traits',
+                  ['Formation of a new species', 'One species diversifies into many niches', 'Physical barrier divides a population'],
+                ),
+                matchQuiz(
+                  'quiz.biochem.speciation.adaptive-radiation',
+                  'Adaptive radiation',
+                  'One species diversifies into many niches',
+                  ['Unrelated species evolve similar traits', 'Related species evolve differently', 'Populations can no longer interbreed'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.speciation.isolation-speciation',
+                  'Geographic isolation can lead to _____.',
+                  ['speciation'],
+                ),
               ],
               achievement: ach(
                 'biochem.evolution.speciation',
@@ -204,6 +232,11 @@ Rodents and rabbits share a recent common ancestor on the cladogram — more clo
                   'quiz.biochem.classify.related',
                   'On a cladogram, the most recent shared branch point indicates closest _____.',
                   ['relationship', 'relation'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.classify.rodents-rabbits',
+                  'On the mammal cladogram, rodents and rabbits share a recent common _____ because they branch together.',
+                  ['ancestor'],
                 ),
                 cladogramQuiz(
                   'quiz.biochem.classify.tetrapod-tree',
@@ -298,6 +331,18 @@ Rodents and rabbits share a recent common ancestor on the cladogram — more clo
                   'quiz.biochem.key.certhidea',
                   'A finch with a long slender beak is _____.',
                   ['Certhidea', 'Geospiza', 'Camarhynchus', 'Platyspiza'],
+                  0,
+                ),
+                mcQuiz(
+                  'quiz.biochem.key.camarhynchus',
+                  'Bird Y (curved lower beak) is _____.',
+                  ['Camarhynchus', 'Geospiza', 'Certhidea', 'Platyspiza'],
+                  0,
+                ),
+                mcQuiz(
+                  'quiz.biochem.key.platyspiza',
+                  'Bird Z (flat upper beak edge) is _____.',
+                  ['Platyspiza', 'Camarhynchus', 'Geospiza', 'Certhidea'],
                   0,
                 ),
               ],

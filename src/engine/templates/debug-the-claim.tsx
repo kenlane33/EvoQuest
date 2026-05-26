@@ -121,12 +121,12 @@ function DebugTheClaimRenderer({
                 onClick={() => onTokenClick(token)}
                 disabled={phase === 'done'}
                 className={cn(
-                  'mx-0.5 rounded px-0.5 underline-offset-4 transition-colors',
+                  'mx-0.5 rounded px-0.5 underline-offset-4 transition-colors disabled:cursor-not-allowed',
                   isBug
                     ? 'bg-[color-mix(in_oklab,var(--status-wrong)_20%,transparent)] text-(--status-wrong) underline'
                     : isWrongPick
                       ? 'bg-[color-mix(in_oklab,var(--accent-amber)_15%,transparent)]'
-                      : 'hover:bg-(--bg-card-active) hover:underline',
+                      : 'underline decoration-[color-mix(in_oklab,var(--text-dim)_45%,transparent)] hover:bg-(--bg-card-active) hover:decoration-(--text-primary)',
                 )}
               >
                 {token.text}

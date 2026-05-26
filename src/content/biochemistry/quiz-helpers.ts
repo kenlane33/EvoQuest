@@ -1,6 +1,7 @@
 import type {
   BeTheTurtleData,
   CladogramCrafterData,
+  ConceptMapBuilderData,
   CounterfactualLabData,
   DebugTheClaimData,
   EtymologyPuppetData,
@@ -8,11 +9,14 @@ import type {
   InnerQuestion,
   MicroworldSandboxData,
   MutationLabData,
+  PalaceWalkData,
   PedigreeDetectiveData,
   PredictRunReflectData,
+  ProcedureBuilderData,
   PunnettBuilderData,
   QuizTemplate,
   RecipeSequencerData,
+  ScenarioData,
 } from '@/types';
 
 export const FIG = '/content/biochemistry/figures';
@@ -33,6 +37,29 @@ export function fillQuiz(
     preferred: isPreferred,
     data: { prompt, acceptable, hint },
   };
+}
+
+export function matchQuiz(
+  id: string,
+  term: string,
+  correct: string,
+  distractors: string[],
+  preferred?: boolean,
+): QuizTemplate {
+  return {
+    kind: 'match',
+    id,
+    preferred,
+    data: { term, correct, distractors },
+  };
+}
+
+export function scenarioQuiz(
+  id: string,
+  data: ScenarioData,
+  preferred?: boolean,
+): QuizTemplate {
+  return { kind: 'scenario', id, preferred, data };
 }
 
 export function mcQuiz(
@@ -177,6 +204,30 @@ export function counterfactualQuiz(
   preferred?: boolean,
 ): QuizTemplate {
   return { kind: 'counterfactual-lab', id, preferred, data };
+}
+
+export function procedureQuiz(
+  id: string,
+  data: ProcedureBuilderData,
+  preferred?: boolean,
+): QuizTemplate {
+  return { kind: 'procedure-builder', id, preferred, data };
+}
+
+export function conceptMapQuiz(
+  id: string,
+  data: ConceptMapBuilderData,
+  preferred?: boolean,
+): QuizTemplate {
+  return { kind: 'concept-map-builder', id, preferred, data };
+}
+
+export function palaceWalkQuiz(
+  id: string,
+  data: PalaceWalkData,
+  preferred?: boolean,
+): QuizTemplate {
+  return { kind: 'palace-walk', id, preferred, data };
 }
 
 export function ach(id: string, emoji: string, shortLabel: string, longLabel: string, flavor: string) {

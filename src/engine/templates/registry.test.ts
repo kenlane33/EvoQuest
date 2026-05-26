@@ -7,11 +7,14 @@ const NEW_KINDS = [
   'pedigree-detective',
   'cladogram-crafter',
   'counterfactual-lab',
+  'procedure-builder',
+  'concept-map-builder',
+  'palace-walk',
 ] as const;
 
 describe('template registry', () => {
-  it('registers 13 interactive template kinds', () => {
-    expect(Object.keys(REGISTRY).sort()).toHaveLength(13);
+  it('registers 16 interactive template kinds', () => {
+    expect(Object.keys(REGISTRY).sort()).toHaveLength(16);
   });
 
   it.each(NEW_KINDS)('validates exemplar for %s', (kind) => {

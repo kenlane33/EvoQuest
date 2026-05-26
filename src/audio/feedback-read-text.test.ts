@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildFeedbackReadBundle,
+  feedbackAutoReadText,
   feedbackDescReadText,
   feedbackPageReadText,
 } from '@/audio/feedback-read-text';
@@ -34,10 +35,15 @@ describe('buildFeedbackReadBundle', () => {
   });
 
   it('joins slots for page and desc read text', () => {
-    const bundle = buildFeedbackReadBundle('Yes!', 'Short idea.', teach, null);
+    const bundle = buildFeedbackReadBundle('Yes!', 'Short idea.', teach, {
+      root: 'Greek: endo symbiosis',
+      mnemonic: 'ENDO=INSIDE.',
+    });
     expect(feedbackDescReadText(bundle)).toContain('Short idea.');
     expect(feedbackDescReadText(bundle)).toContain('Acquired Traits');
-    expect(feedbackPageReadText(bundle)).toContain('Yes!');
-    expect(feedbackPageReadText(bundle)).toContain('Short idea.');
+    expect(feedbackAutoReadText(bundle)).toContain('Yes!');
+    expect(feedbackAutoReadText(bundle)).toContain('Short idea.');
+    expect(feedbackAutoReadText(bundle)).not.toContain('endo symbiosis');
+    expect(feedbackPageReadText(bundle)).toContain('endo symbiosis');
   });
 });

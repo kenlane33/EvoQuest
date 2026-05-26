@@ -35,5 +35,20 @@ export function getQuizReadText(quiz: QuizTemplate): string {
   if (typeof data.headline === 'string' && data.headline.trim()) {
     return data.headline.trim();
   }
+  if (typeof data.term === 'string' && data.term.trim()) {
+    return `Match: ${data.term.trim()}`;
+  }
+  if (typeof data.story === 'string' && typeof data.question === 'string') {
+    return `${data.story.trim()} ${normalizePromptForSpeech(data.question.trim())}`;
+  }
+  if (typeof data.goal === 'string' && data.goal.trim()) {
+    return data.goal.trim();
+  }
+  if (typeof data.focalConcept === 'string' && data.focalConcept.trim()) {
+    return `Concept map: ${data.focalConcept.trim()}`;
+  }
+  if (typeof data.roomTitle === 'string' && data.roomTitle.trim()) {
+    return data.roomTitle.trim();
+  }
   return '';
 }

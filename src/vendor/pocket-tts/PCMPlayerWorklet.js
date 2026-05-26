@@ -316,7 +316,6 @@ export class PCMPlayerWorklet extends EventEmitter {
             break;
 
           case 'playback-started':
-            console.log(`[MAIN THREAD] Received playback-started at performance.now=${performance.now().toFixed(2)}ms, audioContext.currentTime=${this.audioContext.currentTime.toFixed(3)}s, worklet reported audioTime=${e.data.audioTime}s`);
             this.emit('firstPlayback', {
               startTime: this.audioContext.currentTime,
               bufferedSamples: e.data.buffered

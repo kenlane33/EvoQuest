@@ -18,7 +18,7 @@ type PreloadTarget = {
   playCtx: { root: string; mnemonic?: string } | null;
 } | null;
 
-/** Pre-synthesize feedback slots while the player answers (headline + teach + etymology). */
+/** Pre-synthesize feedback slots while the player answers (headline + teach). */
 export function useFeedbackReadPreload(target: PreloadTarget, delayMs = 600) {
   const reading = useAppStore((s) => s.settings.reading);
   const voice = reading.voice;
@@ -51,9 +51,6 @@ export function useFeedbackReadPreload(target: PreloadTarget, delayMs = 600) {
       preloadPocketTtsText(correct, voice);
       preloadPocketTtsText(wrong, voice);
       preloadPocketTtsText(desc, voice);
-      if (bodyBundle.sidebar.trim()) {
-        preloadPocketTtsText(bodyBundle.sidebar, voice);
-      }
     };
 
     const timer = window.setTimeout(run, delayMs);

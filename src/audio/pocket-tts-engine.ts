@@ -10,6 +10,13 @@ import {
   prefetchPocketTtsBundle,
 } from '@/audio/pocket-tts-model-cache';
 import { prepareTextForSpeech } from '@/audio/speech-substitutions';
+import {
+  ttsLogReadySummary,
+  ttsMark,
+  ttsMeasure,
+  ttsTimelineEnabled,
+  ttsWorkerMark,
+} from '@/audio/pocket-tts-timeline';
 import { PCMPlayerWorklet } from '@/vendor/pocket-tts/PCMPlayerWorklet.js';
 
 const SAMPLE_RATE = 24_000;
@@ -27,6 +34,10 @@ type WorkerMessage = {
   type: string;
   error?: string;
   data?: Float32Array;
+  label?: string;
+  sinceOrigin?: number;
+  sincePrev?: number;
+  detail?: Record<string, unknown>;
 };
 
 type PendingSpeak = {
@@ -71,6 +82,9 @@ export class PocketTtsEngine {
   private status: PocketTtsEngineStatus = 'uninitialized';
   private statusError: string | null = null;
   private initPromise: Promise<void> | null = null;
+  /** Serializes model load + voice setup so speak cannot race setVoice. */
+  private bootstrapPromise: Promise<void> | null = null;
+  private bootstrappedVoice: string | null = null;
   private worker: Worker | null = null;
   private player: PCMPlayer | null = null;
   private audioContext: AudioContext | null = null;
@@ -81,6 +95,7 @@ export class PocketTtsEngine {
   private preloadTasks = new Map<string, Promise<void>>();
   /** Serializes speak calls so chained handoffs wait for playback to finish. */
   private speakChain: Promise<void> = Promise.resolve();
+  private markedFirstChunkThisSpeak = false;
 
   getStatus(): PocketTtsEngineStatus {
     return this.status;
@@ -107,18 +122,40 @@ export class PocketTtsEngine {
       throw isolationError();
     }
 
-    if (this.status === 'ready') {
+    if (this.bootstrapPromise && this.bootstrappedVoice === voice) {
+      return this.bootstrapPromise;
+    }
+
+    if (this.bootstrapPromise && this.bootstrappedVoice !== voice) {
+      await this.bootstrapPromise;
       if (this.activeVoice !== voice) {
         await this.setVoice(voice);
+        this.bootstrappedVoice = voice;
       }
       return;
     }
 
+    this.bootstrappedVoice = voice;
+    this.bootstrapPromise = this.bootstrap(voice);
+    try {
+      await this.bootstrapPromise;
+    } catch (err) {
+      this.bootstrapPromise = null;
+      this.bootstrappedVoice = null;
+      throw err;
+    }
+  }
+
+  private async bootstrap(voice: string): Promise<void> {
+    ttsMark('bootstrap-start', { voice });
     if (!this.initPromise) {
       this.initPromise = this.init();
     }
     await this.initPromise;
     await this.setVoice(voice);
+    this.status = 'ready';
+    ttsMark('engine-ready', { voice });
+    ttsLogReadySummary();
   }
 
   private async init(): Promise<void> {
@@ -130,10 +167,28 @@ export class PocketTtsEngine {
         sampleRate: SAMPLE_RATE,
         latencyHint: 'interactive',
       });
+      ttsMark('audio-context', { state: this.audioContext.state });
       this.player = new PCMPlayerWorklet(this.audioContext);
+      this.player.addEventListener('firstPlayback', (event: { detail?: { bufferedSamples?: number } }) => {
+        ttsMark('playback-started', {
+          audioContextTime: this.audioContext?.currentTime,
+          bufferedSamples: event.detail?.bufferedSamples,
+        });
+        ttsMeasure(
+          'speak-request',
+          'playback-started',
+          'speak latency (request → first sound)',
+        );
+        ttsMeasure('speak-cached', 'playback-started', 'cached speak latency');
+      });
+      this.player.addEventListener('audioEnded', () => {
+        ttsMark('playback-ended');
+      });
       await this.player.initPromise;
+      ttsMark('pcm-worklet-ready');
 
       this.worker = new Worker(WORKER_URL, { type: 'module' });
+      ttsMark('worker-spawn');
       this.worker.onmessage = (event: MessageEvent<WorkerMessage>) => {
         this.handleWorkerMessage(event.data);
       };
@@ -148,6 +203,7 @@ export class PocketTtsEngine {
           if (type === 'loaded') {
             clearTimeout(timeout);
             this.worker?.removeEventListener('message', onMessage);
+            ttsMark('models-loaded');
             resolve();
           } else if (type === 'error') {
             clearTimeout(timeout);
@@ -161,6 +217,7 @@ export class PocketTtsEngine {
           data: {
             bundleBase: POCKET_TTS_BUNDLE_BASE,
             modelCacheName: POCKET_TTS_MODEL_CACHE_NAME,
+            timelineEnabled: ttsTimelineEnabled(),
           },
         });
         this.worker!.postMessage({
@@ -169,7 +226,7 @@ export class PocketTtsEngine {
         });
       });
 
-      this.status = 'ready';
+      // ready is set after setVoice in bootstrap()
     } catch (err) {
       this.status = 'error';
       this.statusError = err instanceof Error ? err.message : 'TTS init failed';
@@ -186,6 +243,7 @@ export class PocketTtsEngine {
         if (type === 'voice_set') {
           this.worker?.removeEventListener('message', onMessage);
           this.activeVoice = voiceName;
+          ttsMark('voice-set', { voice: voiceName });
           resolve();
         } else if (type === 'error') {
           this.worker?.removeEventListener('message', onMessage);
@@ -235,9 +293,14 @@ export class PocketTtsEngine {
     const key = ttsCacheKey(voice, trimmed);
     const cached = this.audioCache.get(key);
     if (cached) {
+      ttsMark('speak-cached', { chars: trimmed.length, voice });
+      this.markedFirstChunkThisSpeak = false;
       await this.playCached(cached, options);
       return;
     }
+
+    ttsMark('speak-request', { chars: trimmed.length, voice });
+    this.markedFirstChunkThisSpeak = false;
 
     this.status = 'speaking';
     this.player?.reset();
@@ -364,17 +427,6 @@ export class PocketTtsEngine {
     }
   }
 
-  /** Resolve an in-flight speak without surfacing an error (superseded or aborted). */
-  private finishPendingSpeak(): void {
-    const pending = this.pendingSpeak;
-    if (!pending) return;
-    this.pendingSpeak = null;
-    if (this.status === 'speaking') {
-      this.status = 'ready';
-    }
-    pending.resolve();
-  }
-
   private rejectPending(err?: Error): void {
     const pending = this.pendingSpeak;
     if (!pending) return;
@@ -429,8 +481,17 @@ export class PocketTtsEngine {
     const { type, error, data } = msg;
 
     switch (type) {
+      case 'timeline':
+        if (msg.label != null && msg.sinceOrigin != null && msg.sincePrev != null) {
+          ttsWorkerMark(msg.label, msg.sinceOrigin, msg.sincePrev, msg.detail);
+        }
+        break;
       case 'audio_chunk':
         if (!data) break;
+        if (!this.markedFirstChunkThisSpeak && this.pendingSpeak && !this.pendingCollect) {
+          ttsMark('first-audio-chunk');
+          this.markedFirstChunkThisSpeak = true;
+        }
         if (this.pendingCollect) {
           this.pendingCollect.chunks.push(new Float32Array(data));
         } else if (this.player && this.pendingSpeak) {
@@ -442,6 +503,7 @@ export class PocketTtsEngine {
           this.resolveCollect();
           break;
         }
+        ttsMark('stream-ended');
         if (this.pendingSpeak && this.player) {
           if (this.player.notifyStreamEnded) {
             this.player.notifyStreamEnded();
@@ -453,16 +515,15 @@ export class PocketTtsEngine {
           );
         }
         break;
-      case 'error':
-        this.status = 'error';
-        this.statusError = error ?? 'TTS error';
+      case 'error': {
+        const message = error ?? 'TTS error';
         if (this.pendingCollect) {
-          this.rejectCollect(new Error(this.statusError));
-        }
-        if (this.pendingSpeak) {
-          this.rejectPending(new Error(this.statusError));
+          this.rejectCollect(new Error(message));
+        } else if (this.pendingSpeak) {
+          this.rejectPending(new Error(message));
         }
         break;
+      }
       default:
         break;
     }

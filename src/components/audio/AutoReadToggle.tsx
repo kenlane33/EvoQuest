@@ -18,6 +18,7 @@ export function AutoReadToggle() {
       )}
     >
       <span
+        aria-hidden
         className={cn(
           'text-meta font-bold uppercase tracking-[0.06em]',
           disabled

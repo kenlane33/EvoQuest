@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   feedbackDescReadText,
   type FeedbackReadBundle,
@@ -10,25 +10,29 @@ import { getPocketTtsEngine, waitForPocketTtsIdle } from '@/audio/pocket-tts-eng
 import { useAppStore } from '@/store/app-store';
 
 /**
- * Auto-read feedback body (explanation + teach + sidebar) after the reaction
- * headline finishes. Skips the title — useImmediateFeedbackSpeak covers that.
+ * Auto-read feedback body (explanation + teach) after the reaction headline
+ * finishes. Skips title (useImmediateFeedbackSpeak) and fb.etym sidebar.
+ *
+ * @returns Whether auto-read for this feedback has finished (always true when auto-read is off).
  */
 export function useFeedbackAutoRead(
   bundle: FeedbackReadBundle | null,
   autoKey: string | null,
-) {
+): boolean {
   const reading = useAppStore((s) => s.settings.reading);
   const voice = reading.voice;
   const volume = useAppStore((s) => s.settings.audio.volume);
   const runId = useRef(0);
   const descText = bundle ? feedbackDescReadText(bundle) : '';
-  const sidebarText = bundle?.sidebar.trim() ?? '';
+  const autoRead = Boolean(autoKey && canAutoReadAloud(reading) && descText);
+  const [autoReadDone, setAutoReadDone] = useState(() => !autoRead);
+
+  useLayoutEffect(() => {
+    setAutoReadDone(!autoRead);
+  }, [autoRead, autoKey]);
 
   useEffect(() => {
-    if (!autoKey || !canAutoReadAloud(reading)) return;
-
-    const parts = [descText, sidebarText].filter((p) => p.length > 0);
-    if (parts.length === 0) return;
+    if (!autoRead) return;
 
     const id = ++runId.current;
     const abort = new AbortController();
@@ -37,16 +41,17 @@ export function useFeedbackAutoRead(
       await waitForPocketTtsIdle();
       if (abort.signal.aborted || runId.current !== id) return;
 
-      for (const text of parts) {
+      try {
+        await getPocketTtsEngine().speak(descText, {
+          voice,
+          volume,
+          signal: abort.signal,
+        });
+      } catch {
         if (abort.signal.aborted || runId.current !== id) return;
-        try {
-          await getPocketTtsEngine().speak(text, {
-            voice,
-            volume,
-            signal: abort.signal,
-          });
-        } catch {
-          if (abort.signal.aborted || runId.current !== id) return;
+      } finally {
+        if (!abort.signal.aborted && runId.current === id) {
+          setAutoReadDone(true);
         }
       }
     };
@@ -59,13 +64,7 @@ export function useFeedbackAutoRead(
         runId.current += 1;
       }
     };
-  }, [
-    autoKey,
-    descText,
-    sidebarText,
-    reading.enabled,
-    reading.autoRead,
-    voice,
-    volume,
-  ]);
+  }, [autoRead, autoKey, descText, voice, volume]);
+
+  return autoReadDone;
 }

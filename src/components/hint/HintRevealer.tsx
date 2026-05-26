@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { SpeakButton } from '@/components/content/SpeakButton';
 import { cn } from '@/lib/cn';
+import { HINT_COUNTDOWN_MS, HINT_REVEAL_MS } from '@/types/schemas';
 
 export type EtymHint = {
   root: string;
@@ -22,8 +23,8 @@ type HintRevealerProps = {
 export function HintRevealer({
   hint,
   answered = false,
-  countdownSec = 6,
-  revealMs = 5000,
+  countdownSec = Math.round(HINT_COUNTDOWN_MS.default / 1000),
+  revealMs = HINT_REVEAL_MS.default,
   showRoot = true,
   className,
   onPhaseChange,

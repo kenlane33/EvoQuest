@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CONTENT_MODULES } from '@/content';
+import { getUnitById } from '@/content/catalog';
 import { buildQueue } from '@/engine/selection';
 import { EMPTY_USER_STATE } from '@/test/fixtures';
 import type { UserState } from '@/types';
@@ -16,6 +17,37 @@ describe('selection buildQueue', () => {
   it('builds branch sweep for a wing', () => {
     const queue = buildQueue({ kind: 'branch', nodeId: 'evo' }, world, EMPTY_USER_STATE);
     expect(queue.length).toBeGreaterThan(0);
+  });
+
+  it('builds branch sweep for bundled module id', () => {
+    const queue = buildQueue(
+      { kind: 'branch', nodeId: 'mod.biochemistry.bundled' },
+      world,
+      EMPTY_USER_STATE,
+    );
+    expect(queue.length).toBe(153);
+    expect(queue.every((q) => q.unitId.startsWith('biochem.'))).toBe(true);
+  });
+
+  it('builds branch sweep for biochemistry section', () => {
+    const queue = buildQueue(
+      { kind: 'branch', nodeId: 'biochem.macromolecules' },
+      world,
+      EMPTY_USER_STATE,
+    );
+    expect(queue.length).toBe(33);
+    expect(queue.every((q) => q.unitId.startsWith('biochem.macromolecules')
+      || q.unitId.startsWith('biochem.enzymes'))).toBe(true);
+  });
+
+  it('builds single-unit branch from unit id', () => {
+    const queue = buildQueue(
+      { kind: 'branch', nodeId: 'biochem.enzymes.factors' },
+      world,
+      EMPTY_USER_STATE,
+    );
+    expect(queue).toHaveLength(3);
+    expect(queue.every((q) => q.unitId === 'biochem.enzymes.factors')).toBe(true);
   });
 
   it('builds deep-dive sample from a node', () => {
@@ -70,5 +102,46 @@ describe('selection buildQueue', () => {
       EMPTY_USER_STATE,
     );
     expect(queue.some((q) => q.unitId === 'evo.origin.abiogenesis.miller-urey')).toBe(true);
+  });
+
+  it('defers encountered branch quizzes to the end of the queue', () => {
+    const unitId = 'biochem.enzymes.factors';
+    const unit = getUnitById(unitId);
+    expect(unit).toBeDefined();
+    const encounteredId = unit!.quizzes[0].id;
+
+    const state: UserState = {
+      units: {
+        [unitId]: {
+          unitId,
+          firstSeenAt: Date.now(),
+          attempts: 1,
+          correct: 1,
+          lastSeenAt: Date.now(),
+          lastFiveOutcomes: [
+            { correct: true, ms: 1000, templateKind: unit!.quizzes[0].kind },
+          ],
+          templatesEncountered: [encounteredId],
+          tier: 'unlocked',
+          achievementEarned: false,
+        },
+      },
+      disabledUnitIds: [],
+    };
+
+    const queue = buildQueue({ kind: 'branch', nodeId: unitId }, world, state);
+    expect(queue).toHaveLength(unit!.quizzes.length);
+    expect(queue.at(-1)?.templateId).toBe(encounteredId);
+    expect(queue.slice(0, -1).every((q) => q.templateId !== encounteredId)).toBe(true);
+  });
+
+  it('includes every branch quiz once with fresh items before review', () => {
+    const unitId = 'biochem.enzymes.factors';
+    const unit = getUnitById(unitId);
+    expect(unit).toBeDefined();
+
+    const queue = buildQueue({ kind: 'branch', nodeId: unitId }, world, EMPTY_USER_STATE);
+    const expectedIds = unit!.quizzes.map((q) => q.id).sort();
+    expect(queue.map((q) => q.templateId).sort()).toEqual(expectedIds);
   });
 });

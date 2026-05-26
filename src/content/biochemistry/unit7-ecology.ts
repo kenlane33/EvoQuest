@@ -145,6 +145,26 @@ If snails and dragonflies are removed, **hawks** lose prey and their population 
                   ['Decrease in number', 'Increase rapidly', 'Become producers', 'Not be affected'],
                   0,
                 ),
+                fillQuiz(
+                  'quiz.biochem.foodweb.symbiosis',
+                  'A close relationship between two species is called _____.',
+                  ['symbiosis'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.foodweb.mutualism',
+                  'Bees pollinating flowers is an example of _____.',
+                  ['mutualism'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.foodweb.parasitism',
+                  'A tick on a dog is an example of _____.',
+                  ['parasitism'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.foodweb.heterotroph',
+                  'Animals that eat other organisms are _____.',
+                  ['heterotrophs', 'heterotroph', 'consumers'],
+                ),
               ],
               achievement: ach(
                 'biochem.ecology.food-web',
@@ -238,6 +258,26 @@ Nitrogen is essential for amino acids and nucleic acids in all living organisms.
                   'quiz.biochem.cycles.fixation',
                   '_____ fixation converts atmospheric N₂ to usable forms.',
                   ['nitrogen'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cycles.respiration-co2',
+                  'Cellular respiration releases _____ into the atmosphere.',
+                  ['co2', 'carbon dioxide'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cycles.greenhouse',
+                  'Excess CO₂ traps heat through the _____ effect.',
+                  ['greenhouse'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cycles.ozone',
+                  'The ozone layer blocks harmful _____ radiation.',
+                  ['uv', 'ultraviolet'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cycles.nitrogen-essential',
+                  'Nitrogen is essential for building _____ and nucleic acids.',
+                  ['amino acids', 'proteins', 'protein'],
                 ),
               ],
               achievement: ach(
@@ -342,6 +382,27 @@ Nitrogen is essential for amino acids and nucleic acids in all living organisms.
                   },
                   true,
                 ),
+                fillQuiz(
+                  'quiz.biochem.pop.deer-k',
+                  'From the deer population graph, the carrying capacity is about _____ deer.',
+                  ['80', 'eighty'],
+                  'Where the curve plateaus',
+                ),
+                fillQuiz(
+                  'quiz.biochem.pop.density-dependent',
+                  '_____ factors like disease increase in effect as population size grows.',
+                  ['density-dependent', 'density dependent'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.pop.density-independent',
+                  'A natural disaster is a _____ factor.',
+                  ['density-independent', 'density independent'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.pop.exponential',
+                  'Unlimited resources produce _____ growth (J-shaped curve).',
+                  ['exponential'],
+                ),
               ],
               achievement: ach(
                 'biochem.ecology.population',
@@ -368,6 +429,9 @@ Nitrogen is essential for amino acids and nucleic acids in all living organisms.
 | Hibernation | Dormancy in winter | Bears |
 | Imprinting | Early learning attachment | Ducklings following mother |
 | Territoriality | Defending space | Wolves marking territory |
+| Courtship | Mating displays | Bird songs and dances |
+| Conditioning | Learned association | Pavlov's dogs |
+| Communication (pheromones) | Chemical signals | Ant trail markers |
 
 ![DDT biomagnification pyramid](${FIG}/p18_ddt_biomagnification.svg)
 
@@ -397,6 +461,41 @@ Nitrogen is essential for amino acids and nucleic acids in all living organisms.
                   '_____ reduces biodiversity by destroying habitats.',
                   ['urbanization'],
                 ),
+                fillQuiz(
+                  'quiz.biochem.conservation.migration',
+                  'Seasonal movement of animals (e.g., birds flying south) is _____.',
+                  ['migration'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.conservation.hibernation',
+                  'Winter dormancy in bears is _____.',
+                  ['hibernation'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.conservation.imprinting',
+                  'Ducklings following their mother is an example of _____.',
+                  ['imprinting'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.conservation.courtship',
+                  'Mating displays like bird songs are _____ behavior.',
+                  ['courtship'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.conservation.pheromones',
+                  'Ants marking trails with chemical signals use _____.',
+                  ['pheromones', 'communication using pheromones'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.conservation.parks',
+                  'Name one human conservation effort: _____.',
+                  ['national parks', 'national park', 'pollution laws', 'captive breeding', 'captive breeding programs'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.conservation.population-impact',
+                  'Name one negative effect of population growth on the environment: _____.',
+                  ['pollution', 'habitat destruction', 'deforestation', 'climate change', 'resource depletion', 'loss of biodiversity'],
+                ),
               ],
               achievement: ach(
                 'biochem.ecology.behavior-conservation',
@@ -407,6 +506,60 @@ Nitrogen is essential for amino acids and nucleic acids in all living organisms.
               ),
               difficulty: 'core',
               tags: ['ecology', 'conservation'],
+            }),
+            unit({
+              id: 'biochem.ecology.plants-atmosphere',
+              slug: 'plants-atmosphere',
+              title: 'Plants and the Atmosphere',
+              emoji: '🌱',
+              shortLabel: 'Plants',
+              longLabel: 'Plants & Atmosphere',
+              teach: {
+                headline: 'Stomata, Vascular Plants, and Reproduction',
+                body: `**Stomata** — pores on plant leaves that exchange CO₂ and O₂ (like lungs in animals).
+
+**Vascular plants** have xylem and phloem to transport water and nutrients (e.g., ferns, pines, flowering plants).
+
+**Nonvascular plants** lack specialized transport tissues (e.g., mosses).
+
+**Reproduction:** most plants reproduce via spores or seeds; fungi reproduce via spores.
+
+**Climate:** the greenhouse effect traps heat; the ozone layer blocks UV radiation.`,
+                poweredIdea: 'Stomata breathe for plants; vascular tissues move water and sugar.',
+              },
+              quizzes: [
+                fillQuiz(
+                  'quiz.biochem.plants.stomata',
+                  '_____ are pores on leaves that exchange gases.',
+                  ['stomata', 'stoma'],
+                  true,
+                ),
+                mcQuiz(
+                  'quiz.biochem.plants.vascular',
+                  'Which is a vascular plant?',
+                  ['Pine tree', 'Moss', 'Algae only', 'Bacteria'],
+                  0,
+                ),
+                fillQuiz(
+                  'quiz.biochem.plants.nonvascular',
+                  '_____ is an example of a nonvascular plant.',
+                  ['moss', 'mosses'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.plants.fungi-spores',
+                  'Fungi reproduce using _____.',
+                  ['spores', 'spore'],
+                ),
+              ],
+              achievement: ach(
+                'biochem.ecology.plants-atmosphere',
+                '🌱',
+                'Plants',
+                'Plants & Atmosphere',
+                'You trace water from root to stomata to sky.',
+              ),
+              difficulty: 'core',
+              tags: ['ecology', 'plants'],
             }),
           ],
         },

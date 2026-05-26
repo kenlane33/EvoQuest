@@ -116,6 +116,11 @@ export const divisionWing: Wing = {
                   'Sister chromatids separate during _____.',
                   ['anaphase'],
                 ),
+                fillQuiz(
+                  'quiz.biochem.cycle.metaphase',
+                  'Chromosomes align along the equator during _____.',
+                  ['metaphase'],
+                ),
               ],
               achievement: ach(
                 'biochem.division.cell-cycle',
@@ -158,6 +163,16 @@ export const divisionWing: Wing = {
                   'quiz.biochem.division.mitosis-count',
                   'Mitosis produces _____ daughter cells.',
                   ['2', 'two'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.division.meiosis-count',
+                  'Meiosis produces _____ genetically unique gametes.',
+                  ['4', 'four'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.division.assortment',
+                  'The Law of Independent Assortment states that alleles for different traits segregate into gametes _____.',
+                  ['independently', 'independently of one another'],
                 ),
               ],
               achievement: ach(

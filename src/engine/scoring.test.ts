@@ -90,7 +90,7 @@ describe('scoring', () => {
       const next = updateUnitProgress(undefined, makeAttempt({ correct: true }));
       expect(next.attempts).toBe(1);
       expect(next.correct).toBe(1);
-      expect(next.templatesEncountered).toContain('speed-reveal-mnemonic');
+      expect(next.templatesEncountered).toContain('quiz.evo.origin.miller-urey.sr-1');
       expect(next.lastFiveOutcomes).toHaveLength(1);
     });
 
@@ -103,10 +103,31 @@ describe('scoring', () => {
       expect(prog.lastFiveOutcomes).toHaveLength(5);
     });
 
-    it('does not duplicate template kinds in templatesEncountered', () => {
-      const prog = baseProgress({ templatesEncountered: ['speed-reveal-mnemonic'] });
+    it('does not duplicate template ids in templatesEncountered', () => {
+      const prog = baseProgress({ templatesEncountered: ['quiz.evo.origin.miller-urey.sr-1'] });
       const next = updateUnitProgress(prog, makeAttempt({ correct: true }));
-      expect(next.templatesEncountered).toEqual(['speed-reveal-mnemonic']);
+      expect(next.templatesEncountered).toEqual(['quiz.evo.origin.miller-urey.sr-1']);
+    });
+
+    it('tracks distinct quiz ids even when template kind repeats', () => {
+      let prog = baseProgress();
+      prog = updateUnitProgress(
+        prog,
+        makeAttempt({
+          correct: true,
+          templateId: 'quiz.a',
+          templateKind: 'fill-blank',
+        }),
+      );
+      prog = updateUnitProgress(
+        prog,
+        makeAttempt({
+          correct: true,
+          templateId: 'quiz.b',
+          templateKind: 'fill-blank',
+        }),
+      );
+      expect(prog.templatesEncountered).toEqual(['quiz.a', 'quiz.b']);
     });
   });
 });

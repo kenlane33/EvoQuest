@@ -5,6 +5,8 @@ import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
 import { AchievementGrid } from '@/components/achievements/AchievementGrid';
 import { Button } from '@/components/common/Button';
 import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { BIOLOGY_EOC_SELECTION, sectionStudySelection } from '@/content/catalog';
+import type { WingSubgroup } from '@/content/catalog';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';
 
@@ -46,9 +48,24 @@ function HomePage() {
     navigate({ to: '/play/$sessionId', params: { sessionId } });
   }
 
+  function handleEocReview() {
+    const { sessionId } = embarkNewQuest(BIOLOGY_EOC_SELECTION);
+    navigate({ to: '/play/$sessionId', params: { sessionId } });
+  }
+
+  function handleTileEmbark(unitId: string) {
+    const { sessionId } = embarkNewQuest({ kind: 'branch', nodeId: unitId });
+    navigate({ to: '/play/$sessionId', params: { sessionId } });
+  }
+
+  function handleSectionStudy(subgroup: WingSubgroup) {
+    const { sessionId } = embarkNewQuest(sectionStudySelection(subgroup.id));
+    navigate({ to: '/play/$sessionId', params: { sessionId } });
+  }
+
   const readText = resumeSession
-    ? 'Home. Your biology achievement grid. Continue your quest in progress, or start a new one.'
-    : 'Home. Your biology achievement grid. Start a new quest when you are ready.';
+    ? 'Home. Tap Study on a section or a topic tile to review. Progress shows on each tile. Continue your quest if one is in progress.'
+    : 'Home. Tap Study on a section for that portion of the workbook, or tap a topic tile to drill one unit. Each tile shows your question progress.';
 
   usePageReadAloud(readText);
 
@@ -60,13 +77,24 @@ function HomePage() {
         aria-label="Achievements"
       >
         {hydrated ? (
-          <AchievementGrid unitProgress={unitProgress} />
+          <>
+            <p className="mb-4 text-meta leading-relaxed text-(--text-dim)">
+              Use the wide <span className="font-bold text-(--text-secondary)">Study</span> bar
+              on each section, or tap a topic tile. Tiles show how many questions you&apos;ve done
+              out of the total in each topic.
+            </p>
+            <AchievementGrid
+              unitProgress={unitProgress}
+              onTileSelect={(tile) => handleTileEmbark(tile.unitId)}
+              onSubgroupStudy={handleSectionStudy}
+            />
+          </>
         ) : (
-          <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
-            {Array.from({ length: 16 }).map((_, i) => (
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-2.5">
+            {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="aspect-square animate-pulse rounded-(--r-lg) bg-(--bg-card)"
+                className="min-h-[6.5rem] min-w-[8rem] animate-pulse rounded-(--r-lg) bg-(--bg-card)"
               />
             ))}
           </div>
@@ -86,11 +114,19 @@ function HomePage() {
               <Button variant="secondary" fullWidth {...devMark('new')} onClick={handleNewQuest}>
                 NEW QUEST
               </Button>
+              <Button variant="secondary" fullWidth {...devMark('eoc')} onClick={handleEocReview}>
+                FULL EOC REVIEW
+              </Button>
             </>
           ) : (
-            <Button variant="primary" fullWidth {...devMark('new')} onClick={handleNewQuest}>
-              NEW QUEST
-            </Button>
+            <>
+              <Button variant="primary" fullWidth {...devMark('new')} onClick={handleNewQuest}>
+                NEW QUEST
+              </Button>
+              <Button variant="secondary" fullWidth {...devMark('eoc')} onClick={handleEocReview}>
+                FULL EOC REVIEW
+              </Button>
+            </>
           )}
         </section>
 

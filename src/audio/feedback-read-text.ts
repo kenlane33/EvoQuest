@@ -46,8 +46,13 @@ export function feedbackDescReadText(bundle: FeedbackReadBundle): string {
   return [bundle.explanation, bundle.teach].filter((p) => p.length > 0).join('. ');
 }
 
-/** Full page text for the global Read it bar. */
+/** Default auto-read / Read it text (excludes fb.etym sidebar). */
+export function feedbackAutoReadText(bundle: FeedbackReadBundle): string {
+  return feedbackReadAloudText(bundle.headline, feedbackDescReadText(bundle));
+}
+
+/** Full page text including etymology (manual sidebar speak). */
 export function feedbackPageReadText(bundle: FeedbackReadBundle): string {
-  const core = feedbackReadAloudText(bundle.headline, feedbackDescReadText(bundle));
+  const core = feedbackAutoReadText(bundle);
   return [core, bundle.sidebar].filter((p) => p.length > 0).join('. ');
 }

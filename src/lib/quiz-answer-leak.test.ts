@@ -28,6 +28,7 @@ const galapagosUnit: KnowledgeUnit = {
     wingId: 'evo',
   },
   difficulty: 'intro',
+  enabled: true,
 };
 
 describe('textLeaksAnswer', () => {
@@ -42,6 +43,10 @@ describe('textLeaksAnswer', () => {
 
   it('detects prefix leaks like Endosym', () => {
     expect(textLeaksAnswer('Endosym', ['endosymbiosis'])).toBe(true);
+  });
+
+  it('detects etymology stem leaks like Cambria → Cambrian', () => {
+    expect(textLeaksAnswer('Latin: Cambria — Roman name for Wales', ['cambrian'])).toBe(true);
   });
 });
 
@@ -58,5 +63,11 @@ describe('shouldShowPlayEtymology', () => {
     const root = 'Spanish: galápago (saddle — tortoise shell shape)';
     expect(shouldShowPlayEtymology(root, ['galapagos'], false)).toBe(false);
     expect(shouldShowPlayEtymology(root, ['galapagos'], true)).toBe(true);
+  });
+
+  it('hides Cambria roots until answered', () => {
+    const root = 'Latin: Cambria — Roman name for Wales';
+    expect(shouldShowPlayEtymology(root, ['cambrian'], false)).toBe(false);
+    expect(shouldShowPlayEtymology(root, ['cambrian'], true)).toBe(true);
   });
 });

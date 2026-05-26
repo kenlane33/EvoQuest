@@ -25,13 +25,11 @@ export function GlobalReadAloudBar() {
 
   const coordinated = Boolean(questionSpeak);
   const status: PocketTtsStatus = coordinated
-    ? questionSpeak!.status === 'error'
-      ? 'error'
-      : questionSpeak!.status === 'loading'
-        ? 'loading'
-        : questionSpeak!.status === 'playing'
-          ? 'playing'
-          : 'idle'
+    ? questionSpeak!.status === 'loading'
+      ? 'loading'
+      : questionSpeak!.status === 'playing'
+        ? 'playing'
+        : 'idle'
     : tts.status;
   const isActive = coordinated
     ? questionSpeak!.status === 'loading' || questionSpeak!.status === 'playing'

@@ -39,6 +39,7 @@
   --animate-cascade: cascadeFade 220ms ease-out both;
   --animate-correct-flash: correctFlash 1.4s ease-out forwards;
   --animate-feedback-headline-pulse: feedbackHeadlinePulse 1.1s ease-in-out infinite;
+  --animate-next-ready-pulse: nextReadyPulse 1.4s ease-in-out infinite;
 }
 
 :root {
@@ -288,6 +289,16 @@
   }
 }
 
+@keyframes nextReadyPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 8px color-mix(in oklab, var(--status-correct) 22%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 22px color-mix(in oklab, var(--status-correct) 52%, transparent);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-pop-in,
   .animate-slide-up,
@@ -295,7 +306,8 @@
   .animate-reveal-char,
   .animate-cascade,
   .animate-correct-flash,
-  .animate-feedback-headline-pulse {
+  .animate-feedback-headline-pulse,
+  .animate-next-ready-pulse {
     animation: none !important;
   }
 }
@@ -339,6 +351,28 @@ a {
 
 a:hover {
   color: var(--accent-aqua);
+}
+
+button:not(:disabled):not([disabled]),
+input[type="button"]:not(:disabled):not([disabled]),
+input[type="submit"]:not(:disabled):not([disabled]),
+input[type="reset"]:not(:disabled):not([disabled]),
+a[href],
+label:has(input, select, textarea, button),
+select:not(:disabled),
+summary,
+[role="button"]:not([aria-disabled="true"]),
+[role="switch"]:not(:disabled):not([disabled]) {
+  cursor: pointer;
+}
+
+button:disabled,
+button[disabled],
+input:disabled,
+select:disabled,
+textarea:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
 }
 
 .page-wrap {
@@ -471,4 +505,32 @@ html[data-dev-labels] [data-dev]::before {
   pointer-events: auto;
   cursor: pointer;
   user-select: all;
+}
+
+@keyframes devCopyFlash {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.dev-copy-flash {
+  animation: devCopyFlash 900ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dev-copy-flash {
+    animation: none !important;
+    opacity: 1;
+  }
 }

@@ -13,6 +13,7 @@ import {
 } from '@/lib/google-fonts';
 import { useAppStore } from '@/store/app-store';
 import type { Settings } from '@/types';
+import { HINT_COUNTDOWN_SEC, HINT_REVEAL_SEC } from '@/types/schemas';
 import { useDevPageLabelsEnabled } from '@/components/dev/DevPageLabel';
 import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
 import { devMark } from '@/lib/dev-mark';
@@ -20,6 +21,9 @@ import { devMark } from '@/lib/dev-mark';
 export const Route = createFileRoute('/settings')({
   component: SettingsPage,
 });
+
+const SETTINGS_PAGE_READ_TEXT =
+  'Settings. Appearance: contrast, font size, reading font. Hints: countdown before reveal, mnemonic reveal speed. Audio: sound effects, volume, read it with voice Azelma in your browser. Data: export, import backup, reset all progress.';
 
 function SettingsPage() {
   const settings = useAppStore((s) => s.settings);
@@ -31,10 +35,16 @@ function SettingsPage() {
   const [importMsg, setImportMsg] = useState<string | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
   const [devPageLabels, setDevPageLabels] = useDevPageLabelsEnabled();
+  const [tryReadText, setTryReadText] = useState('');
+  const [tryReadNonce, setTryReadNonce] = useState(0);
 
-  usePageReadAloud(
-    'Settings. Appearance: contrast, font size, reading font. Audio: sound effects, volume, read it with voice Azelma in your browser. Data: export, import backup, reset all progress.',
-  );
+  const trimmedTryRead = tryReadText.trim();
+  const pageReadText = trimmedTryRead || SETTINGS_PAGE_READ_TEXT;
+
+  usePageReadAloud(pageReadText, {
+    autoRead: Boolean(trimmedTryRead),
+    autoReadKey: trimmedTryRead ? `settings-try-${tryReadNonce}` : undefined,
+  });
 
   useEffect(() => {
     for (const font of BODY_FONT_OPTIONS) {
@@ -151,6 +161,65 @@ function SettingsPage() {
         </p>
       </section>
 
+      <section {...devMark('hints')} className="mb-10">
+        <h2 className="mb-4 text-headline-md font-bold">Hints</h2>
+        <Card className="space-y-5">
+          <Field label="Countdown before reveal">
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={HINT_COUNTDOWN_SEC.min}
+                max={HINT_COUNTDOWN_SEC.max}
+                step={1}
+                value={Math.round(settings.reveals.countdownMs / 1000)}
+                onChange={(e) =>
+                  setSettings({
+                    reveals: {
+                      ...settings.reveals,
+                      countdownMs: Number(e.target.value) * 1000,
+                    },
+                  })
+                }
+                className="w-full accent-(--accent-violet)"
+              />
+              <span className="w-10 shrink-0 text-right text-meta font-bold tabular-nums text-(--text-secondary)">
+                {Math.round(settings.reveals.countdownMs / 1000)}s
+              </span>
+            </div>
+            <p className="mt-2 text-meta text-(--text-faint)">
+              How long to wait before the mnemonic starts appearing ({HINT_COUNTDOWN_SEC.min}–{HINT_COUNTDOWN_SEC.max}s).
+            </p>
+          </Field>
+
+          <Field label="Mnemonic reveal speed">
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={HINT_REVEAL_SEC.min}
+                max={HINT_REVEAL_SEC.max}
+                step={1}
+                value={Math.round(settings.reveals.revealMs / 1000)}
+                onChange={(e) =>
+                  setSettings({
+                    reveals: {
+                      ...settings.reveals,
+                      revealMs: Number(e.target.value) * 1000,
+                    },
+                  })
+                }
+                className="w-full accent-(--accent-violet)"
+              />
+              <span className="w-10 shrink-0 text-right text-meta font-bold tabular-nums text-(--text-secondary)">
+                {Math.round(settings.reveals.revealMs / 1000)}s
+              </span>
+            </div>
+            <p className="mt-2 text-meta text-(--text-faint)">
+              How long the mnemonic takes to fully appear after the countdown ({HINT_REVEAL_SEC.min}–{HINT_REVEAL_SEC.max}s).
+            </p>
+          </Field>
+        </Card>
+      </section>
+
       <section {...devMark('audio')} className="mb-10">
         <h2 className="mb-4 text-headline-md font-bold">Audio</h2>
         <Card className="space-y-5">
@@ -200,6 +269,22 @@ function SettingsPage() {
             Voice: Azelma. Runs in your browser (WASM); the English model downloads
             once on first use (~200&nbsp;MB).
           </p>
+          <Field label="Try read-aloud">
+            <textarea
+              value={tryReadText}
+              onChange={(e) => setTryReadText(e.target.value)}
+              onPaste={() => {
+                queueMicrotask(() => setTryReadNonce((n) => n + 1));
+              }}
+              rows={4}
+              placeholder="Paste text here to hear it…"
+              className="w-full resize-y rounded-(--r-lg) border border-(--border-light) bg-(--bg-card-hi) px-4 py-3 text-body text-(--text-primary) outline-none placeholder:text-(--text-faint) focus:border-(--accent-cyan)"
+            />
+            <p className="mt-2 text-meta text-(--text-faint)">
+              Not saved. With auto-read on, pasted text is spoken; use Read it in the
+              corner anytime. Cleared when you leave this page.
+            </p>
+          </Field>
         </Card>
       </section>
 

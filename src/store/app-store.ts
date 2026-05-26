@@ -2,9 +2,10 @@
 
 import { create } from 'zustand';
 import { ulid } from '@/lib/id';
-import { buildGameQueue } from '@/content/catalog';
+import { buildGameQueue, introBiochemUnitIds } from '@/content/catalog';
 import type {
   ActiveSession,
+  CalibrationRecord,
   Journey,
   ScheduledItem,
   SelectionDescriptor,
@@ -14,6 +15,7 @@ import type {
   UnitProgress,
   UserState,
 } from '@/types';
+import { HINT_COUNTDOWN_MS, HINT_REVEAL_MS } from '@/types/schemas';
 
 const APP_VERSION = '0.1.0';
 const SCHEMA_VERSION = 1;
@@ -25,6 +27,7 @@ export const STORAGE_KEYS = {
   journeys: 'evo-quest.v1.journeys',
   settings: 'evo-quest.v1.settings',
   firstRun: 'evo-quest.v1.firstRun',
+  calibration: 'evo-quest.v1.calibration',
 } as const;
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -47,8 +50,8 @@ export const DEFAULT_SETTINGS: Settings = {
     serverUrl: '',
   },
   reveals: {
-    countdownMs: 6000,
-    revealMs: 5000,
+    countdownMs: HINT_COUNTDOWN_MS.default,
+    revealMs: HINT_REVEAL_MS.default,
   },
   practice: {
     confidenceFrequency: 'every-3',
@@ -66,6 +69,7 @@ type AppState = {
   unitProgress: Record<string, UnitProgress>;
   sessionState: SessionState;
   journeys: Journey[];
+  calibrationRecords: CalibrationRecord[];
   firstRunCompleted: boolean;
   loadFromStorage: () => void;
   setSettings: (patch: Partial<Settings> | ((s: Settings) => Settings)) => void;
@@ -73,6 +77,7 @@ type AppState = {
   setSessionState: (state: SessionState) => void;
   setSession: (session: ActiveSession | null) => void;
   addJourney: (journey: Journey) => void;
+  appendCalibration: (record: Omit<CalibrationRecord, 'id' | 'recordedAt'>) => void;
   completeFirstRun: () => void;
   embarkNewQuest: (selection?: SelectionDescriptor) => { sessionId: string; queue: ScheduledItem[] };
   clearSession: (resetState?: boolean) => void;
@@ -134,6 +139,7 @@ function schedulePersist(state: AppState) {
     writeBlob(STORAGE_KEYS.settings, state.settings);
     writeBlob(STORAGE_KEYS.units, state.unitProgress);
     writeBlob(STORAGE_KEYS.journeys, state.journeys);
+    writeBlob(STORAGE_KEYS.calibration, state.calibrationRecords);
     writeBlob(STORAGE_KEYS.firstRun, { completedAt: state.firstRunCompleted ? Date.now() : undefined });
 
     const session = extractActiveSession(state.sessionState);
@@ -171,6 +177,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   unitProgress: {},
   sessionState: { phase: 'loading' },
   journeys: [],
+  calibrationRecords: [],
   firstRunCompleted: false,
 
   loadFromStorage: () => {
@@ -187,8 +194,27 @@ export const useAppStore = create<AppState>((set, get) => ({
           privacy: { ...DEFAULT_SETTINGS.privacy, ...rawSettings.privacy },
         }
       : DEFAULT_SETTINGS;
-    const unitProgress = readBlob<Record<string, UnitProgress>>(STORAGE_KEYS.units) ?? {};
+    const storedProgress = readBlob<Record<string, UnitProgress>>(STORAGE_KEYS.units) ?? {};
+    const unitProgress = { ...storedProgress };
+    for (const unitId of introBiochemUnitIds()) {
+      if (!unitProgress[unitId]) {
+        unitProgress[unitId] = {
+          unitId,
+          firstSeenAt: 0,
+          attempts: 0,
+          correct: 0,
+          lastSeenAt: 0,
+          lastFiveOutcomes: [],
+          templatesEncountered: [],
+          tier: 'unlocked',
+          unlockedAt: Date.now(),
+          achievementEarned: false,
+        };
+      }
+    }
     const journeys = readBlob<Journey[]>(STORAGE_KEYS.journeys) ?? [];
+    const calibrationRecords =
+      readBlob<CalibrationRecord[]>(STORAGE_KEYS.calibration) ?? [];
     const firstRun = readBlob<{ completedAt?: number }>(STORAGE_KEYS.firstRun);
     const sessionState = sessionFromStorage();
 
@@ -197,6 +223,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       settings,
       unitProgress,
       journeys,
+      calibrationRecords,
       firstRunCompleted: Boolean(firstRun?.completedAt),
       sessionState,
     });
@@ -252,6 +279,19 @@ export const useAppStore = create<AppState>((set, get) => ({
       const journeys = [journey, ...s.journeys].slice(0, 500);
       schedulePersist({ ...s, journeys });
       return { journeys };
+    });
+  },
+
+  appendCalibration: (record) => {
+    set((s) => {
+      const entry: CalibrationRecord = {
+        ...record,
+        id: ulid(),
+        recordedAt: Date.now(),
+      };
+      const calibrationRecords = [entry, ...s.calibrationRecords].slice(0, 2000);
+      schedulePersist({ ...s, calibrationRecords });
+      return { calibrationRecords };
     });
   },
 
@@ -347,6 +387,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       unitProgress: {},
       sessionState: { phase: 'menu' },
       journeys: [],
+      calibrationRecords: [],
       firstRunCompleted: false,
     });
   },
@@ -363,6 +404,7 @@ export function attachPersistHooks() {
     writeBlob(STORAGE_KEYS.settings, state.settings);
     writeBlob(STORAGE_KEYS.units, state.unitProgress);
     writeBlob(STORAGE_KEYS.journeys, state.journeys);
+    writeBlob(STORAGE_KEYS.calibration, state.calibrationRecords);
     writeBlob(STORAGE_KEYS.firstRun, { completedAt: state.firstRunCompleted ? Date.now() : undefined });
     const session = extractActiveSession(state.sessionState);
     if (session) writeBlob(STORAGE_KEYS.session, session, true);

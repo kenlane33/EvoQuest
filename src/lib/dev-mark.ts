@@ -1,6 +1,15 @@
+/** Dev marks excluded from default auto-read (shell chrome, optional sidebar). */
+export const DEFAULT_READ_SKIP_DEV_MARKS = new Set([
+  'shell.hdr',
+  'shell.autoread',
+  'fb.etym',
+]);
+
 /** Spread onto any element: {...devMark('grid')} */
-export function devMark(id: string): { 'data-dev': string } {
-  return { 'data-dev': id };
+export function devMark(id: string): { 'data-dev': string; 'data-read-skip'?: '1' } {
+  return DEFAULT_READ_SKIP_DEV_MARKS.has(id)
+    ? { 'data-dev': id, 'data-read-skip': '1' }
+    : { 'data-dev': id };
 }
 
 const LABEL_HEIGHT_PX = 18;

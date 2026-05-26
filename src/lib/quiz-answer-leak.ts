@@ -9,6 +9,27 @@ export function normalizeAnswerToken(text: string): string {
     .replace(/[^a-z0-9]/g, '');
 }
 
+function extractNormalizedTokens(text: string): string[] {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length >= 3);
+}
+
+function normalizedStringsLeak(normA: string, normB: string): boolean {
+  if (normA.length < 3 || normB.length < 3) return false;
+
+  if (normA.includes(normB) || normB.includes(normA)) {
+    return true;
+  }
+
+  const shorter = normA.length <= normB.length ? normA : normB;
+  const longer = normA.length > normB.length ? normA : normB;
+  return shorter.length >= 4 && longer.startsWith(shorter);
+}
+
 export function getQuizAcceptableAnswers(quiz: QuizTemplate): string[] {
   const data = quiz.data as Record<string, unknown>;
   const inner = data.question;
@@ -34,6 +55,12 @@ export function getQuizAcceptableAnswers(quiz: QuizTemplate): string[] {
   if (Array.isArray(data.acceptable)) {
     return (data.acceptable as string[]).filter((a) => typeof a === 'string' && a.trim());
   }
+  if (typeof data.correct === 'string' && data.correct.trim()) {
+    return [data.correct.trim()];
+  }
+  if (typeof data.answer === 'string' && data.answer.trim()) {
+    return [data.answer.trim()];
+  }
   if (typeof data.targetTerm === 'string' && data.targetTerm.trim()) {
     return [data.targetTerm.trim()];
   }
@@ -45,18 +72,20 @@ export function textLeaksAnswer(text: string, acceptableAnswers: string[]): bool
   const normText = normalizeAnswerToken(text);
   if (!normText || acceptableAnswers.length === 0) return false;
 
+  const tokens = extractNormalizedTokens(text);
+
   for (const answer of acceptableAnswers) {
     const normAnswer = normalizeAnswerToken(answer);
     if (normAnswer.length < 3) continue;
 
-    if (normText.includes(normAnswer) || normAnswer.includes(normText)) {
+    if (normalizedStringsLeak(normText, normAnswer)) {
       return true;
     }
 
-    const shorter = normText.length <= normAnswer.length ? normText : normAnswer;
-    const longer = normText.length > normAnswer.length ? normText : normAnswer;
-    if (shorter.length >= 4 && longer.startsWith(shorter)) {
-      return true;
+    for (const token of tokens) {
+      if (normalizedStringsLeak(token, normAnswer)) {
+        return true;
+      }
     }
   }
 

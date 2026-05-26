@@ -124,7 +124,8 @@ export function ensureGoogleFontLoaded(id: BodyFontId): void {
   if (typeof document === 'undefined') return;
 
   const font = bodyFontById(id);
-  if (font.bundled || id === 'nunito') return;
+  if (('bundled' in font && font.bundled) || id === 'nunito') return;
+  if (!('cssParam' in font)) return;
 
   const linkId = `${LINK_ID_PREFIX}${id}`;
   if (document.getElementById(linkId)) return;

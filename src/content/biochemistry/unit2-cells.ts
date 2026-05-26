@@ -1,6 +1,6 @@
 import type { Wing } from '@/types';
 import { unit } from '@/content/helpers';
-import { FIG, ach, fillQuiz, mcQuiz, srFill, turtleQuiz, counterfactualQuiz } from '@/content/biochemistry/quiz-helpers';
+import { FIG, ach, fillQuiz, mcQuiz, srFill, turtleQuiz, counterfactualQuiz, procedureQuiz, conceptMapQuiz, palaceWalkQuiz } from '@/content/biochemistry/quiz-helpers';
 
 export const cellsWing: Wing = {
   id: 'biochem.cells',
@@ -56,6 +56,76 @@ export const cellsWing: Wing = {
                   'Photosynthesis occurs in the _____.',
                   ['chloroplast', 'chloroplasts'],
                 ),
+                palaceWalkQuiz(
+                  'quiz.biochem.cells.organelle-palace',
+                  {
+                    roomTitle: 'Cell organelle memory palace',
+                    layout: [
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+                      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+                      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+                      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    ],
+                    spawn: { x: 1, y: 1 },
+                    totems: [
+                      {
+                        id: 'nucleus',
+                        x: 4,
+                        y: 1,
+                        icon: '🧬',
+                        label: 'Nucleus',
+                        question: {
+                          kind: 'fill',
+                          prompt: 'The nucleus stores _____.',
+                          acceptable: ['dna'],
+                        },
+                      },
+                      {
+                        id: 'mito',
+                        x: 7,
+                        y: 2,
+                        icon: '🔋',
+                        label: 'Mitochondrion',
+                        question: {
+                          kind: 'fill',
+                          prompt: 'Mitochondria produce _____.',
+                          acceptable: ['atp'],
+                        },
+                      },
+                      {
+                        id: 'chloro',
+                        x: 2,
+                        y: 4,
+                        icon: '🌿',
+                        label: 'Chloroplast',
+                        question: {
+                          kind: 'fill',
+                          prompt: 'Photosynthesis occurs in the _____.',
+                          acceptable: ['chloroplast', 'chloroplasts'],
+                        },
+                      },
+                      {
+                        id: 'ribo',
+                        x: 6,
+                        y: 4,
+                        icon: '🔵',
+                        label: 'Ribosome',
+                        question: {
+                          kind: 'fill',
+                          prompt: 'Ribosomes build _____.',
+                          acceptable: ['protein', 'proteins'],
+                        },
+                      },
+                    ],
+                    poweredIdea:
+                      'Organelles occupy neighborhoods in the cell — spatial memory helps recall their jobs.',
+                    root: 'Biology EOC Review — organelles',
+                    mnemonic: 'Walk the palace — bump each compartment to recall its job.',
+                  },
+                  true,
+                ),
               ],
               achievement: ach(
                 'biochem.cells.organelles',
@@ -103,6 +173,16 @@ The mitochondria's inner membrane is **folded (cristae)** to increase surface ar
                   'quiz.biochem.cells.cristae',
                   'Mitochondria inner membranes are folded to increase _____.',
                   ['surface area', 'surface'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cells.homeostasis',
+                  '_____ is maintaining stable internal conditions while adjusting to the environment.',
+                  ['homeostasis'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cells.buffer',
+                  'A buffer helps maintain a stable, optimal _____ inside cells.',
+                  ['ph', 'pH'],
                 ),
               ],
               achievement: ach(
@@ -248,6 +328,12 @@ Plant cell walls prevent lysis in hypotonic solutions — animal cells can burst
                   'A plasmolyzed cell is in a _____ solution.',
                   ['hypertonic'],
                 ),
+                mcQuiz(
+                  'quiz.biochem.osmosis.isotonic',
+                  'A flaccid plant cell is in an _____ solution.',
+                  ['Isotonic', 'Hypertonic', 'Hypotonic', 'Plasmolyzed'],
+                  0,
+                ),
               ],
               achievement: ach(
                 'biochem.transport.osmosis',
@@ -366,6 +452,21 @@ Plant cell walls prevent lysis in hypotonic solutions — animal cells can burst
                   ['Aerobic respiration', 'Anaerobic respiration', 'Both equally', 'Neither'],
                   0,
                 ),
+                fillQuiz(
+                  'quiz.biochem.energy.photo-products',
+                  'The main product of photosynthesis (besides oxygen) is _____.',
+                  ['glucose', 'sugar', 'c6h12o6'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.energy.xylem',
+                  '_____ transports water and dissolved minerals from roots to leaves.',
+                  ['xylem'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.energy.phloem',
+                  '_____ transports organic compounds from leaves to the rest of the plant.',
+                  ['phloem'],
+                ),
                 counterfactualQuiz(
                   'quiz.biochem.energy.photosynthesis-counterfactual',
                   {
@@ -425,6 +526,108 @@ Plant cell walls prevent lysis in hypotonic solutions — animal cells can burst
                       'Earth\'s living history is contingent — photosynthesis opened one path among many.',
                     root: 'Biology EOC Review — energy flow',
                     mnemonic: 'No photo → no O₂ → no ozone → no us.',
+                  },
+                ),
+                procedureQuiz(
+                  'quiz.biochem.energy.central-dogma-procedure',
+                  {
+                    goal: 'Write a procedure that produces a functional protein from a gene.',
+                    initialState: 'DNA in nucleus',
+                    targetState: 'Folded protein in cytoplasm',
+                    blocks: [
+                      {
+                        id: 'transcribe',
+                        label: 'Transcribe gene → pre-mRNA',
+                        icon: '📝',
+                        narration: 'RNA polymerase copies the gene into messenger RNA.',
+                      },
+                      {
+                        id: 'splice',
+                        label: 'Splice introns from pre-mRNA',
+                        icon: '✂️',
+                        narration: 'Spliceosomes remove introns and join exons.',
+                      },
+                      {
+                        id: 'export',
+                        label: 'Export mRNA through nuclear pore',
+                        icon: '🚪',
+                        narration: 'Processed mRNA leaves the nucleus.',
+                      },
+                      {
+                        id: 'translate',
+                        label: 'Translate mRNA at ribosome',
+                        icon: '🔤',
+                        narration: 'Ribosomes read codons and assemble amino acids.',
+                      },
+                      {
+                        id: 'fold',
+                        label: 'Fold polypeptide into protein',
+                        icon: '🧶',
+                        narration: 'The polypeptide chain folds into its functional shape.',
+                      },
+                    ],
+                    canonicalOrder: ['transcribe', 'splice', 'export', 'translate', 'fold'],
+                    poweredIdea:
+                      'Gene expression is a pipeline of named sub-procedures, each modifying the molecule.',
+                    root: 'Biology EOC Review — central dogma',
+                    mnemonic: 'Transcribe, process, export, translate, fold — the protein pipeline.',
+                  },
+                ),
+                conceptMapQuiz(
+                  'quiz.biochem.energy.respiration-map',
+                  {
+                    focalConcept: 'Cellular Respiration',
+                    nodes: [
+                      { id: 'glucose', label: 'Glucose', icon: '🍬' },
+                      { id: 'o2', label: 'Oxygen', icon: '💨' },
+                      { id: 'co2', label: 'CO₂', icon: '☁️' },
+                      { id: 'atp', label: 'ATP', icon: '⚡' },
+                      { id: 'mito', label: 'Mitochondrion', icon: '🔋' },
+                      { id: 'glycolysis', label: 'Glycolysis', icon: '🔄' },
+                    ],
+                    decoyNodes: [{ id: 'chloro', label: 'Chloroplast', icon: '🌿' }],
+                    canonicalEdges: [
+                      {
+                        from: 'glucose',
+                        to: 'glycolysis',
+                        label: 'enters',
+                        importance: 'critical',
+                        reasonIfMissing: 'Glycolysis begins with glucose splitting in the cytoplasm.',
+                      },
+                      {
+                        from: 'glycolysis',
+                        to: 'mito',
+                        label: 'feeds',
+                        importance: 'standard',
+                        reasonIfMissing: 'Pyruvate enters the mitochondrion for aerobic steps.',
+                      },
+                      {
+                        from: 'mito',
+                        to: 'atp',
+                        label: 'produces',
+                        importance: 'critical',
+                        reasonIfMissing: 'Most ATP is harvested in the mitochondrion.',
+                      },
+                      {
+                        from: 'o2',
+                        to: 'mito',
+                        label: 'enters',
+                        importance: 'critical',
+                        reasonIfMissing: 'Oxygen is the final electron acceptor in aerobic respiration.',
+                      },
+                      {
+                        from: 'mito',
+                        to: 'co2',
+                        label: 'produces',
+                        importance: 'standard',
+                        reasonIfMissing: 'Carbon dioxide is released during the Krebs cycle.',
+                      },
+                    ],
+                    allowedLabels: ['enters', 'feeds', 'produces', 'consumes', 'requires', 'occurs in'],
+                    poweredIdea:
+                      'Respiration is a network of inputs, stages, and outputs — not a single step.',
+                    root: 'Biology EOC Review — respiration pathways',
+                    mnemonic: 'Glucose in, ATP out — trace every labeled edge.',
                   },
                 ),
               ],

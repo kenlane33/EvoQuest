@@ -78,7 +78,7 @@ export function pickTemplate(
   mode: PickMode,
   force?: string,
 ): QuizTemplate {
-  const seen = state.units[unit.id]?.templatesEncountered ?? [];
+  const seen = new Set(state.units[unit.id]?.templatesEncountered ?? []);
   const candidates = unit.quizzes.filter((q) => {
     const reg = REGISTRY[q.kind];
     if (!reg) return true;
@@ -90,7 +90,7 @@ export function pickTemplate(
   if (!candidates.length) return unit.quizzes[0];
 
   if (mode === 'adaptive') {
-    const unseen = candidates.filter((q) => !seen.includes(q.kind));
+    const unseen = candidates.filter((q) => !seen.has(q.id) && !seen.has(q.kind));
     if (unseen.length) return pickPreferredOrRandom(unseen);
   }
 
@@ -128,11 +128,49 @@ function troubleTour(world: World, state: UserState, length: number): ScheduledI
   return picks.map(({ unit }) => toScheduledItem(unit, state, 'adaptive'));
 }
 
+function resolveBranchUnits(world: World, state: UserState, nodeId: string): KnowledgeUnit[] {
+  const disabled = new Set(state.disabledUnitIds ?? []);
+  const single = findUnit(world.modules, nodeId);
+  if (single?.enabled && !disabled.has(single.id)) {
+    return [single];
+  }
+
+  const module = world.modules.find((m) => m.id === nodeId);
+  const units = module
+    ? flattenUnits([module])
+    : collectUnitsUnderNode(world.modules, nodeId);
+  return units.filter((u) => u.enabled && !disabled.has(u.id));
+}
+
+function isScheduledItemEncountered(item: ScheduledItem, state: UserState): boolean {
+  const seen = new Set(state.units[item.unitId]?.templatesEncountered ?? []);
+  return seen.has(item.templateId) || seen.has(item.templateKind);
+}
+
+function scheduledItemsForUnits(units: KnowledgeUnit[], state: UserState): ScheduledItem[] {
+  const fresh: ScheduledItem[] = [];
+  const review: ScheduledItem[] = [];
+
+  for (const unit of units) {
+    for (const quiz of unit.quizzes) {
+      const item: ScheduledItem = {
+        unitId: unit.id,
+        templateKind: quiz.kind,
+        templateId: quiz.id,
+      };
+      if (isScheduledItemEncountered(item, state)) {
+        review.push(item);
+      } else {
+        fresh.push(item);
+      }
+    }
+  }
+
+  return [...shuffle(fresh), ...shuffle(review)];
+}
+
 function branchSweep(world: World, state: UserState, nodeId: string): ScheduledItem[] {
-  const units = collectUnitsUnderNode(world.modules, nodeId).filter(
-    (u) => u.enabled && !(state.disabledUnitIds ?? []).includes(u.id),
-  );
-  return units.map((u) => toScheduledItem(u, state, 'mixed'));
+  return scheduledItemsForUnits(resolveBranchUnits(world, state, nodeId), state);
 }
 
 export function buildQueue(
@@ -148,9 +186,10 @@ export function buildQueue(
     case 'branch':
       return branchSweep(world, state, selection.nodeId);
     case 'deep-dive': {
-      const units = collectUnitsUnderNode(world.modules, selection.nodeId).filter(
-        (u) => u.enabled,
-      );
+      const module = world.modules.find((m) => m.id === selection.nodeId);
+      const units = (
+        module ? flattenUnits([module]) : collectUnitsUnderNode(world.modules, selection.nodeId)
+      ).filter((u) => u.enabled);
       return sampleN(units, selection.length).map((u) => toScheduledItem(u, state, 'mixed'));
     }
     case 'mixed-trouble': {
