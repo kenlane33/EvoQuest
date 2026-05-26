@@ -52,8 +52,7 @@ let stTensors = [];
 let isGenerating = false;
 let isReady = false;
 
-const DEFAULT_BUNDLE_BASE =
-    "https://huggingface.co/spaces/KevinAHM/pocket-tts-web/resolve/main/onnx";
+const DEFAULT_BUNDLE_BASE = "/api/pocket-tts/onnx";
 const DEFAULT_MODEL_CACHE_NAME = "evo-quest.v1.pocket-tts";
 let bundleBase = DEFAULT_BUNDLE_BASE;
 let modelCacheName = DEFAULT_MODEL_CACHE_NAME;

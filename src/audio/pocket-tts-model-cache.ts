@@ -6,8 +6,10 @@
 import { POCKET_TTS_DEFAULT_LANGUAGE } from '@/audio/pocket-tts';
 import { ttsMark } from '@/audio/pocket-tts-timeline';
 
-export const POCKET_TTS_BUNDLE_BASE =
-  'https://huggingface.co/spaces/KevinAHM/pocket-tts-web/resolve/main/onnx';
+import { POCKET_TTS_PROXY_PREFIX } from '@/server/pocket-tts-proxy';
+
+/** Same-origin Worker proxy — avoids Hugging Face CORS in the browser. */
+export const POCKET_TTS_BUNDLE_BASE = POCKET_TTS_PROXY_PREFIX;
 
 /** Matches evo-quest storage namespace; Cache API bucket, not localStorage. */
 export const POCKET_TTS_MODEL_CACHE_NAME = 'evo-quest.v1.pocket-tts';

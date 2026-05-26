@@ -49,6 +49,19 @@ describe('getQuizPlayFigures', () => {
     expect(getQuizPlayFigures(popUnit, kQuiz!)).toEqual([]);
   });
 
+  it('shows the DNA hierarchy diagram for hierarchy fill quizzes', () => {
+    const dnaUnit = getUnitById('biochem.protein.dna-structure');
+    if (!dnaUnit) throw new Error('missing DNA unit');
+
+    const nucleusQuiz = dnaUnit.quizzes.find((q) => q.id === 'quiz.biochem.dna.nucleus');
+    expect(nucleusQuiz).toBeDefined();
+
+    const figures = getQuizPlayFigures(dnaUnit, nucleusQuiz!);
+    expect(figures).toHaveLength(1);
+    expect(figures[0]?.id).toBe('p07_dna_hierarchy');
+    expect(figures[0]?.src).toContain('p07_dna_hierarchy.png');
+  });
+
   it('handles speed-reveal fill questions', () => {
     const quiz: QuizTemplate = {
       kind: 'speed-reveal-mnemonic',

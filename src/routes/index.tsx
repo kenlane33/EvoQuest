@@ -105,25 +105,25 @@ function HomePage() {
         {...devMark('dock')}
         className="shrink-0 border-t border-(--border-faint) bg-[color-mix(in_oklab,var(--bg-deep)_94%,transparent)] pt-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md"
       >
-        <section className="mx-auto flex max-w-(--w-narrow) flex-col gap-3">
+        <section className="mx-auto flex max-w-(--w-narrow) flex-row flex-wrap gap-2">
           {resumeSession ? (
             <>
-              <Button variant="primary" fullWidth {...devMark('cont')} onClick={handleContinue}>
-                CONTINUE
-              </Button>
-              <Button variant="secondary" fullWidth {...devMark('new')} onClick={handleNewQuest}>
+              <Button variant="secondary" className="min-w-[9rem] flex-1" {...devMark('new')} onClick={handleNewQuest}>
                 NEW QUEST
               </Button>
-              <Button variant="secondary" fullWidth {...devMark('eoc')} onClick={handleEocReview}>
+              <Button variant="primary" className="min-w-[9rem] flex-1" {...devMark('cont')} onClick={handleContinue}>
+                CONTINUE
+              </Button>
+              <Button variant="secondary" className="min-w-[9rem] flex-1" {...devMark('eoc')} onClick={handleEocReview}>
                 FULL EOC REVIEW
               </Button>
             </>
           ) : (
             <>
-              <Button variant="primary" fullWidth {...devMark('new')} onClick={handleNewQuest}>
+              <Button variant="primary" className="min-w-[9rem] flex-1" {...devMark('new')} onClick={handleNewQuest}>
                 NEW QUEST
               </Button>
-              <Button variant="secondary" fullWidth {...devMark('eoc')} onClick={handleEocReview}>
+              <Button variant="secondary" className="min-w-[9rem] flex-1" {...devMark('eoc')} onClick={handleEocReview}>
                 FULL EOC REVIEW
               </Button>
             </>

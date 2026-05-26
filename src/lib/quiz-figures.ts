@@ -21,6 +21,8 @@ function getQuizPromptAndHint(quiz: QuizTemplate): { prompt: string; hint: strin
 
 function quizReferencesFigure(prompt: string, hint: string): boolean {
   const text = `${prompt} ${hint}`;
+  if (/\bdiagram\b/i.test(text)) return true;
+  if (/\bgraph\b/i.test(text)) return true;
   if (/\b(the|this|that)\s+(graph|chart|diagram|figure)\b/i.test(text)) {
     return true;
   }

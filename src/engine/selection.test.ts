@@ -25,7 +25,7 @@ describe('selection buildQueue', () => {
       world,
       EMPTY_USER_STATE,
     );
-    expect(queue.length).toBe(153);
+    expect(queue.length).toBe(158);
     expect(queue.every((q) => q.unitId.startsWith('biochem.'))).toBe(true);
   });
 

@@ -2,6 +2,8 @@
 export const DEFAULT_READ_SKIP_DEV_MARKS = new Set([
   'shell.hdr',
   'shell.autoread',
+  'shell.menu',
+  'hud.menu',
   'fb.etym',
 ]);
 

@@ -32,6 +32,12 @@ describe('content catalog', () => {
     expect(unit?.teach.figures?.length).toBeGreaterThan(0);
   });
 
+  it('includes DNA hierarchy figure on DNA structure unit', () => {
+    const unit = getUnitById('biochem.protein.dna-structure');
+    expect(unit?.teach.body).toContain('p07_dna_hierarchy.png');
+    expect(unit?.teach.figures?.some((f) => f.id === 'p07_dna_hierarchy')).toBe(true);
+  });
+
   it('groups Biology EOC tiles first with sub-wings', () => {
     expect(WING_GROUPS[0]?.wingId).toBe('biochem');
     expect(WING_GROUPS[0]?.title).toBe('Biology EOC Review');
@@ -44,7 +50,7 @@ describe('content catalog', () => {
       { kind: 'branch', nodeId: 'mod.biochemistry.bundled' },
       EMPTY_USER_STATE,
     );
-    expect(queue).toHaveLength(153);
+    expect(queue).toHaveLength(158);
     expect(queue.every((item) => item.unitId.startsWith('biochem.'))).toBe(true);
   });
 

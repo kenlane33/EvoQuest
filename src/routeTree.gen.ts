@@ -19,6 +19,7 @@ import { Route as JourneysIndexRouteImport } from './routes/journeys/index'
 import { Route as ContentIndexRouteImport } from './routes/content/index'
 import { Route as PlaySessionIdRouteImport } from './routes/play.$sessionId'
 import { Route as JourneysIdRouteImport } from './routes/journeys/$id'
+import { Route as DxPreviewRouteImport } from './routes/dx/preview'
 import { Route as ContentStatsRouteImport } from './routes/content/stats'
 import { Route as ContentModulesRouteImport } from './routes/content/modules'
 import { Route as ContentImportRouteImport } from './routes/content/import'
@@ -74,6 +75,11 @@ const JourneysIdRoute = JourneysIdRouteImport.update({
   path: '/journeys/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DxPreviewRoute = DxPreviewRouteImport.update({
+  id: '/dx/preview',
+  path: '/dx/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContentStatsRoute = ContentStatsRouteImport.update({
   id: '/content/stats',
   path: '/content/stats',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/content/import': typeof ContentImportRoute
   '/content/modules': typeof ContentModulesRoute
   '/content/stats': typeof ContentStatsRoute
+  '/dx/preview': typeof DxPreviewRoute
   '/journeys/$id': typeof JourneysIdRoute
   '/play/$sessionId': typeof PlaySessionIdRoute
   '/content/': typeof ContentIndexRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/content/import': typeof ContentImportRoute
   '/content/modules': typeof ContentModulesRoute
   '/content/stats': typeof ContentStatsRoute
+  '/dx/preview': typeof DxPreviewRoute
   '/journeys/$id': typeof JourneysIdRoute
   '/play/$sessionId': typeof PlaySessionIdRoute
   '/content': typeof ContentIndexRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/content/import': typeof ContentImportRoute
   '/content/modules': typeof ContentModulesRoute
   '/content/stats': typeof ContentStatsRoute
+  '/dx/preview': typeof DxPreviewRoute
   '/journeys/$id': typeof JourneysIdRoute
   '/play/$sessionId': typeof PlaySessionIdRoute
   '/content/': typeof ContentIndexRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/content/import'
     | '/content/modules'
     | '/content/stats'
+    | '/dx/preview'
     | '/journeys/$id'
     | '/play/$sessionId'
     | '/content/'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/content/import'
     | '/content/modules'
     | '/content/stats'
+    | '/dx/preview'
     | '/journeys/$id'
     | '/play/$sessionId'
     | '/content'
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
     | '/content/import'
     | '/content/modules'
     | '/content/stats'
+    | '/dx/preview'
     | '/journeys/$id'
     | '/play/$sessionId'
     | '/content/'
@@ -206,6 +218,7 @@ export interface RootRouteChildren {
   ContentImportRoute: typeof ContentImportRoute
   ContentModulesRoute: typeof ContentModulesRoute
   ContentStatsRoute: typeof ContentStatsRoute
+  DxPreviewRoute: typeof DxPreviewRoute
   JourneysIdRoute: typeof JourneysIdRoute
   PlaySessionIdRoute: typeof PlaySessionIdRoute
   ContentIndexRoute: typeof ContentIndexRoute
@@ -284,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JourneysIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dx/preview': {
+      id: '/dx/preview'
+      path: '/dx/preview'
+      fullPath: '/dx/preview'
+      preLoaderRoute: typeof DxPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/content/stats': {
       id: '/content/stats'
       path: '/content/stats'
@@ -326,6 +346,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContentImportRoute: ContentImportRoute,
   ContentModulesRoute: ContentModulesRoute,
   ContentStatsRoute: ContentStatsRoute,
+  DxPreviewRoute: DxPreviewRoute,
   JourneysIdRoute: JourneysIdRoute,
   PlaySessionIdRoute: PlaySessionIdRoute,
   ContentIndexRoute: ContentIndexRoute,

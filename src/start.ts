@@ -1,4 +1,14 @@
 import { createStart, createMiddleware } from '@tanstack/react-start';
+import { isPocketTtsProxyPath, proxyPocketTtsRequest } from '@/server/pocket-tts-proxy';
+
+/** Proxy Pocket TTS ONNX assets from Hugging Face (same-origin for the browser). */
+const pocketTtsProxyMiddleware = createMiddleware().server(async ({ request, next }) => {
+  const pathname = new URL(request.url).pathname;
+  if (isPocketTtsProxyPath(pathname)) {
+    return proxyPocketTtsRequest(request);
+  }
+  return next();
+});
 
 /** Pocket TTS (ONNX WASM) needs cross-origin isolation for SharedArrayBuffer. */
 const crossOriginIsolationMiddleware = createMiddleware().server(async ({ next }) => {
@@ -21,5 +31,5 @@ const crossOriginIsolationMiddleware = createMiddleware().server(async ({ next }
 });
 
 export const startInstance = createStart(() => ({
-  requestMiddleware: [crossOriginIsolationMiddleware],
+  requestMiddleware: [crossOriginIsolationMiddleware, pocketTtsProxyMiddleware],
 }));

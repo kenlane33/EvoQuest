@@ -28,22 +28,36 @@ export const proteinWing: Wing = {
               shortLabel: 'DNA',
               longLabel: 'DNA Structure',
               teach: {
-                headline: 'Three Parts of a Nucleotide',
-                body: `DNA has three parts per nucleotide:
-1. **Phosphate group**
-2. **Deoxyribose sugar** (5-carbon)
-3. **Nitrogenous base** (A, T, C, or G)
+                headline: 'From Cell to Base Pair',
+                body: `**Levels of DNA organization** (largest → smallest):
+
+1. **Cell** — eukaryotic cell contains a nucleus
+2. **Nucleus** — stores **chromosomes** (X-shaped in the diagram)
+3. **Chromosome** — tightly coiled chromatin; one long DNA molecule plus proteins
+4. **Chromatin / nucleosomes** — DNA wrapped around histone proteins (“beads on a string”)
+5. **DNA double helix** — two antiparallel strands with a sugar-phosphate backbone
+6. **Base pairs** — complementary nitrogenous bases: **A–T** and **G–C**
+
+![DNA organization from cell to base pairs](${FIG}/p07_dna_hierarchy.png)
+
+Each **nucleotide** has three parts: **phosphate**, **deoxyribose sugar**, and a **nitrogenous base** (A, T, C, or G).
 
 ![Labeled DNA double helix](${FIG}/p07_dna_structure.svg)
 
 The double helix has antiparallel strands connected by complementary base pairs: **A–T** and **G–C**.`,
                 figures: [
                   {
+                    id: 'p07_dna_hierarchy',
+                    alt: 'Cell with nucleus and chromosomes, DNA uncoiling through chromatin nucleosomes to double helix and A-T G-C base pairs',
+                    caption: 'Cell → nucleus → chromosome → chromatin → DNA helix → base pairs.',
+                  },
+                  {
                     id: 'p07_dna_structure',
                     alt: 'DNA double helix with sugar-phosphate backbone and base pairs labeled',
+                    caption: 'Nucleotide parts and complementary base pairing.',
                   },
                 ],
-                poweredIdea: 'DNA = phosphate + deoxyribose + base; A-T and G-C pair.',
+                poweredIdea: 'DNA packs from base pairs → helix → chromatin → chromosomes → nucleus.',
               },
               quizzes: [
                 fillQuiz(
@@ -57,6 +71,34 @@ The double helix has antiparallel strands connected by complementary base pairs:
                   'Which is NOT part of a DNA nucleotide?',
                   ['Ribose sugar', 'Phosphate', 'Nitrogenous base', 'Deoxyribose'],
                   0,
+                ),
+                fillQuiz(
+                  'quiz.biochem.dna.nucleus',
+                  'In the DNA hierarchy diagram, chromosomes are stored in the _____.',
+                  ['nucleus'],
+                  'Inside the cell',
+                ),
+                fillQuiz(
+                  'quiz.biochem.dna.chromosome-uncoil',
+                  'In the DNA hierarchy diagram, the DNA strand uncoils from a _____.',
+                  ['chromosome', 'chromosomes'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.dna.nucleosomes',
+                  'In the DNA hierarchy diagram, DNA wrapped around histone proteins forms _____.',
+                  ['nucleosomes', 'chromatin', 'nucleosome'],
+                  'Beads on a string',
+                ),
+                fillQuiz(
+                  'quiz.biochem.dna.guanine-pair',
+                  'In the DNA hierarchy diagram, guanine (G) pairs with _____ (C).',
+                  ['cytosine', 'c'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.dna.backbone',
+                  'In the DNA hierarchy diagram, the spiral backbone is made of sugar and _____.',
+                  ['phosphate', 'phosphates'],
+                  'Alternating with deoxyribose',
                 ),
               ],
               achievement: ach(

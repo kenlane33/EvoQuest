@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router';
 import { Flame, Heart, Settings } from 'lucide-react';
 import { AutoReadToggle } from '@/components/audio/AutoReadToggle';
 import { buttonPressClasses } from '@/components/common/Button';
+import { MenuHomeButton } from '@/components/common/MenuHomeButton';
 import { cn } from '@/lib/cn';
 import { devMark } from '@/lib/dev-mark';
 
@@ -34,33 +35,36 @@ export function Hud({ current, total, score, streak, elapsedSec, onProgressClick
         className,
       )}
     >
-      <div className="mx-auto flex max-w-(--w-content) items-center justify-between px-4 py-2">
-        <button
-          type="button"
-          {...devMark('hud.prog')}
-          onClick={onProgressClick}
-          disabled={!onProgressClick}
-          aria-label={onProgressClick ? 'Pause quest' : undefined}
-          className={cn(
-            'flex min-h-11 min-w-11 items-center gap-2 rounded-(--r-md) px-1 -mx-1',
-            onProgressClick
-              ? cn(
-                  buttonPressClasses,
-                  'cursor-pointer hover:bg-(--bg-card) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent-cyan)',
-                )
-              : 'cursor-default',
-          )}
-        >
-          <span className="text-micro font-extrabold uppercase text-(--accent-cyan)">
-            {Math.min(current, total)}/{total}
-          </span>
-          <div className="h-1.5 w-24 overflow-hidden rounded-full bg-(--bg-card-active)">
-            <div
-              className="h-full rounded-full bg-[image:linear-gradient(90deg,var(--accent-cyan),var(--accent-green))] transition-[width] duration-500"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-        </button>
+      <div className="mx-auto flex max-w-(--w-content) items-center justify-between gap-2 px-4 py-2 sm:gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <MenuHomeButton devId="hud.menu" size="compact" />
+          <button
+            type="button"
+            {...devMark('hud.prog')}
+            onClick={onProgressClick}
+            disabled={!onProgressClick}
+            aria-label={onProgressClick ? 'Pause quest' : undefined}
+            className={cn(
+              'flex min-h-11 min-w-0 items-center gap-2 rounded-(--r-md) px-1 -mx-1',
+              onProgressClick
+                ? cn(
+                    buttonPressClasses,
+                    'cursor-pointer hover:bg-(--bg-card) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent-cyan)',
+                  )
+                : 'cursor-default',
+            )}
+          >
+            <span className="text-micro font-extrabold uppercase text-(--accent-cyan)">
+              {Math.min(current, total)}/{total}
+            </span>
+            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-(--bg-card-active) sm:w-24">
+              <div
+                className="h-full rounded-full bg-[image:linear-gradient(90deg,var(--accent-cyan),var(--accent-green))] transition-[width] duration-500"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+          </button>
+        </div>
 
         <div {...devMark('hud.stats')} className="flex items-center gap-2 text-meta font-bold sm:gap-3">
           <div {...devMark('hud.autoread')}>
