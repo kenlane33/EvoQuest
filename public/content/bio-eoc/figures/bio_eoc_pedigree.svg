@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="834.23279"
-   height="586.2782"
+  
+  
    viewBox="0 0 834.23277 586.27819"
    id="svg2"
    version="1.1"
@@ -671,15 +671,15 @@
             <tspan
                x="0"
                y="0"
-               font-size="12"
+               font-size="16"
                id="tspan17"
-               style="font-size:12px;font-family:ArialMT">Homozygous</tspan>
+               style="font-size:16px;font-family:ArialMT">Homozygous</tspan>
             <tspan
                x="0"
                y="14.4"
-               font-size="12"
+               font-size="16"
                id="tspan19"
-               style="font-size:12px;font-family:ArialMT">Male</tspan>
+               style="font-size:16px;font-family:ArialMT">Male</tspan>
           </text>
         </g>
         <g
@@ -697,15 +697,15 @@
             <tspan
                x="0"
                y="0"
-               font-size="12"
+               font-size="16"
                id="tspan27"
-               style="font-size:12px;font-family:ArialMT">Homozygous</tspan>
+               style="font-size:16px;font-family:ArialMT">Homozygous</tspan>
             <tspan
                x="0"
                y="14.4"
-               font-size="12"
+               font-size="16"
                id="tspan29"
-               style="font-size:12px;font-family:ArialMT">Female</tspan>
+               style="font-size:16px;font-family:ArialMT">Female</tspan>
           </text>
         </g>
         <g
@@ -788,15 +788,15 @@
             <tspan
                x="0"
                y="0"
-               font-size="12"
+               font-size="16"
                id="tspan66"
-               style="font-size:12px;font-family:ArialMT">Heterozygous</tspan>
+               style="font-size:16px;font-family:ArialMT">Heterozygous</tspan>
             <tspan
                x="0"
                y="14.4"
-               font-size="12"
+               font-size="16"
                id="tspan68"
-               style="font-size:12px;font-family:ArialMT">Male</tspan>
+               style="font-size:16px;font-family:ArialMT">Male</tspan>
           </text>
         </g>
         <g
@@ -878,15 +878,15 @@
             <tspan
                x="0"
                y="0"
-               font-size="12"
+               font-size="16"
                id="tspan105"
-               style="font-size:12px;font-family:ArialMT">Heterozygous</tspan>
+               style="font-size:16px;font-family:ArialMT">Heterozygous</tspan>
             <tspan
                x="0"
                y="14.4"
-               font-size="12"
+               font-size="16"
                id="tspan107"
-               style="font-size:12px;font-family:ArialMT">Female</tspan>
+               style="font-size:16px;font-family:ArialMT">Female</tspan>
           </text>
         </g>
         <g
@@ -904,15 +904,15 @@
             <tspan
                x="0"
                y="0"
-               font-size="12"
+               font-size="16"
                id="tspan115"
-               style="font-size:12px;font-family:ArialMT">Wild Type</tspan>
+               style="font-size:16px;font-family:ArialMT">Wild Type</tspan>
             <tspan
                x="0"
                y="14.4"
-               font-size="12"
+               font-size="16"
                id="tspan117"
-               style="font-size:12px;font-family:ArialMT">Female</tspan>
+               style="font-size:16px;font-family:ArialMT">Female</tspan>
           </text>
         </g>
         <g
@@ -931,15 +931,15 @@
             <tspan
                x="0"
                y="0"
-               font-size="12"
+               font-size="16"
                id="tspan125"
-               style="font-size:12px;font-family:ArialMT">Wild Type</tspan>
+               style="font-size:16px;font-family:ArialMT">Wild Type</tspan>
             <tspan
                x="0"
                y="14.4"
-               font-size="12"
+               font-size="16"
                id="tspan127"
-               style="font-size:12px;font-family:ArialMT">Male</tspan>
+               style="font-size:16px;font-family:ArialMT">Male</tspan>
           </text>
         </g>
         <rect

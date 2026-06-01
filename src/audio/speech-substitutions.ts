@@ -5,6 +5,9 @@
 
 import { replaceEmojisForSpeech } from '@/audio/speech-emoji-substitutions';
 
+/** Em-dash → comma: prosodic pause in prose (not for pronunciation hints). */
+const TTS_PAUSE = ', ';
+
 const SUBSCRIPT_CHARS: Record<string, string> = {
   '₀': '0',
   '₁': '1',
@@ -100,9 +103,36 @@ export const SPEECH_SUBSTITUTIONS: ReadonlyArray<readonly [RegExp, string]> = [
 
   // Punctuation that TTS reads awkwardly
   [/&/g, ' and '],
-  [/\s*\u2014\s*/g, ' - '],
+  [/\s*\u2014\s*/g, TTS_PAUSE],
   [/\s*–\s*/g, ' to '],
 ];
+
+/**
+ * Pocket TTS has no phoneme/SSML input — steer pronunciation via single-token respellings.
+ * Do not insert commas, hyphens, or spaces between hint parts; those become real pauses.
+ */
+const PRONUNCIATION_HINTS: ReadonlyArray<readonly [RegExp, (match: string, ...groups: string[]) => string]> = [
+  [/\bribosom(\w*)\b/gi, (_match, suffix) => respellToken(_match, `rybosom${suffix}`)],
+  [/\bmitochondri(\w*)\b/gi, (_match, suffix) => respellToken(_match, `mydoughchondri${suffix}`)],
+];
+
+function respellToken(original: string, spoken: string): string {
+  if (original === original.toUpperCase()) {
+    return spoken.toUpperCase();
+  }
+  if (original[0] === original[0].toUpperCase()) {
+    return spoken[0].toUpperCase() + spoken.slice(1);
+  }
+  return spoken;
+}
+
+function applyPronunciationHints(text: string): string {
+  let out = text;
+  for (const [pattern, replace] of PRONUNCIATION_HINTS) {
+    out = out.replace(pattern, replace);
+  }
+  return out;
+}
 
 function expandUnicodeScript(text: string): string {
   return text
@@ -124,5 +154,6 @@ export function prepareTextForSpeech(text: string): string {
   for (const [pattern, replacement] of SPEECH_SUBSTITUTIONS) {
     out = out.replace(pattern, replacement);
   }
+  out = applyPronunciationHints(out);
   return collapseWhitespace(out);
 }

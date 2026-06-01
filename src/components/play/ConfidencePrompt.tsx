@@ -37,7 +37,7 @@ export function ConfidencePrompt({ onCommit }: ConfidencePromptProps) {
         className="mt-4 w-full accent-(--accent-cyan)"
         aria-label="Confidence prediction"
       />
-      <div className="mt-1 flex justify-between text-micro text-(--text-dim)">
+      <div className="mt-1 flex justify-between text-micro text-(--text-dim) max-sm:hidden">
         {CONFIDENCE_MARKS.map((mark) => (
           <span key={mark}>{Math.round(mark * 100)}%</span>
         ))}

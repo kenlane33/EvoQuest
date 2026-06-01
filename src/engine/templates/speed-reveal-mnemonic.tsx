@@ -211,7 +211,7 @@ function FillQuestion({
             <>
               {parts[0]}
               <span
-                className={`mx-1 inline-block min-w-[70px] border-b-2 px-1 font-bold ${
+                className={`mx-1 inline-block min-w-[3rem] max-sm:min-w-[2.5rem] border-b-2 px-1 font-bold ${
                   done
                     ? ok
                       ? 'border-emerald-400 text-emerald-300'

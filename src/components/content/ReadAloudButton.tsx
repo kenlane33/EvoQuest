@@ -27,13 +27,13 @@ export function ReadAloudButton({
   const disabled = !text.trim();
 
   return (
-    <div className={cn('flex flex-col items-start gap-1', className)}>
+    <div className={cn('flex flex-col items-start gap-1 h-9', className)}>
       <Button
         variant="secondary"
         onClick={onToggle}
         disabled={disabled || busy}
         aria-label={playing ? 'Stop reading' : label}
-        className="gap-2"
+        className="gap-2 h-9"
       >
         {busy ? (
           <Loader2 size={16} className="animate-spin" aria-hidden />

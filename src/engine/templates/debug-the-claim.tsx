@@ -121,7 +121,7 @@ function DebugTheClaimRenderer({
                 onClick={() => onTokenClick(token)}
                 disabled={phase === 'done'}
                 className={cn(
-                  'mx-0.5 rounded px-0.5 underline-offset-4 transition-colors disabled:cursor-not-allowed',
+                  'mx-0.5 inline-flex min-h-11 items-center rounded px-1.5 py-1 underline-offset-4 transition-colors disabled:cursor-not-allowed',
                   isBug
                     ? 'bg-[color-mix(in_oklab,var(--status-wrong)_20%,transparent)] text-(--status-wrong) underline'
                     : isWrongPick

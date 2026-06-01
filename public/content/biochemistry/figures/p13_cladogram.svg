@@ -1,6 +1,6 @@
 <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
   <title>Cladogram of mammals</title>
-  <text x="200" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Cladogram  Rodents and Rabbits</text>
+  <text x="200" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Cladogram — Rodents and Rabbits</text>
   <!-- Tree -->
   <line x1="60" y1="260" x2="340" y2="260" stroke="#333" stroke-width="2"/>
   <line x1="100" y1="260" x2="100" y2="180" stroke="#333" stroke-width="2"/>

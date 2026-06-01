@@ -5,6 +5,7 @@ import '@/engine/templates';
 import { preloadPocketTts } from '@/audio/pocket-tts-engine';
 import { useValidateStoredPocketTtsVoice } from '@/hooks/use-pocket-tts-voices';
 import { AppHeader } from '@/components/common/AppHeader';
+import { VersionBadge } from '@/components/common/VersionBadge';
 import { DevPageLabelProvider } from '@/components/dev/DevPageLabel';
 import { GlobalReadAloudBar } from '@/components/audio/GlobalReadAloudBar';
 import { PageReadAloudProvider } from '@/components/audio/page-read-aloud-context';
@@ -48,21 +49,22 @@ export function AppHydrator({ children }: { children: React.ReactNode }) {
     }
   }, [settings.reading.enabled, settings.reading.voice]);
 
-  if (!hydrated) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-(--text-dim)">
-        Loading…
-      </div>
-    );
-  }
-
   return (
-    <DevPageLabelProvider>
-      <PageReadAloudProvider>
-        <AppHeader />
-        {children}
-        <GlobalReadAloudBar />
-      </PageReadAloudProvider>
-    </DevPageLabelProvider>
+    <>
+      <VersionBadge />
+      {!hydrated ? (
+        <div className="flex min-h-screen items-center justify-center text-(--text-dim)">
+          Loading…
+        </div>
+      ) : (
+        <DevPageLabelProvider>
+          <PageReadAloudProvider>
+            <AppHeader />
+            {children}
+            <GlobalReadAloudBar />
+          </PageReadAloudProvider>
+        </DevPageLabelProvider>
+      )}
+    </>
   );
 }

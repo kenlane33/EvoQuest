@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
 """ To recover the Python script to generate this SVG, delete the line above -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="46 -105 639 426">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="46 -105 639 426">
  <title>Punnett square blood types</title>
  <desc>Punnett square of the possible genotypes and phenotypes of children given combined genotypes and phenotypes of their mothers (rows) and fathers (columns) shaded by phenotypes (A: amber, B: blue, AB: green and O: grey) by CMG Lee. The top-left inset shows possible genotypes for each phenotype, and the top-right inset shows phenotypes for possible genotypes.</desc>
  <style type="text/css">

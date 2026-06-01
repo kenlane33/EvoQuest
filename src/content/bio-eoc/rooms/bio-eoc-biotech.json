@@ -374,9 +374,13 @@
                       "kind": "match",
                       "id": "quiz.bio.eoc.biotech.engineering.applications-ethics.ethics",
                       "data": {
-                        "term": "An ethical question about biotechnology",
-                        "correct": "Should humans edit the genes of embryos?",
-                        "distractors": ["How many bases make up a codon?", "What sugar is found in DNA?", "Where in the cell does translation occur?"]
+                        "term": "Should humans edit the genes of embryos?",
+                        "correct": "An ethics question ('should we?')",
+                        "distractors": [
+                          "A science question ('what is it?')",
+                          "A science question ('how does it work?')",
+                          "A science question ('can we do it?')"
+                        ]
                       }
                     }
                   ],

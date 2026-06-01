@@ -2,7 +2,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-headline: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-headline: "Bungee", ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-headline);
   --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -109,6 +109,9 @@
   --w-wide: 960px;
   --w-max: 1200px;
   --app-header-h: 4.0625rem;
+  --hud-height: 3.25rem;
+  --play-readbar-bottom: max(6.5rem, calc(env(safe-area-inset-bottom) + 6rem));
+  --play-readbar-reserve: 6rem;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -383,23 +386,68 @@ textarea:disabled,
 
 .text-display-xl {
   font-family: var(--font-headline);
-  font-size: 3.5rem;
+  font-size: clamp(2rem, 8vw, 3.5rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
 }
 
 .text-display-lg {
   font-family: var(--font-headline);
-  font-size: 2.5rem;
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
 .text-display-md {
   font-family: var(--font-headline);
-  font-size: 1.75rem;
+  font-size: clamp(1.375rem, 4.5vw, 1.75rem);
   line-height: 1.15;
   letter-spacing: -0.02em;
+}
+
+.text-display-sm {
+  font-family: var(--font-headline);
+  font-size: clamp(1.125rem, 3.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.safe-top {
+  padding-top: max(var(--space-2), env(safe-area-inset-top));
+}
+
+.safe-bottom {
+  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+}
+
+.play-content-top {
+  /* --hud-height is set by Hud (full header incl. safe area); fallback adds safe area once */
+  padding-top: calc(
+    var(--hud-height, calc(3.25rem + max(var(--space-2), env(safe-area-inset-top)))) + var(--space-3)
+  );
+}
+
+.play-content-bottom {
+  padding-bottom: max(2.5rem, calc(env(safe-area-inset-bottom) + var(--space-5)));
+}
+
+.play-content-bottom-with-readbar {
+  padding-bottom: max(
+    var(--play-readbar-reserve),
+    calc(env(safe-area-inset-bottom) + var(--play-readbar-reserve))
+  );
+  scroll-padding-bottom: max(
+    var(--play-readbar-reserve),
+    calc(env(safe-area-inset-bottom) + var(--play-readbar-reserve))
+  );
+}
+
+@media (max-width: 639px) {
+  :root {
+    /* Pin read bar to the bottom edge; reserve space for bar + primary CTA when scrolled. */
+    --play-readbar-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    --play-readbar-reserve: calc(var(--play-readbar-bottom) + 3.75rem + 5.5rem);
+  }
 }
 
 .text-headline-lg {

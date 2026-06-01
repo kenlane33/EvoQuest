@@ -1,25 +1,59 @@
-<svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
-  <title>Cladogram of mammals</title>
-  <text x="200" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Cladogram  Rodents and Rabbits</text>
-  <!-- Tree -->
-  <line x1="60" y1="260" x2="340" y2="260" stroke="#333" stroke-width="2"/>
-  <line x1="100" y1="260" x2="100" y2="180" stroke="#333" stroke-width="2"/>
-  <line x1="100" y1="180" x2="200" y2="180" stroke="#333" stroke-width="2"/>
-  <line x1="200" y1="180" x2="200" y2="100" stroke="#333" stroke-width="2"/>
-  <line x1="200" y1="100" x2="280" y2="100" stroke="#333" stroke-width="2"/>
-  <!-- Branches to tips -->
-  <line x1="140" y1="260" x2="140" y2="230" stroke="#333" stroke-width="1.5"/>
-  <line x1="180" y1="260" x2="180" y2="230" stroke="#333" stroke-width="1.5"/>
-  <line x1="240" y1="260" x2="240" y2="230" stroke="#333" stroke-width="1.5"/>
-  <line x1="300" y1="260" x2="300" y2="230" stroke="#333" stroke-width="1.5"/>
-  <line x1="240" y1="180" x2="240" y2="150" stroke="#333" stroke-width="1.5"/>
-  <line x1="280" y1="100" x2="280" y2="70" stroke="#333" stroke-width="1.5"/>
-  <!-- Labels -->
-  <text x="140" y="250" text-anchor="middle" font-size="10" fill="#333">Mouse</text>
-  <text x="180" y="250" text-anchor="middle" font-size="10" fill="#333">Rat</text>
-  <text x="240" y="250" text-anchor="middle" font-size="10" fill="#333">Squirrel</text>
-  <text x="300" y="250" text-anchor="middle" font-size="10" fill="#333">Beaver</text>
-  <text x="240" y="170" text-anchor="middle" font-size="10" fill="#333">Rabbit</text>
-  <text x="280" y="60" text-anchor="middle" font-size="10" fill="#333">Human</text>
-  <text x="200" y="300" text-anchor="middle" font-size="10" fill="#555">Most recent common ancestor shared by closest branches</text>
+<svg viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Cladogram of mammals — Glires and outgroup</title>
+  <desc>Topology based on Glires (Rodentia + Lagomorpha) within Euarchontoglires; Human (Primates) as outgroup. Layout follows standard rectangular cladogram conventions used in OpenStax Biology Figure 20.10.</desc>
+
+  <rect width="500" height="320" fill="#F4F7FB"/>
+  <rect x="10" y="10" width="480" height="300" rx="10" fill="#FFFFFF" stroke="#C8D2E0" stroke-width="1"/>
+
+  <text x="250" y="36" text-anchor="middle" font-size="17" font-weight="bold" fill="#0F172A">Cladogram — Rodents and Rabbits</text>
+
+  <!-- Rectangular cladogram: root left, tips right. (Human,(Rabbit,((Mouse,Rat),(Squirrel,Beaver)))) -->
+  <g fill="none" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Root → Human (outgroup) + Glires stem -->
+    <line x1="60" y1="165" x2="60" y2="58"/>
+    <line x1="60" y1="58" x2="430" y2="58"/>
+    <line x1="60" y1="165" x2="60" y2="268"/>
+    <line x1="60" y1="165" x2="105" y2="165"/>
+
+    <!-- Glires: Rabbit sister to Rodentia -->
+    <line x1="105" y1="102" x2="105" y2="268"/>
+    <line x1="105" y1="102" x2="430" y2="102"/>
+
+    <!-- Rodentia -->
+    <line x1="105" y1="168" x2="170" y2="168"/>
+    <line x1="170" y1="148" x2="170" y2="268"/>
+
+    <!-- Muridae: Mouse + Rat -->
+    <line x1="170" y1="168" x2="220" y2="168"/>
+    <line x1="220" y1="148" x2="220" y2="188"/>
+    <line x1="220" y1="148" x2="430" y2="148"/>
+    <line x1="220" y1="188" x2="430" y2="188"/>
+
+    <!-- Sciuridae + Castoridae (simplified rodent pair) -->
+    <line x1="170" y1="258" x2="220" y2="258"/>
+    <line x1="220" y1="238" x2="220" y2="278"/>
+    <line x1="220" y1="238" x2="430" y2="238"/>
+    <line x1="220" y1="278" x2="430" y2="278"/>
+  </g>
+
+  <g fill="#2563EB">
+    <circle cx="60" cy="165" r="4.5"/>
+    <circle cx="105" cy="165" r="4.5"/>
+    <circle cx="170" cy="168" r="4.5"/>
+    <circle cx="220" cy="168" r="4.5"/>
+    <circle cx="220" cy="258" r="4.5"/>
+  </g>
+
+  <g font-size="15" font-weight="600" fill="#0F172A">
+    <text x="438" y="62" text-anchor="start">Human</text>
+    <text x="438" y="106" text-anchor="start">Rabbit</text>
+    <text x="438" y="152" text-anchor="start">Mouse</text>
+    <text x="438" y="192" text-anchor="start">Rat</text>
+    <text x="438" y="242" text-anchor="start">Squirrel</text>
+    <text x="438" y="282" text-anchor="start">Beaver</text>
+  </g>
+
+  <text x="438" y="48" font-size="11" font-weight="600" fill="#64748B">(outgroup)</text>
+
+  <text x="250" y="302" text-anchor="middle" font-size="12" fill="#475569">Rodents + rabbits share a branch; primates (Human) branch earlier as the outgroup</text>
 </svg>

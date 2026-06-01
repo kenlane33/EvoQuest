@@ -27,13 +27,16 @@ import {
   buildQuestionReadBundle,
   useQuestionTtsPreload,
 } from '@/hooks/use-question-tts-preload';
+import { useAchievementMomentSpeak } from '@/hooks/use-achievement-moment-speak';
 import { useFeedbackAutoRead } from '@/hooks/use-feedback-auto-read';
 import { useFeedbackReadPreload } from '@/hooks/use-feedback-read-preload';
 import { useImmediateFeedbackSpeak } from '@/hooks/use-immediate-feedback-speak';
 import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
 import { calibrationNote, shouldAskConfidence } from '@/engine/calibration';
 import { ConfidencePrompt } from '@/components/play/ConfidencePrompt';
+import { ContinueCountdownButton } from '@/components/play/ContinueCountdownButton';
 import { AnswerFeedbackFlash } from '@/components/play/AnswerFeedbackFlash';
+import { CorrectAnswerReveal } from '@/components/play/CorrectAnswerReveal';
 import { PauseModal } from '@/components/play/PauseModal';
 import { getUnitById } from '@/content/catalog';
 import { ulid } from '@/lib/id';
@@ -44,6 +47,7 @@ import '@/engine/templates';
 import { cn } from '@/lib/cn';
 import {
   getQuizAcceptableAnswers,
+  getQuizCorrectAnswerDisplay,
   getSafePlayHeading,
   shouldShowPlayEtymology,
 } from '@/lib/quiz-answer-leak';
@@ -228,7 +232,7 @@ function FillQuestion({
             {parts[0]}
             <span
               className={cn(
-                'mx-1 inline-flex min-w-[4rem] items-center gap-1 border-b-2 px-1 font-bold',
+                'mx-1 inline-flex min-w-[3rem] max-sm:min-w-[2.5rem] items-center gap-1 border-b-2 px-1 font-bold',
                 done
                   ? 'border-(--status-correct) text-(--status-correct)'
                   : 'border-(--accent-cyan) text-(--accent-cyan)',
@@ -435,53 +439,6 @@ function FeedbackNextButton({
   );
 }
 
-function ContinueCountdownButton({
-  onContinue,
-  countdownSec = 3,
-  continueReady = true,
-}: {
-  onContinue: () => void;
-  countdownSec?: number;
-  /** When false, hold until answer-reaction speech finishes. */
-  continueReady?: boolean;
-}) {
-  const [remaining, setRemaining] = useState(countdownSec);
-  const firedRef = useRef(false);
-
-  const fire = useCallback(() => {
-    if (firedRef.current || !continueReady) return;
-    firedRef.current = true;
-    onContinue();
-  }, [onContinue, continueReady]);
-
-  useEffect(() => {
-    if (remaining <= 0) return;
-    const t = setTimeout(() => setRemaining((r) => r - 1), 1000);
-    return () => clearTimeout(t);
-  }, [remaining]);
-
-  useEffect(() => {
-    if (remaining <= 0 && continueReady) {
-      fire();
-    }
-  }, [remaining, continueReady, fire]);
-
-  const waitingOnSpeech = !continueReady;
-
-  return (
-    <Button
-      variant="primary"
-      fullWidth
-      className="mt-6 animate-slide-up"
-      onClick={fire}
-      disabled={waitingOnSpeech}
-    >
-      CONTINUE
-      {remaining > 0 ? ` · ${remaining}s` : waitingOnSpeech ? ' · …' : ''}
-    </Button>
-  );
-}
-
 function TemplateRenderer({
   data,
   answered,
@@ -544,7 +501,6 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
   const [pendingCorrect, setPendingCorrect] = useState<boolean | null>(null);
   const [confidenceValue, setConfidenceValue] = useState<number | null>(null);
   const [confidenceCommitted, setConfidenceCommitted] = useState(false);
-  const [elapsedSec, setElapsedSec] = useState(0);
   const [fillHintShown, setFillHintShown] = useState(false);
   const [mnemonicPhase, setMnemonicPhase] = useState<'waiting' | 'revealing' | 'done'>('waiting');
   const [activeEffects, setActiveEffects] = useState<PowerUpEffect[]>([]);
@@ -588,10 +544,6 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
   useEffect(() => {
     if (!session) return;
     startRef.current = session.startedAt;
-    const iv = setInterval(() => {
-      setElapsedSec(Math.floor((Date.now() - startRef.current) / 1000));
-    }, 500);
-    return () => clearInterval(iv);
   }, [session]);
 
   phaseRef.current = sessionState.phase;
@@ -630,9 +582,10 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     const [next, ...rest] = earnedMomentQueue;
     setShownMoment(next);
     setEarnedMomentQueue(rest);
-    const t = setTimeout(() => setShownMoment(null), next.kind === 'aggregate' ? 2500 : 1500);
-    return () => clearTimeout(t);
   }, [earnedMomentQueue, shownMoment]);
+
+  const achievementMomentActive = shownMoment !== null || earnedMomentQueue.length > 0;
+  const stopAchievementSpeak = useAchievementMomentSpeak(shownMoment);
 
   const applyEarnedAchievements = useCallback(
     (achievements: EarnedAchievement[]) => {
@@ -744,6 +697,8 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
 
   const handleContinueToFeedback = useCallback(() => {
     if (!session || sessionState.phase !== 'play' || pendingCorrect === null) return;
+
+    stopPocketTtsEngine();
 
     const correct = pendingCorrect;
     const effectState = buildActiveEffects(activeEffects);
@@ -889,6 +844,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
 
   const finishJourney = useCallback(
     (session: ActiveSession, abandoned?: boolean) => {
+      const elapsedSec = Math.floor((Date.now() - session.startedAt) / 1000);
       const correct = session.attempts.filter((a) => a.correct).length;
       const store = useAppStore.getState();
       const powerupsUsed = Object.values(session.powerupUsage).reduce((a, b) => a + b, 0);
@@ -932,7 +888,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       });
       clearSession(false);
     },
-    [addJourney, applyEarnedAchievements, clearSession, elapsedSec, setSessionState],
+    [addJourney, applyEarnedAchievements, clearSession, setSessionState],
   );
 
   const goNext = useCallback(() => {
@@ -977,6 +933,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     const state = useAppStore.getState().sessionState;
     if (state.phase !== 'paused') return;
     const session = state.session;
+    const elapsedSec = Math.floor((Date.now() - session.startedAt) / 1000);
     const correct = session.attempts.filter((a) => a.correct).length;
     const store = useAppStore.getState();
     const powerupsUsed = Object.values(session.powerupUsage).reduce((a, b) => a + b, 0);
@@ -1010,7 +967,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     pauseSnapshotRef.current = null;
     clearSession(true);
     navigate({ to: '/' });
-  }, [addJourney, applyEarnedAchievements, clearSession, elapsedSec, navigate]);
+  }, [addJourney, applyEarnedAchievements, clearSession, navigate]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -1058,6 +1015,11 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
 
   const acceptableAnswers = useMemo(
     () => (activeQuiz ? getQuizAcceptableAnswers(activeQuiz) : []),
+    [activeQuiz],
+  );
+
+  const correctAnswerDisplay = useMemo(
+    () => (activeQuiz ? getQuizCorrectAnswerDisplay(activeQuiz) : null),
     [activeQuiz],
   );
 
@@ -1135,12 +1097,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
 
   useFeedbackReadPreload(feedbackPreloadTarget);
 
-  const answerReactionReady = useImmediateFeedbackSpeak(pendingFeedbackHeadline);
-
-  const holdForReactionSpeech = Boolean(
-    pendingFeedbackHeadline && canAutoReadAloud(settings.reading),
-  );
-  const continueReady = !holdForReactionSpeech || answerReactionReady;
+  useImmediateFeedbackSpeak(pendingFeedbackHeadline);
 
   const feedbackReadBundle = useMemo(() => {
     if (sessionState.phase !== 'feedback' || !activeUnit) return null;
@@ -1236,13 +1193,16 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
 
   const feedbackAutoReadDone = useFeedbackAutoRead(
     feedbackReadBundle,
-    sessionState.phase === 'feedback' ? pageReadAutoKey : null,
+    sessionState.phase === 'feedback' && !achievementMomentActive
+      ? pageReadAutoKey
+      : null,
   );
 
   const feedbackNextReady =
-    !canAutoReadAloud(settings.reading) ||
-    !feedbackDescText ||
-    feedbackAutoReadDone;
+    !achievementMomentActive &&
+    (!canAutoReadAloud(settings.reading) ||
+      !feedbackDescText ||
+      feedbackAutoReadDone);
 
   const briefAutoAdvance = canAutoReadAloud(settings.reading);
 
@@ -1278,7 +1238,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       pct >= 93 ? 'A' : pct >= 85 ? 'B+' : pct >= 78 ? 'B' : pct >= 70 ? 'C' : pct >= 60 ? 'D' : 'F';
 
     return (
-      <div {...devMark('end')} className="mx-auto max-w-(--w-narrow) px-5 py-10 text-center animate-slide-up">
+      <div {...devMark('end')} className="mx-auto max-w-(--w-narrow) px-4 py-10 text-center animate-slide-up max-sm:px-3 safe-bottom">
         <div {...devMark('end.grade')} className="mb-2 text-5xl" aria-hidden>
           🏆
         </div>
@@ -1337,14 +1297,13 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
         total={total}
         score={score}
         streak={session.currentStreak}
-        elapsedSec={elapsedSec}
+        startedAt={session.startedAt}
         onProgressClick={pauseQuest}
       />
 
       {sessionState.phase === 'paused' && (
         <PauseModal
           session={session}
-          elapsedSec={elapsedSec}
           onResume={resumeQuest}
           onEndJourney={endQuest}
         />
@@ -1354,12 +1313,12 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
         <div
           data-wing={unit.achievement.wingId}
           {...devMark('brief')}
-          className="mx-auto flex min-h-screen max-w-(--w-content) flex-col items-center justify-center px-6 pt-16 animate-pop-in"
+          className="mx-auto flex min-h-screen max-w-(--w-content) flex-col items-center justify-center px-4 play-content-top animate-pop-in max-sm:px-3"
         >
           <div {...devMark('brief.hero')} className="text-center">
             <div
               {...devMark('brief.emoji')}
-              className="mb-4 text-6xl glow-wing-lg"
+              className="mb-4 text-5xl glow-wing-lg max-sm:text-4xl"
               style={{ filter: 'drop-shadow(0 0 48px var(--wing-glow))' }}
             >
               {unit.emoji}
@@ -1407,13 +1366,13 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
             key={`play-${session.currentIndex}`}
             data-wing={unit.achievement.wingId}
             {...devMark('q')}
-            className="mx-auto max-w-(--w-content) px-5 pb-10 pt-20 animate-slide-up"
+            className="mx-auto max-w-(--w-content) px-4 play-content-top play-content-bottom-with-readbar animate-slide-up max-sm:px-3"
           >
-            <div {...devMark('q.title')} className="mb-5 flex items-center gap-2">
-              <span className="text-xl">{unit.emoji}</span>
+            <div {...devMark('q.title')} className="mb-5 flex flex-wrap items-start gap-x-2 gap-y-1">
+              <span className="shrink-0 text-xl leading-none">{unit.emoji}</span>
               <span
                 className={cn(
-                  'min-w-0 flex-1 font-headline font-black bg-[image:var(--wing-gradient)] bg-clip-text text-transparent',
+                  'min-w-0 flex-1 wrap-break-word font-headline font-black bg-[image:var(--wing-gradient)] bg-clip-text text-transparent',
                   playHeading === unit.shortLabel
                     ? 'text-micro uppercase tracking-[0.1em]'
                     : 'text-sm leading-snug',
@@ -1425,6 +1384,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
                 slot="title"
                 text={playHeading}
                 label={`Read title: ${playHeading}`}
+                className="shrink-0"
               />
             </div>
 
@@ -1435,6 +1395,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
                 speakText={sidebarSpeakText}
                 speakSlot="sidebar"
                 compact
+                collapsible
                 />
               </div>
             ) : null}
@@ -1539,6 +1500,12 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
               </div>
             ) : null}
 
+            {pendingCorrect !== null && correctAnswerDisplay ? (
+              <div {...devMark('q.answer')}>
+                <CorrectAnswerReveal answer={correctAnswerDisplay} />
+              </div>
+            ) : null}
+
             {pendingCorrect !== null && pendingFeedbackHeadline ? (
               <div {...devMark('q.flash')}>
                 <AnswerFeedbackFlash
@@ -1554,7 +1521,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
                 <ContinueCountdownButton
                 key={`continue-${session.currentIndex}`}
                 onContinue={handleContinueToFeedback}
-                continueReady={continueReady}
+                countdownSec={Math.round(settings.reveals.countdownMs / 1000)}
                 />
               </div>
             )}
@@ -1572,7 +1539,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
           }}
           autoKey={pageReadAutoKey}
         >
-          <div {...devMark('fb')} className="mx-auto max-w-(--w-content) px-5 pb-10 pt-20 animate-slide-up">
+          <div {...devMark('fb')} className="mx-auto max-w-(--w-content) px-4 play-content-top play-content-bottom-with-readbar animate-slide-up max-sm:px-3">
             {unit ? (
               <div {...devMark('fb.unit')} className="mb-5 flex items-center gap-2">
                 <span className="text-xl">{unit.emoji}</span>
@@ -1617,6 +1584,12 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
               </div>
             </div>
 
+            {correctAnswerDisplay ? (
+              <div {...devMark('fb.answer')}>
+                <CorrectAnswerReveal answer={correctAnswerDisplay} className="mb-6" />
+              </div>
+            ) : null}
+
             <Card {...devMark('fb.explain')} variant={sessionState.feedback.correct ? 'correct' : 'wrong'}>
               <div className="flex items-start gap-2">
                 <p className="min-w-0 flex-1 text-body leading-relaxed text-(--text-secondary)">
@@ -1652,6 +1625,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
                   speakText={feedbackSidebarText}
                   speakSlot="sidebar"
                   compact
+                  collapsible
                 />
               </div>
             ) : null}
@@ -1670,7 +1644,11 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       {shownMoment ? (
         <AchievementEarnedMoment
           achievement={shownMoment}
-          onDismiss={() => setShownMoment(null)}
+          remainingCount={earnedMomentQueue.length}
+          onContinue={() => {
+            stopAchievementSpeak();
+            setShownMoment(null);
+          }}
           reducedMotion={settings.motion !== 'full'}
         />
       ) : null}

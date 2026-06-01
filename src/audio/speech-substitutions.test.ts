@@ -47,7 +47,29 @@ describe('prepareTextForSpeech', () => {
 
   it('preserves plain prose', () => {
     expect(prepareTextForSpeech('Keep going — every attempt builds the map.')).toBe(
-      'Keep going - every attempt builds the map.',
+      'Keep going, every attempt builds the map.',
     );
+  });
+
+  it('disambiguates biology terms with single-token respellings (no prosodic breaks)', () => {
+    expect(prepareTextForSpeech('Ribosomes read codons.')).toBe('Rybosomes read codons.');
+    expect(prepareTextForSpeech('Translate mRNA at the ribosome.')).toBe(
+      'Translate mRNA at the rybosome.',
+    );
+    expect(prepareTextForSpeech('RIBOSOME = PROTEIN PRINTER')).toBe(
+      'RYBOSOME equals PROTEIN PRINTER',
+    );
+    expect(prepareTextForSpeech('Mitochondria produce ATP.')).toBe(
+      'Mydoughchondria produce ATP.',
+    );
+    expect(prepareTextForSpeech('The mitochondrial matrix')).toBe('The mydoughchondrial matrix');
+    expect(prepareTextForSpeech('Enter the mitochondrion')).toBe('Enter the mydoughchondrion');
+    expect(prepareTextForSpeech('mitosis and mitochondria')).toBe('mitosis and mydoughchondria');
+    for (const sample of [
+      'Rybosomes read codons.',
+      'Mydoughchondria produce ATP.',
+    ]) {
+      expect(sample).not.toMatch(/,\s/);
+    }
   });
 });

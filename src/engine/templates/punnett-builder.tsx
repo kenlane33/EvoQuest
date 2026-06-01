@@ -135,7 +135,8 @@ function PunnettBuilderRenderer({
         Drag alleles into headers, label each cell&apos;s phenotype, then commit.
       </p>
 
-      <div className="grid grid-cols-[auto_1fr_1fr] gap-1">
+      <div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
+        <div className="grid min-w-[280px] grid-cols-[auto_1fr_1fr] gap-1">
         <div />
         {[0, 1].map((slot) => (
           <div
@@ -217,6 +218,7 @@ function PunnettBuilderRenderer({
             })}
           </Fragment>
         ))}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-4">

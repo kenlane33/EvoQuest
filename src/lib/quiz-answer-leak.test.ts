@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
+  getQuizCorrectAnswerDisplay,
   getSafePlayHeading,
   shouldShowPlayEtymology,
   textLeaksAnswer,
 } from '@/lib/quiz-answer-leak';
-import type { KnowledgeUnit } from '@/types';
+import type { KnowledgeUnit, QuizTemplate } from '@/types';
 
 const galapagosUnit: KnowledgeUnit = {
   id: 'evo.evidence.galapagos.finches',
@@ -30,6 +31,35 @@ const galapagosUnit: KnowledgeUnit = {
   difficulty: 'intro',
   enabled: true,
 };
+
+describe('getQuizCorrectAnswerDisplay', () => {
+  it('returns fill acceptable answer', () => {
+    const quiz = {
+      id: 'q1',
+      kind: 'fill',
+      data: { prompt: 'The _____ is the powerhouse.', acceptable: ['mitochondria'] },
+    } as QuizTemplate;
+    expect(getQuizCorrectAnswerDisplay(quiz)).toBe('mitochondria');
+  });
+
+  it('returns match correct option', () => {
+    const quiz = {
+      id: 'q2',
+      kind: 'match',
+      data: { term: 'ATP', correct: 'Cell energy currency', distractors: ['DNA', 'RNA'] },
+    } as QuizTemplate;
+    expect(getQuizCorrectAnswerDisplay(quiz)).toBe('Cell energy currency');
+  });
+
+  it('returns null when no extractable answer', () => {
+    const quiz = {
+      id: 'q3',
+      kind: 'punnett-builder',
+      data: { parentA: 'Aa', parentB: 'aa' },
+    } as QuizTemplate;
+    expect(getQuizCorrectAnswerDisplay(quiz)).toBeNull();
+  });
+});
 
 describe('textLeaksAnswer', () => {
   it('detects Galápagos label and etymology leaks', () => {

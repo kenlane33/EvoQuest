@@ -44,10 +44,10 @@ export function MasteryOverview({
           </p>
           <p className="mt-1 flex items-baseline gap-2">
             <span className="font-headline text-[2.75rem] font-black leading-none text-(--accent-cyan)">
-              ×{overview.laps}
+              {overview.laps}
             </span>
             <span className="text-body font-semibold text-(--text-secondary)">
-              {overview.laps === 1 ? 'lap' : 'laps'}
+              "{overview.laps === 1 ? 'lap' : 'laps'}" so far
             </span>
           </p>
           <p className="mt-2 max-w-[20rem] text-meta text-(--text-dim)">

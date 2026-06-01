@@ -30,12 +30,12 @@ describe('replaceEmojisForSpeech', () => {
 });
 
 describe('prepareTextForSpeech emoji integration', () => {
-  it('replaces em dash with hyphen', () => {
+  it('replaces em dash with a spoken pause', () => {
     expect(prepareTextForSpeech('Keep going — every attempt builds the map.')).toBe(
-      'Keep going - every attempt builds the map.',
+      'Keep going, every attempt builds the map.',
     );
     expect(prepareTextForSpeech('Keep going \u2014 every attempt builds the map.')).toBe(
-      'Keep going - every attempt builds the map.',
+      'Keep going, every attempt builds the map.',
     );
   });
 

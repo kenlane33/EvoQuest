@@ -28,6 +28,7 @@ function HomePage() {
   const unitProgress = useAppStore((s) => s.unitProgress);
   const achievementState = useAppStore((s) => s.achievementState);
   const sessionState = useAppStore((s) => s.sessionState);
+  const completeFirstRun = useAppStore((s) => s.completeFirstRun);
   const firstRunCompleted = useAppStore((s) => s.firstRunCompleted);
   const embarkNewQuest = useAppStore((s) => s.embarkNewQuest);
 
@@ -38,9 +39,9 @@ function HomePage() {
 
   useEffect(() => {
     if (hydrated && !firstRunCompleted) {
-      navigate({ to: '/welcome' });
+      completeFirstRun();
     }
-  }, [hydrated, firstRunCompleted, navigate]);
+  }, [hydrated, firstRunCompleted, completeFirstRun]);
 
   const hasResume =
     sessionState.phase === 'brief' ||
@@ -142,7 +143,7 @@ function HomePage() {
         {...devMark('dock')}
         className="shrink-0 border-t border-(--border-faint) bg-[color-mix(in_oklab,var(--bg-deep)_94%,transparent)] pt-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md"
       >
-        <section className="mx-auto flex max-w-(--w-narrow) flex-row flex-wrap gap-2">
+        <section className="mx-auto flex flex-row flex-wrap gap-2">
           {resumeSession ? (
             <>
               <Button
@@ -171,7 +172,7 @@ function HomePage() {
               </Button>
               <Button
                 variant="secondary"
-                className="min-w-[9rem] flex-1"
+                className="min-w-[7rem] flex-1"
                 {...devMark('eoc')}
                 onClick={handleEocReview}
               >

@@ -1,12 +1,12 @@
 'use client';
 
 import { Button } from '@/components/common/Button';
+import { useElapsedSec } from '@/hooks/use-elapsed-sec';
 import type { ActiveSession } from '@/types';
 import { devMark } from '@/lib/dev-mark';
 
 type PauseModalProps = {
   session: ActiveSession;
-  elapsedSec: number;
   onResume: () => void;
   onEndJourney: () => void;
 };
@@ -17,7 +17,8 @@ function formatTime(sec: number) {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-export function PauseModal({ session, elapsedSec, onResume, onEndJourney }: PauseModalProps) {
+export function PauseModal({ session, onResume, onEndJourney }: PauseModalProps) {
+  const elapsedSec = useElapsedSec(session.startedAt);
   const total = session.queue.length;
   const answered = session.attempts.length;
   const correct = session.attempts.filter((a) => a.correct).length;

@@ -2,13 +2,13 @@
   <title>Energy pyramid</title>
   <text x="180" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Energy Pyramid (~10% rule)</text>
   <polygon points="180,50 300,110 60,110" fill="#66BB6A" stroke="#2E7D32" stroke-width="1.5"/>
-  <text x="180" y="90" text-anchor="middle" font-size="10" fill="#fff">Producers  10,000 kcal</text>
+  <text x="180" y="90" text-anchor="middle" font-size="10" fill="#fff">Producers — 10,000 kcal</text>
   <polygon points="180,110 260,160 100,160" fill="#42A5F5" stroke="#1565C0" stroke-width="1.5"/>
-  <text x="180" y="142" text-anchor="middle" font-size="10" fill="#fff">Primary  1,000 kcal</text>
+  <text x="180" y="142" text-anchor="middle" font-size="10" fill="#fff">Primary — 1,000 kcal</text>
   <polygon points="180,160 220,210 140,210" fill="#FFA726" stroke="#E65100" stroke-width="1.5"/>
-  <text x="180" y="192" text-anchor="middle" font-size="9" fill="#fff">Secondary  100 kcal</text>
+  <text x="180" y="192" text-anchor="middle" font-size="9" fill="#fff">Secondary — 100 kcal</text>
   <polygon points="180,210 200,260 160,260" fill="#EF5350" stroke="#C62828" stroke-width="1.5"/>
-  <text x="180" y="242" text-anchor="middle" font-size="8" fill="#fff">Tertiary  10 kcal</text>
+  <text x="180" y="242" text-anchor="middle" font-size="8" fill="#fff">Tertiary — 10 kcal</text>
   <text x="180" y="290" text-anchor="middle" font-size="10" fill="#555">Only ~10% of energy transfers to the next trophic level</text>
   <text x="180" y="305" text-anchor="middle" font-size="10" fill="#555">Hawks are tertiary consumers at the top</text>
 </svg>

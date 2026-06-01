@@ -19,5 +19,5 @@
   <text x="295" y="55" font-size="11" fill="#C62828">Backbone</text>
   <text x="200" y="170" text-anchor="middle" font-size="11" fill="#333">Nitrogenous bases</text>
   <text x="200" y="185" text-anchor="middle" font-size="10" fill="#555">(A-T, G-C pairs)</text>
-  <text x="200" y="310" text-anchor="middle" font-size="10" fill="#555">Double helix  antiparallel strands</text>
+  <text x="200" y="310" text-anchor="middle" font-size="10" fill="#555">Double helix — antiparallel strands</text>
 </svg>

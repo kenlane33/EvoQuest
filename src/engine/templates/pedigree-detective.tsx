@@ -92,14 +92,15 @@ function PedigreeDetectiveRenderer({
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-col gap-2 max-sm:w-full sm:flex-row sm:flex-wrap">
         {PATTERNS.map((p) => (
           <Button
             key={p}
             variant={pattern === p ? 'primary' : 'secondary'}
             disabled={submitted}
+            fullWidth
+            className="max-sm:w-full text-micro sm:w-auto"
             onClick={() => setPattern(p)}
-            className="text-micro"
           >
             {PATTERN_LABELS[p]}
           </Button>

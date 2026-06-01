@@ -87,7 +87,26 @@ function FoodWebBuilderRenderer({
         Tap prey, then predator to draw energy arrows (from eaten → eater).
       </p>
 
-      <div className="relative min-h-48 rounded-(--r-lg) border border-(--border-light) bg-(--bg-card) p-4">
+      <div className="relative min-h-48 rounded-(--r-lg) border border-(--border-light) bg-(--bg-card) p-4 max-sm:min-h-0 max-sm:p-3">
+        <div className="flex flex-col gap-2 sm:hidden">
+          {data.nodes.map((node) => (
+            <button
+              key={node.id}
+              type="button"
+              onClick={() => toggleLink(node.id)}
+              className={cn(
+                'flex items-center gap-3 rounded-(--r-lg) border px-3 py-2 text-left transition-colors',
+                linkFrom === node.id
+                  ? 'border-(--accent-cyan) bg-[color-mix(in_oklab,var(--accent-cyan)_12%,transparent)]'
+                  : 'border-(--border-light) bg-(--bg-card-hi) hover:border-(--border-medium)',
+              )}
+            >
+              <span className="text-xl">{node.icon}</span>
+              <span className="text-body font-bold text-(--text-primary)">{node.name}</span>
+            </button>
+          ))}
+        </div>
+        <div className="hidden sm:block">
         {data.nodes.map((node, i) => {
           const col = i % 3;
           const row = Math.floor(i / 3);
@@ -109,6 +128,7 @@ function FoodWebBuilderRenderer({
             </button>
           );
         })}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2 text-micro text-(--text-dim)">

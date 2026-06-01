@@ -89,7 +89,7 @@ export const DEFAULT_SETTINGS: Settings = {
     contrast: 'normal',
     fontSize: 'md',
     bodyFont: 'nunito',
-    headlineFont: 'syne',
+    headlineFont: 'bungee',
     colorBlindSafe: false,
   },
   motion: 'full',

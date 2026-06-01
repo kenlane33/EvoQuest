@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouterState } from '@tanstack/react-router';
 import { Button } from '@/components/common/Button';
 import { ReadAloudButton } from '@/components/content/ReadAloudButton';
 import { usePageReadAloudContext } from '@/components/audio/page-read-aloud-context';
@@ -12,12 +13,16 @@ import { devMark } from '@/lib/dev-mark';
 
 /** Fixed Read it control — uses text registered by the active page. */
 export function GlobalReadAloudBar() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const readingEnabled = useAppStore((s) => s.settings.reading.enabled);
   const voice = useAppStore((s) => s.settings.reading.voice);
   const volume = useAppStore((s) => s.settings.audio.volume);
   const { state } = usePageReadAloudContext();
   const questionSpeak = useQuestionSpeakOptional();
   const tts = usePocketTts({ voice, volume });
+
+  const onPlayRoute = pathname.startsWith('/play/');
+  const onHome = pathname === '/';
 
   if (!readingEnabled || !state.text.trim()) {
     return null;
@@ -51,18 +56,25 @@ export function GlobalReadAloudBar() {
   return (
     <div
       {...devMark('shell.readbar')}
-      className="pointer-events-none fixed bottom-5 right-5 z-50 flex max-w-[min(100vw-2rem,24rem)] flex-col items-end"
+      className={cn(
+        'pointer-events-none fixed right-4 z-50 flex max-w-[min(100vw-2rem,24rem)] flex-col items-end',
+        onHome
+          ? 'top-[calc(var(--app-header-h)+0.5rem)]'
+          : onPlayRoute
+            ? 'bottom-(--play-readbar-bottom)'
+            : 'bottom-[max(1.25rem,env(safe-area-inset-bottom))]',
+      )}
       aria-live="polite"
     >
-      <div className="pointer-events-auto rounded-(--r-xl) border border-(--border-light) bg-(--bg-card)/95 p-2 shadow-lg backdrop-blur-sm">
-        <div className="flex items-start gap-2">
+      <div className="pointer-events-auto rounded-(--r-xl) border border-(--border-light) bg-(--bg-card)/95 p-2 shadow-lg backdrop-blur-sm max-sm:p-1.5">
+        <div className="flex items-start gap-1.5 max-sm:gap-1">
           <Button
             variant="secondary"
             {...devMark('shell.shhh')}
             onClick={handleStop}
             aria-label="Stop reading"
             className={cn(
-              'shrink-0',
+              'shrink-0 max-sm:px-2 max-sm:py-1.5 max-sm:text-micro h-9',
               isActive && 'border-[color-mix(in_oklab,var(--status-wrong)_40%,transparent)]',
             )}
           >

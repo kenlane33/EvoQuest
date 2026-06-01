@@ -226,7 +226,7 @@ export function googleFontStylesheetUrl(cssParam: string): string {
 
 /** Base fonts always present in the document shell (headline + mono + default body). */
 export const BASE_GOOGLE_FONTS_URL = googleFontStylesheetUrl(
-  'Syne:wght@700;800;900&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700',
+  'Bungee&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700',
 );
 
 /**
@@ -253,7 +253,7 @@ export function ensureGoogleFontLoaded(id: BodyFontId): void {
 
 export function ensureHeadlineFontLoaded(id: HeadlineFontId): void {
   if (typeof document === 'undefined') return;
-  if (id === 'syne') return;
+  if (id === 'bungee') return;
 
   const font = headlineFontById(id);
   const linkId = `${HEADLINE_LINK_ID_PREFIX}${id}`;

@@ -49,7 +49,25 @@ function CladogramCrafterRenderer({
 
   return (
     <div className="space-y-5">
-      <div className="overflow-x-auto">
+      <div className="space-y-3 sm:hidden">
+        {data.taxa.map((taxon) => (
+          <Card key={taxon.id}>
+            <p className="mb-2 font-semibold text-(--text-primary)">
+              {taxon.icon ? `${taxon.icon} ` : ''}
+              {taxon.name}
+            </p>
+            <ul className="space-y-1 text-micro text-(--text-secondary)">
+              {data.traits.map((t) => (
+                <li key={t.id} className="flex justify-between gap-2">
+                  <span>{t.label}</span>
+                  <span className="font-mono">{data.traitMatrix[taxon.id]?.[t.id] ?? 0}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        ))}
+      </div>
+      <div className="hidden overflow-x-auto sm:block">
         <table className="w-full min-w-[420px] border-collapse text-micro">
           <thead>
             <tr>

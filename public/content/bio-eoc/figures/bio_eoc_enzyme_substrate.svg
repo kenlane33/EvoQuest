@@ -3,23 +3,23 @@
   <text x="260" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Enzyme-Substrate Complex</text>
   <!-- Enzyme -->
   <path d="M 80 180 Q 80 80 180 70 Q 280 60 320 120 Q 360 180 320 220 Q 260 250 180 230 Q 100 210 80 180 Z" fill="#E3F2FD" stroke="#1565C0" stroke-width="2.5"/>
-  <text x="200" y="155" text-anchor="middle" font-size="13" font-weight="bold" fill="#1565C0">Enzyme</text>
+  <text x="200" y="155" text-anchor="middle" font-size="18" font-weight="bold" fill="#1565C0">Enzyme</text>
   <!-- Active site -->
   <path d="M 240 120 Q 280 100 300 130 Q 290 160 250 165 Q 220 155 240 120 Z" fill="#FFF9C4" stroke="#F9A825" stroke-width="2" stroke-dasharray="4,3"/>
-  <text x="270" y="145" font-size="10" fill="#F57F17">Active site</text>
+  <text x="270" y="145" font-size="16" fill="#F57F17">Active site</text>
   <!-- Substrate -->
   <rect x="255" y="115" width="40" height="35" rx="6" fill="#FFCCBC" stroke="#E64A19" stroke-width="2"/>
-  <text x="275" y="137" text-anchor="middle" font-size="10" fill="#BF360C">Substrate</text>
+  <text x="275" y="137" text-anchor="middle" font-size="16" fill="#BF360C">Substrate</text>
   <!-- Products -->
   <circle cx="400" cy="100" r="22" fill="#C8E6C9" stroke="#388E3C" stroke-width="2"/>
-  <text x="400" y="105" text-anchor="middle" font-size="10" fill="#1B5E20">Product</text>
+  <text x="400" y="105" text-anchor="middle" font-size="16" fill="#1B5E20">Product</text>
   <circle cx="430" cy="160" r="18" fill="#C8E6C9" stroke="#388E3C" stroke-width="2"/>
-  <text x="430" y="165" text-anchor="middle" font-size="9" fill="#1B5E20">Product</text>
+  <text x="430" y="165" text-anchor="middle" font-size="14" fill="#1B5E20">Product</text>
   <!-- Arrows -->
   <line x1="50" y1="200" x2="70" y2="190" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
-  <text x="30" y="205" font-size="11" fill="#333">Reactants</text>
+  <text x="30" y="205" font-size="16" fill="#333">Reactants</text>
   <line x1="350" y1="130" x2="375" y2="110" stroke="#333" stroke-width="1.5"/>
-  <text x="455" y="130" font-size="11" fill="#333">Products</text>
+  <text x="455" y="130" font-size="16" fill="#333">Products</text>
   <defs>
     <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
       <polygon points="0,0 8,3 0,6" fill="#333"/>

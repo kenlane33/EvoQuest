@@ -61,7 +61,7 @@ export function PowerUpTray({ inventory, templateKind, onUseSlot, className }: P
         );
       })}
       {disabledHint ? (
-        <p className="absolute mt-14 max-w-[16rem] text-center text-micro text-(--text-dim) animate-slide-up">
+        <p className="absolute left-1/2 mt-14 w-full max-w-[min(16rem,calc(100vw-2rem))] -translate-x-1/2 px-2 text-center text-micro text-(--text-dim) animate-slide-up">
           {disabledHint}
         </p>
       ) : null}

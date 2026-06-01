@@ -18,10 +18,10 @@
     "license": "MIT (project)"
   },
   "bio_eoc_cladogram": {
-    "title": "Mammal cladogram showing shared ancestry",
-    "author": "EvoQuest contributors (adapted from biochemistry figure p13)",
-    "sourceUrl": "https://github.com/ken/EvoQuest",
-    "license": "MIT (project)"
+    "title": "Mammal cladogram — Glires (rodents + rabbit) with primate outgroup",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Glires",
+    "license": "MIT (project); topology per Glires/Euarchontoglires (Murphy et al. 2001; OpenStax Biology 2e Fig. 20.10 cladogram layout)"
   },
   "bio_eoc_gel_electrophoresis": {
     "title": "DNA gel electrophoresis — fragment size vs distance migrated",

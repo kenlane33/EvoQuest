@@ -67,6 +67,12 @@ export function getQuizAcceptableAnswers(quiz: QuizTemplate): string[] {
   return [];
 }
 
+/** Primary display text for the correct answer, when the quiz has one. */
+export function getQuizCorrectAnswerDisplay(quiz: QuizTemplate): string | null {
+  const answers = getQuizAcceptableAnswers(quiz);
+  return answers[0] ?? null;
+}
+
 /** True when visible text substantially reveals a quiz answer. */
 export function textLeaksAnswer(text: string, acceptableAnswers: string[]): boolean {
   const normText = normalizeAnswerToken(text);
