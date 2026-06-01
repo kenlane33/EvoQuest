@@ -36,7 +36,12 @@ export function sectionStudySelection(sectionId: string): SelectionDescriptor {
   return { kind: 'branch', nodeId: sectionId };
 }
 
-const WING_ORDER = ['biochem', 'evo', 'origin', 'cell', 'gen'] as const;
+/** Queue the least-covered questions to advance the next full lap. */
+export function revisitSelection(length: number): SelectionDescriptor {
+  return { kind: 'revisit', length };
+}
+
+const WING_ORDER = ['bio.eoc', 'biochem', 'evo', 'origin', 'cell', 'gen'] as const;
 
 /** Placeholder tiles for wings not yet bundled — show as locked on the home grid. */
 const PLACEHOLDER_TILES: AchievementTile[] = [
@@ -49,6 +54,7 @@ const PLACEHOLDER_TILES: AchievementTile[] = [
 ];
 
 const WING_META: Record<string, { title: string; emoji: string }> = {
+  'bio.eoc': { title: 'Biology EOC (2025)', emoji: '🧬' },
   biochem: { title: 'Biology EOC Review', emoji: '🧪' },
   evo: { title: 'Evolution', emoji: '🦕' },
   origin: { title: 'Origin of Life', emoji: '🍲' },
@@ -57,7 +63,9 @@ const WING_META: Record<string, { title: string; emoji: string }> = {
 };
 
 function tilesFromModules(): AchievementTile[] {
-  return flattenUnits(CONTENT_MODULES).map((u) => ({
+  return flattenUnits(CONTENT_MODULES)
+    .filter((u) => u.enabled)
+    .map((u) => ({
     ...u.achievement,
     unitId: u.id,
   }));
@@ -67,14 +75,36 @@ function biochemSubgroups(live: AchievementTile[]): WingSubgroup[] {
   const mod = CONTENT_MODULES.find((m) => m.id === BIOLOGY_EOC_MODULE_ID);
   if (!mod) return [];
 
-  return mod.tree.map((wing) => {
+  return mod.tree
+    .filter((wing) => wing.id.startsWith('biochem.'))
+    .map((wing) => {
     const unitIds = new Set(
       flattenUnits([{ ...mod, tree: [wing] }]).map((u) => u.id),
     );
     return {
       id: wing.id,
       title: wing.title,
-      emoji: wing.emoji,
+      emoji: wing.emoji ?? '📋',
+      tiles: live.filter((t) => unitIds.has(t.unitId)),
+    };
+  });
+}
+
+function bioEocSubgroups(live: AchievementTile[]): WingSubgroup[] {
+  const mod = CONTENT_MODULES.find((m) => m.id === BIOLOGY_EOC_MODULE_ID);
+  if (!mod) return [];
+
+  const wing = mod.tree.find((w) => w.id === 'bio.eoc');
+  if (!wing) return [];
+
+  return wing.children.map((room) => {
+    const unitIds = new Set(
+      room.children.flatMap((drawer) => drawer.children.map((u) => u.id)),
+    );
+    return {
+      id: room.id,
+      title: room.title,
+      emoji: room.emoji ?? '📋',
       tiles: live.filter((t) => unitIds.has(t.unitId)),
     };
   });
@@ -93,7 +123,12 @@ export const WING_GROUPS: WingGroup[] = (() => {
       title: meta.title,
       emoji: meta.emoji,
       tiles,
-      subgroups: wingId === 'biochem' ? biochemSubgroups(live) : undefined,
+      subgroups:
+        wingId === 'bio.eoc'
+          ? bioEocSubgroups(live)
+          : wingId === 'biochem'
+            ? biochemSubgroups(live)
+            : undefined,
     };
   });
 })();

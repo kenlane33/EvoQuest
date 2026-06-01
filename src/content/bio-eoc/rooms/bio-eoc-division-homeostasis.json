@@ -1,0 +1,428 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC Review",
+  "description": "Complete NC Biology End-of-Course review aligned to 2023 NCSCOS and the 2025 released form. All four strands: molecules to organisms, ecosystems, heredity, evolution.",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780316125812,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.division",
+          "slug": "division",
+          "title": "Cell Division & Homeostasis",
+          "emoji": "\ud83d\udd2c",
+          "description": "The cell cycle, how mitosis and meiosis differ in purpose and outcome, and how the body holds its internal conditions steady through negative feedback.",
+          "children": [
+            {
+              "id": "bio.eoc.division.cycle",
+              "slug": "cycle",
+              "title": "Cell Cycle & Division",
+              "emoji": "\ud83d\udd04",
+              "children": [
+                {
+                  "id": "bio.eoc.division.cycle.cell-cycle",
+                  "slug": "cell-cycle",
+                  "title": "The Cell Cycle",
+                  "emoji": "\ud83d\udd04",
+                  "shortLabel": "Cell Cycle",
+                  "longLabel": "The Cell Cycle",
+                  "description": "Grow and copy DNA, then divide \u2014 and why the order can't be broken.",
+                  "teach": {
+                    "headline": "Grow, Copy DNA, Then Divide",
+                    "body": "The cell cycle has two big parts. During **interphase** the cell grows and copies all of its DNA (the S phase). Then **mitosis** divides the nucleus into two identical sets of chromosomes, and **cytokinesis** splits the cytoplasm into two cells.\n\nOrder matters: the DNA must be copied and the chromosomes separated **before** the cell splits. If cytokinesis happens too early, each new cell gets the wrong amount of DNA and organelles \u2014 and likely dies.\n\n![Circular diagram of cell cycle phases from interphase through mitosis](/content/bio-eoc/figures/bio_eoc_cell_cycle.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_cell_cycle",
+                        "alt": "Cell cycle circle showing interphase, prophase, metaphase, anaphase, and telophase phases",
+                        "caption": "DNA replicates during interphase before mitosis begins."
+                      }
+                    ],
+                    "mnemonic": "COPY BEFORE YOU CUT. Interphase copies DNA \u2192 mitosis sorts it \u2192 cytokinesis splits the cell.",
+                    "poweredIdea": "Interphase copies the DNA; mitosis then cytokinesis split it into two identical cells \u2014 order matters."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.division.cycle.cell-cycle.interphase",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "A cell copies all of its DNA before dividing during the stage called _____.",
+                        "acceptable": ["interphase", "s phase", "interphase (s phase)"],
+                        "hint": "The long 'growing and copying' stage before mitosis"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.division.cycle.cell-cycle.diagram-interphase",
+                      "data": {
+                        "prompt": "On the cell cycle diagram, the stage where DNA is copied before division is _____.",
+                        "acceptable": ["interphase", "s phase", "synthesis"],
+                        "hint": "The largest segment before mitosis begins"
+                      }
+                    },
+                    {
+                      "kind": "recipe-sequencer",
+                      "id": "quiz.bio.eoc.division.cycle.cell-cycle.order",
+                      "data": {
+                        "processTitle": "The cell cycle \u2014 arrange the stages in order",
+                        "root": "Greek: mitos (thread) + -osis (process)",
+                        "mnemonic": "I-PMAT-C: Interphase, then Prophase, Metaphase, Anaphase, Telophase, Cytokinesis.",
+                        "steps": [
+                          { "id": "interphase", "title": "Interphase \u2014 grow and copy DNA", "icon": "\ud83e\uddec", "consequenceHint": "DNA must be copied before the cell can divide." },
+                          { "id": "prophase", "title": "Prophase \u2014 chromosomes condense", "icon": "\ud83c\udf00", "consequenceHint": "Chromosomes condense so they can be moved." },
+                          { "id": "metaphase", "title": "Metaphase \u2014 chromosomes line up at the middle", "icon": "\u2696\ufe0f", "consequenceHint": "They must align before they can be split evenly." },
+                          { "id": "anaphase", "title": "Anaphase \u2014 sister chromatids separate", "icon": "\u2194\ufe0f", "consequenceHint": "Identical copies are pulled to opposite poles." },
+                          { "id": "telophase", "title": "Telophase \u2014 two nuclei reform", "icon": "\ud83c\udf81", "consequenceHint": "A nucleus rebuilds around each chromosome set." },
+                          { "id": "cytokinesis", "title": "Cytokinesis \u2014 the cytoplasm splits in two", "icon": "\u2702\ufe0f", "consequenceHint": "The cell only splits after the nucleus has divided." }
+                        ],
+                        "causalLinks": [
+                          { "fromId": "interphase", "toId": "prophase", "why": "Chromosomes can only condense after the DNA has been copied." },
+                          { "fromId": "metaphase", "toId": "anaphase", "why": "Chromatids separate only after they line up at the middle." },
+                          { "fromId": "telophase", "toId": "cytokinesis", "why": "The cell divides only after two nuclei have formed." }
+                        ]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.division.cycle.cell-cycle.early-cytokinesis",
+                      "data": {
+                        "story": "An error causes a cell to go through cytokinesis (splitting in two) before it completes mitosis (separating its chromosomes).",
+                        "question": "Which best describes the new cells?",
+                        "answer": "They have an incorrect amount of DNA and organelles and will likely experience cell death.",
+                        "options": [
+                          "They have an incorrect amount of DNA and organelles and will likely experience cell death.",
+                          "They are each double the size of the original cell.",
+                          "They each have exactly twice the normal amount of DNA.",
+                          "They have no DNA but keep cycling through the cell cycle."
+                        ],
+                        "explanation": "Splitting before the chromosomes are separated gives each daughter cell the wrong amount of DNA and organelles, so the cells usually die."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.division.cycle.cell-cycle.interphase-match",
+                      "data": {
+                        "term": "Interphase",
+                        "correct": "The cell grows and copies its DNA",
+                        "distractors": ["Sister chromatids separate to the poles", "The cytoplasm splits into two cells", "Chromosomes line up at the cell's middle"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.division.cycle.cell-cycle",
+                    "emoji": "\ud83d\udd04",
+                    "shortLabel": "Cycle",
+                    "longLabel": "The Cell Cycle",
+                    "flavor": "You order the cell cycle and see why splitting before sorting the chromosomes dooms the cell.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["division", "cell-cycle", "mitosis", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.2.1 (division for growth and repair). Maps to released item #6 (cytokinesis before mitosis). Recipe-sequencer per source preference. Deeper than biochem.division.cell-cycle; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.division.cycle.mitosis-meiosis",
+                  "slug": "mitosis-meiosis",
+                  "title": "Mitosis vs Meiosis",
+                  "emoji": "\ud83e\uddeb",
+                  "shortLabel": "Mit vs Mei",
+                  "longLabel": "Mitosis vs Meiosis",
+                  "description": "Two divisions with different jobs: identical body cells versus varied gametes.",
+                  "teach": {
+                    "headline": "Two Identical vs Four Varied Cells",
+                    "body": "**Mitosis** makes **two genetically identical, diploid (2n)** body cells \u2014 the division used for growth and repair.\n\n**Meiosis** makes **four genetically varied, haploid (n)** sex cells, or **gametes** \u2014 the division used for sexual reproduction. Diploid means two sets of chromosomes; haploid means one. Only meiosis halves the chromosome number; mitosis keeps it the same.",
+                    "etymology": {
+                      "termId": "term.meiosis",
+                      "term": "meiosis",
+                      "morphemes": [
+                        { "morphemeId": "morph.meio", "asUsed": "meio" }
+                      ],
+                      "rootSummary": "Greek: meioun (to lessen, make smaller)"
+                    },
+                    "mnemonic": "MEIO = LESSEN. MEIOSIS halves the chromosomes \u2192 4 varied gametes. MITOSIS = 2 identical copies.",
+                    "poweredIdea": "Mitosis makes 2 identical diploid body cells; meiosis makes 4 varied haploid gametes."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.division.cycle.mitosis-meiosis.diploid",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "A cell that has two complete sets of chromosomes is described as _____.",
+                        "acceptable": ["diploid", "2n", "diploid (2n)"],
+                        "hint": "Two sets; the opposite of haploid"
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.division.cycle.mitosis-meiosis.gametes",
+                      "data": {
+                        "paragraph": "Skin cells use mitosis to repair a cut, and the body also uses mitosis to produce the sperm and egg cells needed for reproduction.",
+                        "bugPhrase": "uses mitosis to produce the sperm and egg cells needed for reproduction",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "Which division halves the chromosome number to make sex cells?",
+                        "canonicalFix": "Gametes (sperm and egg) are produced by meiosis, which halves the chromosome number. Mitosis makes identical diploid body cells for growth and repair.",
+                        "poweredIdea": "Mitosis makes body cells; meiosis makes the gametes used in reproduction."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.division.cycle.mitosis-meiosis.meiosis-match",
+                      "data": {
+                        "term": "Meiosis",
+                        "correct": "Makes four varied haploid gametes",
+                        "distractors": ["Makes two identical diploid body cells", "Repairs damaged body tissue", "Copies DNA during interphase"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.division.cycle.mitosis-meiosis.identify",
+                      "data": {
+                        "story": "A dividing cell produces four cells, each with half the original chromosome number and each genetically different from the others.",
+                        "question": "Which process produced these cells?",
+                        "answer": "Meiosis",
+                        "options": ["Meiosis", "Mitosis", "Cytokinesis alone", "DNA replication"],
+                        "explanation": "Four genetically varied cells with half the chromosome number are the signature of meiosis."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.division.cycle.mitosis-meiosis",
+                    "emoji": "\ud83e\uddeb",
+                    "shortLabel": "Two Divides",
+                    "longLabel": "Mitosis vs Meiosis",
+                    "flavor": "You split the two divisions by their output: identical diploid copies versus varied haploid gametes.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.division.cycle.cell-cycle"],
+                  "difficulty": "core",
+                  "tags": ["division", "mitosis", "meiosis", "diploid", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.2.1 (division for reproduction vs growth/repair). Covers mitosis-vs-meiosis outcomes and diploid/haploid per source. Debug-the-claim targets the 'mitosis produces gametes' trap. Deeper than biochem.division.mitosis-meiosis; no biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.division.homeostasis",
+              "slug": "homeostasis",
+              "title": "Homeostasis & Feedback",
+              "emoji": "\u2696\ufe0f",
+              "children": [
+                {
+                  "id": "bio.eoc.division.homeostasis.overview",
+                  "slug": "overview",
+                  "title": "Maintaining Homeostasis",
+                  "emoji": "\u2696\ufe0f",
+                  "shortLabel": "Homeostasis",
+                  "longLabel": "Maintaining Homeostasis",
+                  "description": "Holding internal conditions steady while the outside world changes.",
+                  "teach": {
+                    "headline": "Keeping the Inside Steady",
+                    "body": "**Homeostasis** is keeping internal conditions stable even as the outside world changes \u2014 temperature, water balance, pH, and blood sugar all stay near a target **set point**.\n\nCells and organ systems constantly sense changes and respond to stay balanced. The selectively permeable cell membrane is one tool: it lets needed materials in and waste out to hold conditions steady.",
+                    "etymology": {
+                      "termId": "term.homeostasis",
+                      "term": "homeostasis",
+                      "morphemes": [
+                        { "morphemeId": "morph.homeo", "asUsed": "homeo" },
+                        { "morphemeId": "morph.stasis", "asUsed": "stasis" }
+                      ],
+                      "rootSummary": "Greek: homoios (same) + stasis (standing still)"
+                    },
+                    "mnemonic": "HOMEO = SAME. STASIS = STANDING. Homeostasis = STAY THE SAME inside while outside shifts.",
+                    "poweredIdea": "Homeostasis is maintaining stable internal conditions near a set point despite outside change."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.division.homeostasis.overview.define",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Maintaining stable internal conditions despite changes outside the body is called _____.",
+                        "acceptable": ["homeostasis"],
+                        "hint": "Homeo = same, stasis = standing"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.division.homeostasis.overview.temperature",
+                      "data": {
+                        "story": "On a hot day a person sweats to cool off; on a cold day the same person shivers to warm up.",
+                        "question": "What is the body maintaining through these responses?",
+                        "answer": "Homeostasis \u2014 a stable internal body temperature",
+                        "options": [
+                          "Homeostasis \u2014 a stable internal body temperature",
+                          "A constantly rising body temperature",
+                          "A change in the body's DNA",
+                          "An increase in chromosome number"
+                        ],
+                        "explanation": "Sweating and shivering both work to keep internal temperature near its set point \u2014 that is homeostasis."
+                      }
+                    },
+                    {
+                      "kind": "speed-reveal-mnemonic",
+                      "id": "quiz.bio.eoc.division.homeostasis.overview.root",
+                      "data": {
+                        "termId": "term.homeostasis",
+                        "root": "Greek: homoios (same) + stasis (standing still)",
+                        "mnemonic": "HOMEO = SAME. STASIS = STANDING. Homeostasis means staying the SAME on the inside.",
+                        "question": {
+                          "kind": "multiple-choice",
+                          "prompt": "What does homeostasis keep stable?",
+                          "options": ["The outside environment", "The body's internal conditions", "The number of chromosomes", "The DNA base sequence"],
+                          "correctIndex": 1
+                        }
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.division.homeostasis.overview",
+                    "emoji": "\u2696\ufe0f",
+                    "shortLabel": "Steady State",
+                    "longLabel": "Maintaining Homeostasis",
+                    "flavor": "You read sweating and shivering as the body holding its internal conditions near a set point.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "intro",
+                  "tags": ["division", "homeostasis", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.3.1 (homeostasis maintained through feedback). Reinforces the homeostasis/membrane patterns on the released form. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.division.homeostasis.negative-feedback",
+                  "slug": "negative-feedback",
+                  "title": "Negative Feedback Loops",
+                  "emoji": "\ud83d\udd01",
+                  "shortLabel": "Feedback",
+                  "longLabel": "Negative Feedback Loops",
+                  "description": "Loops that reverse a change to steer the body back to its set point.",
+                  "teach": {
+                    "headline": "A Loop That Reverses the Change",
+                    "body": "A **negative feedback** loop detects a change and triggers a response that pushes the condition **back toward the set point** \u2014 it reverses the change.\n\nBlood glucose: after a meal it rises, the pancreas releases insulin, cells take up glucose, and the level falls back to normal. Body temperature: too hot triggers sweating, too cold triggers shivering. The response always counteracts the original change.",
+                    "mnemonic": "NEGATIVE = REVERSE. Too high \u2192 push DOWN. Too low \u2192 push UP. Always steer back to the set point.",
+                    "poweredIdea": "Negative feedback detects a change and triggers a response that reverses it back to the set point."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.division.homeostasis.negative-feedback.glucose",
+                      "preferred": true,
+                      "data": {
+                        "scenario": "After eating a large meal, the glucose level in a person's blood rises above normal.",
+                        "predictPrompt": "How does the body bring blood glucose back to normal?",
+                        "predictOptions": [
+                          "The pancreas releases more glucose, so the level rises further",
+                          "The pancreas releases insulin; cells absorb glucose and the level falls back to normal",
+                          "Nothing happens until the next meal",
+                          "The body permanently resets its normal glucose level higher"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "Sensors detect the high glucose. The pancreas releases insulin, which signals body cells to take up glucose from the blood. As cells absorb it, blood glucose falls back toward the set point.",
+                        "truthSummary": "Negative feedback reverses the change: a rise in glucose triggers a response that lowers it back to normal.",
+                        "bugCandidates": [
+                          {
+                            "label": "I thought the body adds more glucose to match the meal",
+                            "isTheBug": true,
+                            "explanation": "That would amplify the change \u2014 positive feedback. Homeostasis uses negative feedback, which reverses the change."
+                          },
+                          {
+                            "label": "I forgot that a sensor must detect the change first",
+                            "isTheBug": false,
+                            "explanation": "True, but the headline error is amplifying instead of reversing the change."
+                          },
+                          {
+                            "label": "I assumed the set point itself shifts higher",
+                            "isTheBug": false,
+                            "explanation": "The set point stays the same; the body steers the value back toward it."
+                          }
+                        ],
+                        "poweredIdea": "Negative feedback lowers high blood glucose back to its set point \u2014 it reverses, not amplifies."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.division.homeostasis.negative-feedback.define",
+                      "data": {
+                        "prompt": "A feedback loop that reverses a change to return to the set point is called _____ feedback.",
+                        "acceptable": ["negative"],
+                        "hint": "It counteracts the change rather than amplifying it"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.division.homeostasis.negative-feedback.match",
+                      "data": {
+                        "term": "Negative feedback",
+                        "correct": "A response that reverses the change",
+                        "distractors": ["A response that amplifies the change", "A one-time event with no sensor", "A permanent change to the set point"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.division.homeostasis.negative-feedback.temperature",
+                      "data": {
+                        "story": "A person's body temperature rises during exercise, so they begin to sweat, which cools the body back down.",
+                        "question": "What type of control does this describe?",
+                        "answer": "Negative feedback",
+                        "options": ["Negative feedback", "Positive feedback", "A frameshift mutation", "Active transport"],
+                        "explanation": "The cooling response counteracts the rise in temperature, returning the body toward its set point \u2014 negative feedback."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.division.homeostasis.negative-feedback",
+                    "emoji": "\ud83d\udd01",
+                    "shortLabel": "Reverse It",
+                    "longLabel": "Negative Feedback",
+                    "flavor": "You trace a loop that senses a change and pushes the body back toward its set point.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.division.homeostasis.overview"],
+                  "difficulty": "core",
+                  "tags": ["division", "homeostasis", "feedback", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.3.1 (feedback mechanisms). Covers negative feedback with blood-glucose and temperature examples per source. Predict-run-reflect targets the negative-vs-positive feedback trap. No biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "etymologyContributions": [
+    {
+      "id": "morph.meio",
+      "morpheme": "meio-",
+      "language": "Greek",
+      "meaning": "less, smaller",
+      "cousins": ["meiosis", "miosis"],
+      "appearsIn": ["term.meiosis"]
+    },
+    {
+      "id": "morph.homeo",
+      "morpheme": "homeo-",
+      "language": "Greek",
+      "meaning": "same, similar",
+      "cousins": ["homeostasis", "homeopathy"],
+      "appearsIn": ["term.homeostasis"]
+    },
+    {
+      "id": "morph.stasis",
+      "morpheme": "-stasis",
+      "language": "Greek",
+      "meaning": "standing, staying still",
+      "cousins": ["homeostasis", "stasis", "static"],
+      "appearsIn": ["term.homeostasis"]
+    }
+  ]
+}

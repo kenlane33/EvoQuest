@@ -49,7 +49,22 @@ import {
 } from '@/lib/quiz-answer-leak';
 import { getQuizPlayFigures } from '@/lib/quiz-figures';
 import { QuizPlayFigures } from '@/components/play/QuizPlayFigures';
-import { useAppStore } from '@/store/app-store';
+import { AchievementEarnedMoment } from '@/components/play/AchievementEarnedMoment';
+import { JourneyGainsPanel } from '@/components/play/JourneyGainsPanel';
+import {
+  PowerUpEffectProvider,
+  buildActiveEffects,
+} from '@/components/play/PowerUpEffectContext';
+import { PowerUpFirstUseModal } from '@/components/play/PowerUpFirstUseModal';
+import { PowerUpSwapModal } from '@/components/play/PowerUpSwapModal';
+import { PowerUpTray } from '@/components/play/PowerUpTray';
+import type { EarnedAchievement } from '@/engine/achievements/detect';
+import { getPowerUpDef } from '@/engine/powerups/catalog';
+import {
+  processAnswerRewards,
+  processJourneyEndRewards,
+  trackMorphemesFromUnit,
+} from '@/engine/progress/process-answer';
 import type {
   ActiveSession,
   Attempt,
@@ -58,11 +73,14 @@ import type {
   InnerQuestion,
   KnowledgeUnit,
   MatchData,
+  PowerUpEffect,
+  PowerUpInstance,
   QuizTemplate,
   ScenarioData,
   SessionState,
   SpeedRevealData,
 } from '@/types';
+import { useAppStore } from '@/store/app-store';
 
 type PlaySessionProps = {
   sessionId: string;
@@ -100,11 +118,13 @@ function MultipleChoiceQuestion({
   disabled,
   onAnswer,
   descText,
+  dimmedIndex,
 }: {
   question: Extract<InnerQuestion, { kind: 'multiple-choice' }>;
   disabled: boolean;
   onAnswer: (correct: boolean) => void;
   descText?: string;
+  dimmedIndex?: number;
 }) {
   const [picked, setPicked] = useState<number | null>(null);
 
@@ -126,16 +146,18 @@ function MultipleChoiceQuestion({
         {question.options.map((opt, i) => {
           const isCorrect = picked !== null && i === question.correctIndex;
           const isWrong = picked === i && i !== question.correctIndex;
+          const dimmed = dimmedIndex === i && picked === null;
           const faded = picked !== null && !isCorrect && !isWrong;
           return (
             <Button
               key={opt}
               variant="ghost"
               fullWidth
-              disabled={disabled || picked !== null}
+              disabled={disabled || picked !== null || Boolean(dimmed)}
               onClick={() => choose(i)}
               className={cn(
                 'justify-between rounded-(--r-lg) border px-4 py-3 text-left text-body font-semibold hover:bg-transparent',
+                dimmed && 'opacity-20 pointer-events-none',
                 isCorrect &&
                   'border-[color-mix(in_oklab,var(--status-correct)_35%,transparent)] bg-[color-mix(in_oklab,var(--status-correct)_15%,transparent)] text-(--status-correct)',
                 isWrong &&
@@ -283,11 +305,13 @@ function MatchQuestion({
   disabled,
   onAnswer,
   descText,
+  dimmedOption,
 }: {
   data: MatchData;
   disabled: boolean;
   onAnswer: (correct: boolean) => void;
   descText?: string;
+  dimmedOption?: string;
 }) {
   const options = useMemo(
     () => shuffleOptions([data.correct, ...data.distractors]),
@@ -316,15 +340,17 @@ function MatchQuestion({
         {options.map((opt) => {
           const isCorrect = picked !== null && norm(opt) === norm(data.correct);
           const isWrong = picked === opt && !isCorrect;
+          const dimmed = dimmedOption && norm(opt) === norm(dimmedOption) && picked === null;
           return (
             <Button
               key={opt}
               variant="ghost"
               fullWidth
-              disabled={disabled || picked !== null}
+              disabled={disabled || picked !== null || Boolean(dimmed)}
               onClick={() => choose(opt)}
               className={cn(
                 'justify-start rounded-(--r-lg) border px-4 py-3 text-left text-body font-semibold hover:bg-transparent',
+                dimmed && 'opacity-20 pointer-events-none',
                 isCorrect &&
                   'border-[color-mix(in_oklab,var(--status-correct)_35%,transparent)] bg-[color-mix(in_oklab,var(--status-correct)_15%,transparent)] text-(--status-correct)',
                 isWrong &&
@@ -347,11 +373,13 @@ function ScenarioQuestion({
   disabled,
   onAnswer,
   descText,
+  dimmedIndex,
 }: {
   data: ScenarioData;
   disabled: boolean;
   onAnswer: (correct: boolean) => void;
   descText?: string;
+  dimmedIndex?: number;
 }) {
   const correctIndex = useMemo(() => {
     const idx = data.options.findIndex((o) => norm(o) === norm(data.answer));
@@ -371,6 +399,7 @@ function ScenarioQuestion({
       disabled={disabled}
       onAnswer={onAnswer}
       descText={descText || prompt}
+      dimmedIndex={dimmedIndex}
     />
   );
 }
@@ -499,6 +528,17 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
   const addJourney = useAppStore((s) => s.addJourney);
   const appendCalibration = useAppStore((s) => s.appendCalibration);
   const clearSession = useAppStore((s) => s.clearSession);
+  const powerups = useAppStore((s) => s.powerups);
+  const grantPowerUp = useAppStore((s) => s.grantPowerUp);
+  const swapPowerUp = useAppStore((s) => s.swapPowerUp);
+  const usePowerUp = useAppStore((s) => s.usePowerUp);
+  const markPowerUpFirstUseShown = useAppStore((s) => s.markPowerUpFirstUseShown);
+  const rollStreakReward = useAppStore((s) => s.rollStreakReward);
+  const earnAchievement = useAppStore((s) => s.earnAchievement);
+  const updateAchievementState = useAppStore((s) => s.updateAchievementState);
+  const updateMorphemeProgress = useAppStore((s) => s.updateMorphemeProgress);
+  const appendPendingJourneyReward = useAppStore((s) => s.appendPendingJourneyReward);
+  const pendingJourneyRewards = useAppStore((s) => s.pendingJourneyRewards);
 
   const [answered, setAnswered] = useState(false);
   const [pendingCorrect, setPendingCorrect] = useState<boolean | null>(null);
@@ -507,6 +547,14 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
   const [elapsedSec, setElapsedSec] = useState(0);
   const [fillHintShown, setFillHintShown] = useState(false);
   const [mnemonicPhase, setMnemonicPhase] = useState<'waiting' | 'revealing' | 'done'>('waiting');
+  const [activeEffects, setActiveEffects] = useState<PowerUpEffect[]>([]);
+  const [pendingFirstUseId, setPendingFirstUseId] = useState<string | null>(null);
+  const [pendingFirstUseSlot, setPendingFirstUseSlot] = useState<0 | 1 | 2 | null>(null);
+  const [pendingSwap, setPendingSwap] = useState<PowerUpInstance | null>(null);
+  const [earnedMomentQueue, setEarnedMomentQueue] = useState<EarnedAchievement[]>([]);
+  const [shownMoment, setShownMoment] = useState<EarnedAchievement | null>(null);
+  const [matchDimmedOption, setMatchDimmedOption] = useState<string | undefined>();
+  const [mcDimmedIndex, setMcDimmedIndex] = useState<number | undefined>();
   const startRef = useRef<number>(Date.now());
   const phaseRef = useRef<string>('loading');
   const pauseSnapshotRef = useRef<
@@ -556,6 +604,9 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       setMnemonicPhase('waiting');
       setConfidenceValue(null);
       setConfidenceCommitted(false);
+      setActiveEffects([]);
+      setMatchDimmedOption(undefined);
+      setMcDimmedIndex(undefined);
     }
   }, [sessionState.phase, session?.currentIndex]);
 
@@ -568,6 +619,118 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
   }, [session, settings.practice.confidenceFrequency]);
 
   const confidenceReady = !askConfidence || confidenceCommitted;
+
+  const queueEarnedMoment = useCallback((achievements: EarnedAchievement[]) => {
+    if (!achievements.length) return;
+    setEarnedMomentQueue((q) => [...q, ...achievements]);
+  }, []);
+
+  useEffect(() => {
+    if (shownMoment || earnedMomentQueue.length === 0) return;
+    const [next, ...rest] = earnedMomentQueue;
+    setShownMoment(next);
+    setEarnedMomentQueue(rest);
+    const t = setTimeout(() => setShownMoment(null), next.kind === 'aggregate' ? 2500 : 1500);
+    return () => clearTimeout(t);
+  }, [earnedMomentQueue, shownMoment]);
+
+  const applyEarnedAchievements = useCallback(
+    (achievements: EarnedAchievement[]) => {
+      for (const ach of achievements) {
+        earnAchievement(ach.id);
+        if (ach.powerUpReward) {
+          const instance: PowerUpInstance = {
+            id: ach.powerUpReward,
+            acquiredAt: Date.now(),
+          };
+          const result = grantPowerUp(instance);
+          if (result.needsSwap) setPendingSwap(instance);
+        }
+      }
+      queueEarnedMoment(achievements);
+    },
+    [earnAchievement, grantPowerUp, queueEarnedMoment],
+  );
+
+  const commitPowerUpUse = useCallback(
+    (
+      slotIndex: 0 | 1 | 2,
+      instance: PowerUpInstance,
+      effects: PowerUpEffect[],
+      templateKind: string,
+    ) => {
+      usePowerUp(slotIndex);
+      setActiveEffects(effects);
+
+      for (const effect of effects) {
+        if (effect.kind === 'reveal-option' && templateKind === 'match') {
+          const currentSession = useAppStore.getState().sessionState;
+          if (currentSession.phase === 'play' || currentSession.phase === 'paused') {
+            const s = currentSession.session;
+            const unit = getUnitById(s.queue[s.currentIndex].unitId);
+            const quiz = unit?.quizzes.find((q) => q.id === s.queue[s.currentIndex].templateId);
+            if (quiz?.kind === 'match') {
+              const wrongs = quiz.data.distractors.filter((d) => d !== quiz.data.correct);
+              if (wrongs.length) {
+                setMatchDimmedOption(wrongs[Math.floor(Math.random() * wrongs.length)]);
+              }
+            }
+          }
+        }
+        if (effect.kind === 'reveal-option' && templateKind === 'scenario') {
+          setMcDimmedIndex(0);
+        }
+      }
+
+      const currentSession = useAppStore.getState().sessionState;
+      if (currentSession.phase === 'play' || currentSession.phase === 'paused') {
+        const s = currentSession.session;
+        const usage = s.powerupUsage ?? {};
+        setSessionState({
+          phase: 'play',
+          session: {
+            ...s,
+            powerupUsage: { ...usage, [instance.id]: (usage[instance.id] ?? 0) + 1 },
+          },
+        });
+      }
+    },
+    [setSessionState, usePowerUp],
+  );
+
+  const activatePowerUpAtSlot = useCallback(
+    (slotIndex: 0 | 1 | 2) => {
+      if (!session || sessionState.phase !== 'play') return;
+      const instance = powerups.slots[slotIndex];
+      if (!instance) return;
+      const def = getPowerUpDef(instance.id);
+      if (!def) return;
+
+      const item = session.queue[session.currentIndex];
+
+      if (def.effects.some((e) => e.kind === 'skip-no-penalty')) {
+        usePowerUp(slotIndex);
+        const requeue = { ...item };
+        const newQueue = [...session.queue];
+        newQueue.splice(session.currentIndex, 1);
+        newQueue.push(requeue);
+        setSessionState({
+          phase: 'brief',
+          session: { ...session, queue: newQueue, currentIndex: session.currentIndex },
+        });
+        return;
+      }
+
+      if (!powerups.firstUseShown.includes(instance.id)) {
+        setPendingFirstUseId(instance.id);
+        setPendingFirstUseSlot(slotIndex);
+        return;
+      }
+
+      commitPowerUpUse(slotIndex, instance, def.effects, item.templateKind);
+    },
+    [session, sessionState.phase, powerups, setSessionState, usePowerUp, commitPowerUpUse],
+  );
 
   const handleAnswerSelect = useCallback(
     (correct: boolean) => {
@@ -583,6 +746,15 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     if (!session || sessionState.phase !== 'play' || pendingCorrect === null) return;
 
     const correct = pendingCorrect;
+    const effectState = buildActiveEffects(activeEffects);
+
+    if (!correct && effectState.allowRetry) {
+      setPendingCorrect(null);
+      setAnswered(false);
+      setActiveEffects(activeEffects.filter((e) => e.kind !== 'allow-retry'));
+      return;
+    }
+
     setPendingCorrect(null);
 
     const item = session.queue[session.currentIndex];
@@ -607,7 +779,12 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       });
     }
 
-    const nextStreak = correct ? session.currentStreak + 1 : 0;
+    let nextStreak = correct ? session.currentStreak + 1 : 0;
+    if (!correct && effectState.streakShieldActive) {
+      nextStreak = session.currentStreak;
+      setActiveEffects(activeEffects.filter((e) => e.kind !== 'streak-shield'));
+    }
+
     const nextSession: ActiveSession = {
       ...session,
       attempts: [...session.attempts, attempt],
@@ -615,15 +792,71 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       bestStreak: Math.max(session.bestStreak, nextStreak),
     };
 
-    if (unit) {
-      const prev = useAppStore.getState().unitProgress[item.unitId];
-      const updated = computeProgress(prev, attempt);
+    let nextProgress = unit
+      ? computeProgress(useAppStore.getState().unitProgress[item.unitId], attempt)
+      : undefined;
+    const prevProgress = useAppStore.getState().unitProgress[item.unitId];
+
+    if (unit && nextProgress) {
       updateUnitProgress(item.unitId, {
-        ...updated,
-        achievementEarned: updated.correct > 0,
-        tier: updated.correct > 0 ? updated.tier : 'unlocked',
-        unlockedAt: updated.unlockedAt ?? (correct ? Date.now() : undefined),
+        ...nextProgress,
+        achievementEarned: nextProgress.correct > 0,
+        tier: nextProgress.correct > 0 ? nextProgress.tier : 'unlocked',
+        unlockedAt: nextProgress.unlockedAt ?? (correct ? Date.now() : undefined),
       });
+
+      const store = useAppStore.getState();
+      const morphemeResult = trackMorphemesFromUnit(unit, store.morphemeProgress);
+      for (const [id, prog] of Object.entries(morphemeResult.next)) {
+        updateMorphemeProgress(id, prog);
+      }
+      if (morphemeResult.touchedFirst.length) {
+        appendPendingJourneyReward({
+          morphemesTouchedFirst: [
+            ...store.pendingJourneyRewards.morphemesTouchedFirst,
+            ...morphemeResult.touchedFirst,
+          ],
+        });
+      }
+
+      const rewards = processAnswerRewards({
+        unit,
+        prevProgress,
+        nextProgress,
+        correct,
+        session: nextSession,
+        nextStreak,
+        unitProgress: { ...store.unitProgress, [item.unitId]: nextProgress },
+        achievementState: store.achievementState,
+        calibrationRecords: store.calibrationRecords,
+        morphemeProgress: morphemeResult.next,
+        artifactCount: session.artifactIds.length,
+      });
+
+      applyEarnedAchievements(rewards.achievements);
+      if (rewards.tierUps.length) {
+        appendPendingJourneyReward({ tierUps: [...store.pendingJourneyRewards.tierUps, ...rewards.tierUps] });
+      }
+
+      for (const bonus of rewards.wingClearBonuses) {
+        updateAchievementState({
+          firstClearedWingIds: [
+            ...store.achievementState.firstClearedWingIds,
+            bonus.wingId,
+          ],
+        });
+        const commonResult = grantPowerUp(bonus.common);
+        if (commonResult.needsSwap) setPendingSwap(bonus.common);
+        const rareResult = grantPowerUp(bonus.rare);
+        if (rareResult.needsSwap) setPendingSwap(bonus.rare);
+      }
+
+      if (rewards.streakRewardStreak) {
+        const earned = rollStreakReward(rewards.streakRewardStreak, unit.achievement.wingId);
+        if (earned && !useAppStore.getState().powerups.slots.some((s) => s?.id === earned.id)) {
+          setPendingSwap(earned);
+        }
+      }
     }
 
     const feedback: Feedback = {
@@ -642,28 +875,44 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     sessionState.phase,
     pendingCorrect,
     confidenceValue,
+    activeEffects,
     setSessionState,
     updateUnitProgress,
     appendCalibration,
+    updateMorphemeProgress,
+    appendPendingJourneyReward,
+    applyEarnedAchievements,
+    updateAchievementState,
+    grantPowerUp,
+    rollStreakReward,
   ]);
 
-  const goNext = useCallback(() => {
-    stopPocketTtsEngine();
-    if (sessionState.phase !== 'feedback') return;
-    const { session } = sessionState;
-    const nextIndex = session.currentIndex + 1;
-
-    if (nextIndex >= session.queue.length) {
+  const finishJourney = useCallback(
+    (session: ActiveSession, abandoned?: boolean) => {
       const correct = session.attempts.filter((a) => a.correct).length;
+      const store = useAppStore.getState();
+      const powerupsUsed = Object.values(session.powerupUsage).reduce((a, b) => a + b, 0);
+      const endHidden = processJourneyEndRewards(
+        {
+          attempts: session.attempts,
+          finalScore: { correct, total: session.attempts.length, bestStreak: session.bestStreak },
+        },
+        powerupsUsed,
+        store.achievementState,
+      );
+      applyEarnedAchievements(endHidden);
+
+      const rewards = store.pendingJourneyRewards;
       addJourney({
         id: session.journeyId,
         startedAt: session.startedAt,
         endedAt: Date.now(),
+        abandoned,
         selection: session.selection,
         attempts: session.attempts,
-        achievementsEarned: [],
+        achievementsEarned: rewards.achievementsEarned,
         artifactsSaved: session.artifactIds,
-        morphemesTouchedFirst: [],
+        morphemesTouchedFirst: rewards.morphemesTouchedFirst,
         finalScore: {
           correct,
           total: session.attempts.length,
@@ -682,12 +931,24 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
         },
       });
       clearSession(false);
+    },
+    [addJourney, applyEarnedAchievements, clearSession, elapsedSec, setSessionState],
+  );
+
+  const goNext = useCallback(() => {
+    stopPocketTtsEngine();
+    if (sessionState.phase !== 'feedback') return;
+    const { session } = sessionState;
+    const nextIndex = session.currentIndex + 1;
+
+    if (nextIndex >= session.queue.length) {
+      finishJourney(session);
       return;
     }
 
     const nextSession = { ...session, currentIndex: nextIndex };
     setSessionState({ phase: 'brief', session: nextSession });
-  }, [sessionState, elapsedSec, addJourney, clearSession, setSessionState]);
+  }, [sessionState, finishJourney, setSessionState]);
 
   const pauseQuest = useCallback(() => {
     const state = useAppStore.getState().sessionState;
@@ -717,7 +978,18 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     if (state.phase !== 'paused') return;
     const session = state.session;
     const correct = session.attempts.filter((a) => a.correct).length;
-
+    const store = useAppStore.getState();
+    const powerupsUsed = Object.values(session.powerupUsage).reduce((a, b) => a + b, 0);
+    const endHidden = processJourneyEndRewards(
+      {
+        attempts: session.attempts,
+        finalScore: { correct, total: session.attempts.length, bestStreak: session.bestStreak },
+      },
+      powerupsUsed,
+      store.achievementState,
+    );
+    applyEarnedAchievements(endHidden);
+    const rewards = store.pendingJourneyRewards;
     addJourney({
       id: session.journeyId,
       startedAt: session.startedAt,
@@ -725,9 +997,9 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       abandoned: true,
       selection: session.selection,
       attempts: session.attempts,
-      achievementsEarned: [],
+      achievementsEarned: rewards.achievementsEarned,
       artifactsSaved: session.artifactIds,
-      morphemesTouchedFirst: [],
+      morphemesTouchedFirst: rewards.morphemesTouchedFirst,
       finalScore: {
         correct,
         total: session.attempts.length,
@@ -735,11 +1007,10 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       },
       elapsedSec,
     });
-
     pauseSnapshotRef.current = null;
     clearSession(true);
     navigate({ to: '/' });
-  }, [addJourney, clearSession, elapsedSec, navigate]);
+  }, [addJourney, applyEarnedAchievements, clearSession, elapsedSec, navigate]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -800,10 +1071,13 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     return getQuizPlayFigures(activeUnit, activeQuiz);
   }, [activeUnit, activeQuiz]);
 
+  const effectState = buildActiveEffects(activeEffects);
+
   const showPlayEtymology = useMemo(() => {
+    if (effectState.showEtymologyAll) return true;
     if (!activePlayCtx) return false;
     return shouldShowPlayEtymology(activePlayCtx.root, acceptableAnswers, answered);
-  }, [activePlayCtx, acceptableAnswers, answered]);
+  }, [activePlayCtx, acceptableAnswers, answered, effectState.showEtymologyAll]);
 
   const fillHintText = useMemo(() => {
     if (!activeQuiz) return undefined;
@@ -1021,6 +1295,12 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
         <p className="text-meta text-(--text-dim)">
           Best streak: {summary.bestStreak}🔥
         </p>
+        <JourneyGainsPanel
+          achievementsEarned={pendingJourneyRewards.achievementsEarned}
+          powerupsEarned={pendingJourneyRewards.powerupsEarned}
+          morphemesTouchedFirst={pendingJourneyRewards.morphemesTouchedFirst}
+          tierUps={pendingJourneyRewards.tierUps}
+        />
         <div {...devMark('end.actions')} className="mt-8 flex flex-col gap-3">
           <Button variant="primary" fullWidth {...devMark('end.home')} onClick={() => navigate({ to: '/' })}>
             BACK HOME
@@ -1093,6 +1373,9 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
             <p {...devMark('brief.idea')} className="mt-3 text-body font-semibold text-(--accent-cyan)">
               {unit.teach.poweredIdea}
             </p>
+            {unit.teach.hook ? (
+              <p className="mt-2 text-meta italic text-(--text-dim)">{unit.teach.hook}</p>
+            ) : null}
           </div>
           {!briefAutoAdvance ? (
             <Button
@@ -1109,6 +1392,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       )}
 
       {sessionState.phase === 'play' && unit && quiz && playCtx && (
+        <PowerUpEffectProvider value={effectState}>
         <QuestionSpeakProvider
           slots={{
             title: playHeading,
@@ -1116,6 +1400,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
             sidebar: sidebarSpeakText,
           }}
           autoSlot="desc"
+          autoWaitForIdle
           autoKey={pageReadAutoKey}
         >
           <div
@@ -1165,6 +1450,13 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
               </div>
             ) : null}
 
+            <PowerUpTray
+              inventory={powerups}
+              templateKind={quiz.kind}
+              onUseSlot={activatePowerUpAtSlot}
+              className="relative mb-4"
+            />
+
             <div {...devMark('q.body')} className={cn('mt-6', !confidenceReady && 'pointer-events-none opacity-40')}>
               {quiz.kind === 'speed-reveal-mnemonic' ? (
                 <>
@@ -1195,6 +1487,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
                   disabled={answered || !confidenceReady}
                   onAnswer={handleAnswerSelect}
                   descText={questionDescText}
+                  dimmedOption={matchDimmedOption}
                 />
               ) : quiz.kind === 'scenario' ? (
                 <ScenarioQuestion
@@ -1202,6 +1495,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
                   disabled={answered || !confidenceReady}
                   onAnswer={handleAnswerSelect}
                   descText={questionDescText}
+                  dimmedIndex={mcDimmedIndex}
                 />
               ) : templateReg ? (
                 <>
@@ -1266,6 +1560,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
             )}
           </div>
         </QuestionSpeakProvider>
+        </PowerUpEffectProvider>
       )}
 
       {sessionState.phase === 'feedback' && feedbackReadBundle && (
@@ -1371,6 +1666,51 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
           </div>
         </QuestionSpeakProvider>
       )}
+
+      {shownMoment ? (
+        <AchievementEarnedMoment
+          achievement={shownMoment}
+          onDismiss={() => setShownMoment(null)}
+          reducedMotion={settings.motion !== 'full'}
+        />
+      ) : null}
+
+      {pendingFirstUseId && pendingFirstUseSlot !== null ? (
+        <PowerUpFirstUseModal
+          powerUpId={pendingFirstUseId}
+          onConfirm={(dontShow) => {
+            if (dontShow) markPowerUpFirstUseShown(pendingFirstUseId);
+            const def = getPowerUpDef(pendingFirstUseId);
+            const inst = powerups.slots[pendingFirstUseSlot];
+            if (def && inst && session) {
+              commitPowerUpUse(
+                pendingFirstUseSlot,
+                inst,
+                def.effects,
+                session.queue[session.currentIndex].templateKind,
+              );
+            }
+            setPendingFirstUseId(null);
+            setPendingFirstUseSlot(null);
+          }}
+          onCancel={() => {
+            setPendingFirstUseId(null);
+            setPendingFirstUseSlot(null);
+          }}
+        />
+      ) : null}
+
+      {pendingSwap ? (
+        <PowerUpSwapModal
+          earned={pendingSwap}
+          inventory={powerups.slots.filter((s): s is PowerUpInstance => s !== null)}
+          onSwap={(slotIndex) => {
+            swapPowerUp(slotIndex, pendingSwap);
+            setPendingSwap(null);
+          }}
+          onDiscard={() => setPendingSwap(null)}
+        />
+      ) : null}
     </>
   );
 }

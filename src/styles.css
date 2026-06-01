@@ -3,6 +3,7 @@
 
 @theme {
   --font-headline: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-headline);
   --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 

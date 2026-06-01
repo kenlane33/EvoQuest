@@ -231,6 +231,21 @@ Key labels: cell wall, cell membrane, nucleus, nucleolus, nuclear membrane, mito
                   'Lysosomes are more prominent in _____ cells.',
                   ['animal'],
                 ),
+                fillQuiz(
+                  'quiz.biochem.cells.diagram.cell-wall',
+                  'Using the plant cell diagram, the rigid outer layer is the _____.',
+                  ['cell wall', 'cellwall'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cells.diagram.chloroplast',
+                  'In the diagram, photosynthesis occurs in the _____.',
+                  ['chloroplast', 'chloroplasts'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cells.diagram.mitochondria-shared',
+                  'Both cells in the diagram contain _____ for ATP production.',
+                  ['mitochondria', 'mitochondrion'],
+                ),
               ],
               achievement: ach(
                 'biochem.cells.diagrams',
@@ -333,6 +348,16 @@ Plant cell walls prevent lysis in hypotonic solutions — animal cells can burst
                   'A flaccid plant cell is in an _____ solution.',
                   ['Isotonic', 'Hypertonic', 'Hypotonic', 'Plasmolyzed'],
                   0,
+                ),
+                fillQuiz(
+                  'quiz.biochem.osmosis.diagram-cell-a',
+                  'In the diagram, cell A is _____ (hypertonic solution).',
+                  ['plasmolyzed', 'plasmolysed'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.osmosis.diagram-cell-c',
+                  'In the diagram, cell C is _____ (hypotonic solution).',
+                  ['turgid'],
                 ),
               ],
               achievement: ach(

@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+""" To recover the Python script to generate this SVG, delete the line above -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="46 -105 639 426">
+ <title>Punnett square blood types</title>
+ <desc>Punnett square of the possible genotypes and phenotypes of children given combined genotypes and phenotypes of their mothers (rows) and fathers (columns) shaded by phenotypes (A: amber, B: blue, AB: green and O: grey) by CMG Lee. The top-left inset shows possible genotypes for each phenotype, and the top-right inset shows phenotypes for possible genotypes.</desc>
+ <style type="text/css">
+svg { font-family:'Liberation Sans',Helvetica,Arial,sans-serif; font-size:20px; letter-spacing:-1px; text-anchor:start; fill:#000000; stroke:none; }
+.A  { fill:#ffcc00; }
+.B  { fill:#66ccff; }
+.AB { fill:#00cc99; }
+.O  { fill:#eeeeee; }
+</style>
+ <defs>
+  <rect id="geno"  x="-10" y="-11" width="180" height="21"/>
+  <rect id="pheno" x="-23" y="-11" width="47"  height="21"/>
+  <g id="A">
+   <use class="A" xlink:href="#pheno"/>
+   <text x="0" y="0.6ex">A</text>
+  </g>
+  <g id="B">
+   <use class="B" xlink:href="#pheno"/>
+   <text x="0" y="0.6ex">B</text>
+  </g>
+  <g id="AB">
+   <use class="AB" xlink:href="#pheno"/>
+   <text x="0" y="0.6ex">AB</text>
+  </g>
+  <g id="O">
+   <use class="O" xlink:href="#pheno"/>
+   <text x="0" y="0.6ex">O</text>
+  </g>
+<!-- BEGIN_DYNAMIC_DEFS -->
+
+<!--   END_DYNAMIC_DEFS -->
+ </defs>
+ <circle cx="0" cy="0" r="99999" fill="#fff"/>
+<!-- BEGIN_DYNAMIC_MAIN -->
+ <g transform="translate(0,45)">
+  <rect x="48" y="0" width="47" height="43" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(50,22) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(97,0)">
+  <rect x="0" y="0" width="95" height="43" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(24,22) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(97,45)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(145,45)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(97,67)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(145,67)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,0)">
+  <rect x="0" y="0" width="95" height="43" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(24,22) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,45)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(242,45)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,67)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(242,67)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(293,0)">
+  <rect x="0" y="0" width="95" height="43" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(24,22) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(293,45)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(341,45)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(293,67)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(341,67)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(392,0)">
+  <rect x="0" y="0" width="95" height="43" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(24,22) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,45)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(440,45)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,67)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(440,67)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(489,0)">
+  <rect x="0" y="0" width="95" height="43" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(24,22) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(489,45)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(537,45)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(489,67)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(537,67)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(588,0)">
+  <rect x="0" y="0" width="95" height="43" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(24,22) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(588,45)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(636,45)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(588,67)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(636,67)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(0,90)">
+  <rect x="48" y="0" width="47" height="43" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(50,22) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(97,90)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(145,90)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(97,112)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(145,112)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,90)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(242,90)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,112)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(242,112)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(293,90)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(341,90)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(293,112)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(341,112)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(392,90)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(440,90)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(392,112)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(440,112)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(489,90)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(537,90)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(489,112)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(537,112)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(588,90)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(636,90)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(588,112)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(636,112)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(0,137)">
+  <rect x="48" y="0" width="47" height="43" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(50,22) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(97,137)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(145,137)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(97,159)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(145,159)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(194,137)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(242,137)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,159)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(242,159)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(293,137)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7468;</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(341,137)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(293,159)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(341,159)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,137)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(440,137)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(392,159)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(440,159)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(489,137)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(537,137)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(489,159)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(537,159)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(588,137)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(636,137)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(588,159)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(636,159)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(0,184)">
+  <rect x="48" y="0" width="47" height="43" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(50,22) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(97,184)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(145,184)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(97,206)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(145,206)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(194,184)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(242,184)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(194,206)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(242,206)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(293,184)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(341,184)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(293,206)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(341,206)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,184)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(440,184)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,206)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(440,206)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(489,184)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(537,184)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(489,206)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(537,206)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(588,184)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(636,184)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(588,206)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(636,206)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(0,229)">
+  <rect x="48" y="0" width="47" height="43" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(50,22) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(97,229)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(145,229)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(97,251)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(145,251)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,229)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(242,229)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(194,251)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(242,251)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(293,229)">
+  <rect x="0" y="0" width="47" height="21" class="AB"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">AB</tspan></text>
+ </g>
+ <g transform="translate(341,229)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(293,251)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(341,251)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,229)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(440,229)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,251)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(440,251)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(489,229)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">I&#7470;</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(537,229)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(489,251)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(537,251)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(588,229)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(636,229)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(588,251)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(636,251)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(0,276)">
+  <rect x="48" y="0" width="47" height="43" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(50,22) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(97,276)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(145,276)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(97,298)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(145,298)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,276)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(242,276)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(194,298)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(242,298)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(293,276)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(341,276)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(293,298)">
+  <rect x="0" y="0" width="47" height="21" class="A"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7468;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">A</tspan></text>
+ </g>
+ <g transform="translate(341,298)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,276)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(440,276)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(392,298)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(440,298)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(489,276)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(537,276)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(489,298)">
+  <rect x="0" y="0" width="47" height="21" class="B"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">I&#7470;<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">B</tspan></text>
+ </g>
+ <g transform="translate(537,298)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(588,276)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(636,276)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(588,298)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+ <g transform="translate(636,298)">
+  <rect x="0" y="0" width="47" height="21" class="O"/>
+  <text x="0" y="0.6ex" transform="translate(2,11) scale(0.8,1)">&#160;i<tspan x="13">&#160;i</tspan><tspan x="23">,</tspan><tspan x="30">O</tspan></text>
+ </g>
+<!--   END_DYNAMIC_MAIN -->
+ <path d="M 49,2 L 96,43" stroke="#cccccc"/>
+ <text transform="translate(75,12)" x="0" y="0.7ex">&#9794;</text>
+ <text transform="translate(52,30)" x="0" y="0.7ex">&#9792;</text>
+
+ <g transform="translate(58,-92)">
+  <g>
+   <use class="A" xlink:href="#geno"/>
+   <text x="0" y="0.6ex">A:<tspan x="4ex">I&#7468;&#8202;I&#7468;</tspan><tspan x="8ex">I&#7468;&#8201;i</tspan><tspan x="12ex">i&#8201;I&#7468;</tspan></text>
+  </g>
+  <g transform="translate(0,22)">
+   <use class="B" xlink:href="#geno"/>
+   <text x="0" y="0.6ex">B:<tspan x="4ex">I&#7470;&#8202;I&#7470;</tspan><tspan x="8ex">I&#7470;&#8201;i</tspan><tspan x="12ex">i&#8201;I&#7470;</tspan></text>
+  </g>
+  <g transform="translate(0,44)">
+   <use class="AB" xlink:href="#geno"/>
+   <text x="0" y="0.6ex">AB:<tspan x="4ex">I&#7468;&#8202;I&#7470;</tspan><tspan x="8ex">I&#7470;&#8202;I&#7468;</tspan></text>
+  </g>
+  <g transform="translate(0,66)">
+   <use class="O" xlink:href="#geno"/>
+   <text x="0" y="0.6ex">O:<tspan x="4ex">i i</tspan></text>
+  </g>
+ </g>
+ <g transform="translate(515,-95)" text-anchor="middle">
+  <text x="0" y="0.6ex" transform="translate( 10,22)">I&#7468;</text>
+  <text x="0" y="0.6ex" transform="translate( 10,44)">i</text>
+  <text x="0" y="0.6ex" transform="translate( 10,66)">I&#7470;</text>
+  <text x="0" y="0.6ex" transform="translate( 48, 0)">I&#7468;</text>
+  <text x="0" y="0.6ex" transform="translate( 96, 0)">i</text>
+  <text x="0" y="0.6ex" transform="translate(144, 0)">I&#7470;</text>
+  <use xlink:href="#A"  transform="translate( 48,22)"/>
+  <use xlink:href="#A"  transform="translate( 96,22)"/>
+  <use xlink:href="#AB" transform="translate(144,22)"/>
+  <use xlink:href="#A"  transform="translate( 48,44)"/>
+  <use xlink:href="#O"  transform="translate( 96,44)"/>
+  <use xlink:href="#B"  transform="translate(144,44)"/>
+  <use xlink:href="#AB" transform="translate( 48,66)"/>
+  <use xlink:href="#B"  transform="translate( 96,66)"/>
+  <use xlink:href="#B"  transform="translate(144,66)"/>
+ </g>
+</svg>
+<!-- Please retain this and other comments, which contain Python code to generate this SVG. """
+import re, math, numbers
+# class dict2class(dict):
+#  def __getattr__(self, k): return dict2class(self[k]) if isinstance(self[k], dict) else self[k]
+def fmt(string): ## string.format(**vars()) using tags {expression!format} by CMG Lee
+ def f(tag): i_sep = tag.rfind('!'); return (re.sub('\.0$', '', str(eval(tag[1:-1])))
+  if (i_sep < 0) else ('{:%s}' % tag[i_sep + 1:-1]).format(eval(tag[1:i_sep])))
+ return (re.sub(r'(?<!{){[^{}]+}', lambda m:f(m.group()), string)
+         .replace('{{', '{').replace('}}', '}'))
+def append(obj, string): return obj.append(fmt(string))
+# def try_int_float(field):
+#  try:               return int(field)
+#  except Exception:
+#   try:              return float(field)
+#   except Exception: return field
+# def parse_data(data_string, delimiter=None, is_headed=False, is_skip_hashed=False):
+#  data_ll = [[try_int_float(cell.strip()) for cell in row.strip().split(delimiter)]
+#   for row in data_string.strip().split('\n') if not is_skip_hashed or row.lstrip()[0] != '#']
+#  if not is_headed: return data_ll
+#  header_l = data_ll[0]
+#  return [{header_l[i]:data_l[i] for i in range(len(data_l))} for data_l in data_ll[1:]]
+# def tabbify(cellss, delimiter='|'):
+#  if isinstance(cellss[0], dict):
+#   return tabbify([list(cellss[-1].keys())] + [list(rows.values()) for rows in cellss])
+#  cellpadss = [list(rows) + [''] * (len(max(cellss, key=len)) - len(rows)) for rows in cellss]
+#  fmts = ['%%%ds' % (max([len(str(cell)) for cell in cols])) for cols in zip(*cellpadss)]
+#  return '\n'.join([delimiter.join([('%' if isinstance(rows[i], numbers.Number) else
+#   '%-') + fmt[1:] for (i,fmt) in enumerate(fmts)]) % tuple(rows) for rows in cellpadss])
+# def roundm(x, multiple=1):
+#  if   (isinstance(x, tuple)): return tuple(roundm(list(x), multiple))
+#  elif (isinstance(x, list )): return [roundm(x_i, multiple) for x_i in x]
+#  else: return int(math.floor(float(x) / multiple + 0.5)) * multiple
+# def roundsf(x, sf=3):
+#  if   (isinstance(x, tuple)): return tuple(roundm(list(x), multiple))
+#  elif (isinstance(x, list )): return [roundm(x_i, multiple) for x_i in x]
+#  else:
+#   str_round = str(round(x, sf - 1 - int(math.floor(math.log10(abs(x))))))
+#   n_pad     = sf - len(re.sub(r'\D', r'', str_round).lstrip('0'))
+#   if   n_pad < 0 and '.' in str_round: return str_round[:-2]
+#   elif n_pad > 0: return str_round + ('' if '.' in str_round else '.') + '0' * n_pad
+#   else:           return str_round
+
+def get_pheno(geno):
+ if   'A' in geno:
+  if  'B' in geno: return 'AB'
+  else:            return 'A'
+ elif 'B' in geno: return 'B'
+ else:             return 'O'
+def format_geno(geno):
+ return ''.join([pheno_d[allele] for allele in geno])
+def format_geno_pheno(geno):
+ geno = sorted(geno)
+ return '%s<tspan x="13">%s</tspan><tspan x="23">,</tspan><tspan x="30">%s</tspan>' % (format_geno(geno[0]), format_geno(geno[1]), get_pheno(geno))
+
+(out_defs, out_mains) = ([], [])
+
+dx = 48
+dy = 22
+# geno_l = 'oA Ao AA AB BA BB Bo oB oo'.split()
+geno_l   = 'oA AA AB BB Bo oo'.split()
+offset_l = [0, 0, 2, 4, 4, 6]
+pheno_d  = {'A':'I&#7468;', 'B':'I&#7470;', 'o':'&#160;i'}
+
+for (i_geno_ma, geno_ma) in enumerate(geno_l):
+ pheno_ma = get_pheno(geno_ma)
+ y = (i_geno_ma + 1) * (dy * 2 + 1) + offset_l[i_geno_ma]
+ append(out_mains, '''\
+ <g transform="translate(0,{y})">
+  <rect x="{dx}" y="0" width="{dx - 1}" height="{dy * 2 - 1}" class="{pheno_ma}"/>
+  <text x="0" y="0.6ex" transform="translate({dx + 2},{dy}) scale(0.8,1)">{format_geno_pheno(geno_ma)}</text>
+ </g>''')
+ for (i_geno_pa, geno_pa) in enumerate(geno_l):
+  pheno_pa = get_pheno(geno_pa)
+  x        = (i_geno_pa + 1) * (dx * 2 + 1) + offset_l[i_geno_pa]
+  if i_geno_ma == 0:
+   append(out_mains, '''\
+ <g transform="translate({x},0)">
+  <rect x="0" y="0" width="{dx * 2 - 1}" height="{dy * 2 - 1}" class="{pheno_pa}"/>
+  <text x="0" y="0.6ex" transform="translate({dx // 2},{dy}) scale(0.8,1)">{format_geno_pheno(geno_pa)}</text>
+ </g>''')
+  for  (i_allele_ma, allele_ma) in enumerate(geno_ma):
+   for (i_allele_pa, allele_pa) in enumerate(geno_pa):
+    geno_ch  = ''.join(sorted([allele_ma] + [allele_pa]))
+    pheno_ch = get_pheno(geno_ch)
+    append(out_mains, '''\
+ <g transform="translate({x + i_allele_pa * dx},{y + i_allele_ma * dy})">
+  <rect x="0" y="0" width="{dx - 1}" height="{dy - 1}" class="{pheno_ch}"/>
+  <text x="0" y="0.6ex" transform="translate(2,{dy // 2}) scale(0.8,1)">{format_geno_pheno(geno_ch)}</text>
+ </g>''')
+    # print('%s:%-2s + %s:%-2s = %s:%-2s' % (geno_ma, get_pheno(geno_ma), geno_pa, get_pheno(geno_pa), geno_ch, get_pheno(geno_ch)))
+
+out_p = 'width="100%" height="100%" viewBox="46 -105 639 426"'
+
+## Compile everything into an .svg file
+myself   = open(__file__, 'r').read() ## the contents of this very file
+path_out = __file__[:__file__.rfind('.')] + '.svg' ## *.* -> *.svg
+with open(path_out, 'w') as file_out:
+ file_out.write('''<?xml version="1.0" encoding="utf-8"?><!%s%s
+%s%s%s\n%s%s\n%s%s''' % ('-', '-', ## because SVG comments cannot have 2 consecutive '-'s
+  myself[:myself.find('width',myself.find('<svg'))], ## assume width specified before height/viewBox
+  out_p, ## replace SVG width/height/viewBox with {out_p} & dynamic SVG blocks with {out*s} contents
+  myself[myself.find ('>',myself.find('<svg')):
+         myself.find ('\n',myself.find('BEGIN_'+'DYNAMIC_DEFS'))], '\n'.join(out_defs),
+  myself[myself.rfind('\n',0,myself.find('END_'+'DYNAMIC_DEFS')):
+         myself.find ('\n',myself.find('BEGIN_'+'DYNAMIC_MAIN'))], '\n'.join(out_mains),
+  myself[myself.rfind('\n',0,myself.find('END_'+'DYNAMIC_MAIN')):]))
+ print('Output %s' % (path_out))
+
+## SVG-Python near-polyglot framework version 3.1 by CMG Lee (December 2023) -->

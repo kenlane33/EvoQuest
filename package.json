@@ -15,7 +15,12 @@
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "typecheck": "tsc --noEmit",
-    "validate-content": "bun run scripts/validate-content.ts"
+    "validate-content": "bun run scripts/validate-content.ts",
+    "check-figures": "bun run scripts/check-figures.ts",
+    "figure-report": "bun run scripts/figure-report.ts",
+    "list-nc-eoc-chunks": "bun run scripts/list-nc-eoc-chunks.ts",
+    "audit-emoji-tts": "bun run scripts/audit-emoji-tts.ts",
+    "print-nc-eoc-prompt": "vitest run src/content/authoring/generate-nc-eoc-prompt.test.ts -t \"prints prompt\" --reporter=verbose"
   },
   "dependencies": {
     "@fontsource/opendyslexic": "^5.2.5",

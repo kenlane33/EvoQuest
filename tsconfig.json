@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/vendor/**/*.js", "scripts/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/vendor/**/*.js", "scripts/**/*.ts"],
   "exclude": ["plan/**", "dist/**", "node_modules"],
   "compilerOptions": {
     "target": "ES2022",
@@ -16,6 +16,7 @@
     "moduleResolution": "bundler",
     "allowJs": true,
     "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
 

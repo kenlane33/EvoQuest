@@ -5,6 +5,8 @@ import {
   type StorageKey,
 } from '@/storage/keys';
 import { POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
+import type { HeadlineFontId } from '@/lib/google-fonts';
+import { HEADLINE_FONT_IDS } from '@/lib/google-fonts';
 import { HINT_COUNTDOWN_MS, HINT_REVEAL_MS } from '@/types/schemas';
 
 export type Migration<From = unknown, To = unknown> = {
@@ -111,6 +113,40 @@ const settingsV5ToV6: Migration = {
   describe: 'Clamp reveals.revealMs to supported 4–60s range',
 };
 
+const powerupsV1ToV2: Migration = {
+  fromVersion: 1,
+  toVersion: 2,
+  forward: (old) => ({
+    ...(old as Record<string, unknown>),
+    firstUseShown: [],
+  }),
+  describe: 'Add firstUseShown for power-up explain modals',
+};
+
+const unitsV1ToV2: Migration = {
+  fromVersion: 1,
+  toVersion: 2,
+  forward: (old) => {
+    const record = old as Record<string, Record<string, unknown>>;
+    const next: Record<string, Record<string, unknown>> = {};
+    for (const [unitId, unit] of Object.entries(record)) {
+      const encountered = (unit.templatesEncountered ?? []) as string[];
+      const quizAttemptCounts: Record<string, number> = {};
+      for (const id of encountered) {
+        if (id.startsWith('quiz.')) {
+          quizAttemptCounts[id] = 1;
+        }
+      }
+      next[unitId] = {
+        ...unit,
+        quizAttemptCounts,
+      };
+    }
+    return next;
+  },
+  describe: 'Add quizAttemptCounts seeded from quiz.* templatesEncountered',
+};
+
 const settingsV6ToV7: Migration = {
   fromVersion: 6,
   toVersion: 7,
@@ -133,11 +169,51 @@ const settingsV6ToV7: Migration = {
   describe: 'Clamp reveals.countdownMs to supported 2–60s range',
 };
 
+const settingsV7ToV8: Migration = {
+  fromVersion: 7,
+  toVersion: 8,
+  forward: (old) => {
+    const prev = old as Record<string, unknown>;
+    const practice = (prev.practice ?? {}) as Record<string, unknown>;
+    return {
+      ...prev,
+      practice: {
+        ...practice,
+        revisitLength: typeof practice.revisitLength === 'number' ? practice.revisitLength : 12,
+      },
+    };
+  },
+  describe: 'Add practice.revisitLength (default 12 questions per revisit pass)',
+};
+
+const settingsV8ToV9: Migration = {
+  fromVersion: 8,
+  toVersion: 9,
+  forward: (old) => {
+    const prev = old as Record<string, unknown>;
+    const appearance = (prev.appearance ?? {}) as Record<string, unknown>;
+    const raw = appearance.headlineFont;
+    const headlineFont =
+      typeof raw === 'string' && HEADLINE_FONT_IDS.includes(raw as HeadlineFontId)
+        ? raw
+        : 'syne';
+    return {
+      ...prev,
+      appearance: {
+        ...appearance,
+        headlineFont,
+      },
+    };
+  },
+  describe: 'Add appearance.headlineFont for display text (default Syne)',
+};
+
 /** Append-only migration chains — one per storage key. */
 export const MIGRATIONS: Record<StorageKey, MigrationChain> = {
   ...Object.fromEntries(
     ALL_STORAGE_KEYS.map((key) => [key, emptyChain()]),
   ),
+  [STORAGE_KEYS.UNITS]: [unitsV1ToV2],
   [STORAGE_KEYS.SETTINGS]: [
     settingsV1ToV2,
     settingsV2ToV3,
@@ -145,7 +221,10 @@ export const MIGRATIONS: Record<StorageKey, MigrationChain> = {
     settingsV4ToV5,
     settingsV5ToV6,
     settingsV6ToV7,
+    settingsV7ToV8,
+    settingsV8ToV9,
   ],
+  [STORAGE_KEYS.POWERUPS]: [powerupsV1ToV2],
 } as Record<StorageKey, MigrationChain>;
 
 export class MissingMigrationError extends Error {

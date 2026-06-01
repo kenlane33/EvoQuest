@@ -1,0 +1,675 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC: Evolution & Natural Selection",
+  "description": "An evolution review drawer rebuilt from the 2025 NC Biology EOC released form. Covers variation, selection pressure, drug resistance, and evidence of common ancestry (LS.Bio.9).",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780272000000,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.evolution",
+          "slug": "evolution",
+          "title": "Evolution & Natural Selection",
+          "emoji": "\ud83e\udd8e",
+          "description": "How variation arises, how the environment selects it, and how we read evidence of shared ancestry.",
+          "children": [
+            {
+              "id": "bio.eoc.evolution.core",
+              "slug": "core",
+              "title": "Natural Selection & Evidence",
+              "emoji": "\ud83e\udd2c",
+              "children": [
+                {
+                  "id": "bio.eoc.evolution.core.variation-first",
+                  "slug": "variation-first",
+                  "title": "Variation Comes First",
+                  "emoji": "\ud83c\udfb2",
+                  "shortLabel": "Variation",
+                  "longLabel": "Variation Comes First",
+                  "description": "Selection has nothing to act on until random mutation supplies variation.",
+                  "teach": {
+                    "headline": "Mutation Makes the Variation",
+                    "body": "Natural selection cannot work on a population that is all the same. **Mutations** are random changes in DNA that add new alleles to a population's gene pool. They are the raw material of evolution.\n\nSelection then favors whichever variants happen to survive and reproduce best. It does not create traits on demand, and it never produces a trait just because an organism 'needs' it.",
+                    "etymology": {
+                      "termId": "term.mutation",
+                      "term": "mutation",
+                      "morphemes": [
+                        { "morphemeId": "morph.mut", "asUsed": "mut" }
+                      ],
+                      "rootSummary": "Latin: mutare (to change)"
+                    },
+                    "mnemonic": "MUT = CHANGE. Mutations CHANGE DNA at random \u2014 selection can only sort what already exists.",
+                    "poweredIdea": "Mutations supply random variation; selection acts only on variation that already exists."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.evolution.core.variation-first.mutation",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Mutations contribute to natural selection because they add new _____ to a population's gene pool.",
+                        "acceptable": ["variation", "variations", "genetic variation", "alleles", "diversity"],
+                        "hint": "The raw material selection acts on"
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.evolution.core.variation-first.lamarck",
+                      "data": {
+                        "paragraph": "When the forest got colder, the mice grew thicker fur because they needed it, and they passed that thicker fur on to their pups.",
+                        "bugPhrase": "grew thicker fur because they needed it, and they passed that thicker fur on to their pups",
+                        "bugClass": "lamarckian-sneak",
+                        "hint": "Does needing a trait make DNA produce it within one lifetime?",
+                        "canonicalFix": "Mice already varied in fur thickness. The cold let thicker-furred mice survive and reproduce more, so the inherited trait became common over generations.",
+                        "poweredIdea": "Traits are not produced on demand \u2014 selection filters variation that already exists."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.evolution.core.variation-first.match",
+                      "data": {
+                        "term": "A random DNA mutation",
+                        "correct": "Source of new variation",
+                        "distractors": ["A response to environmental need", "A trait acquired during life", "Always harmful to the organism"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.core.variation-first.beetles",
+                      "data": {
+                        "story": "A student says a beetle population 'turned green' after birds moved into the area, as if the beetles changed color to hide.",
+                        "question": "What most likely actually happened?",
+                        "answer": "Green beetles already existed; birds ate the more visible ones, so green became more common.",
+                        "options": [
+                          "Green beetles already existed; birds ate the more visible ones, so green became more common.",
+                          "Every beetle changed its color to escape the birds.",
+                          "The birds caused mutations that turned beetles green.",
+                          "The beetles decided to become green to survive."
+                        ],
+                        "explanation": "Variation in color was already present. Predation selected against visible beetles, shifting the population's color frequencies."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.evolution.core.variation-first",
+                    "emoji": "\ud83c\udfb2",
+                    "shortLabel": "Raw Material",
+                    "longLabel": "Variation First",
+                    "flavor": "You see that selection has nothing to shape until random mutation supplies the variation.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["evolution", "natural-selection", "mutation", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "Covers NC LS.Bio.9.3 (mutations as variation source) and the teleology/Lamarckian misconception. Concepts drawn from 2025 Biology EOC released items #41, #28; teach text and quizzes are original, not reproductions."
+                },
+                {
+                  "id": "bio.eoc.evolution.core.selection-pressure",
+                  "slug": "selection-pressure",
+                  "title": "Selection by the Environment",
+                  "emoji": "\ud83d\udc3a",
+                  "shortLabel": "Selection",
+                  "longLabel": "Selection by the Environment",
+                  "description": "The environment decides which inherited traits survive into the next generation.",
+                  "teach": {
+                    "headline": "The Environment Picks Winners",
+                    "body": "Individuals whose inherited traits improve survival and reproduction leave more offspring, so those traits grow more common over generations. Biologists call this **differential reproductive success** \u2014 fitness is measured in surviving offspring, not strength alone.\n\nChange the environment \u2014 add a predator, a disease, a longer winter \u2014 and you change which traits are favored. A trait that was neutral can suddenly become an advantage.",
+                    "mnemonic": "SAME GENES, NEW RULES. Change the environment and you change which inherited traits win.",
+                    "poweredIdea": "Traits that aid survival and reproduction rise in frequency as the environment selects them."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.core.selection-pressure.rabbits",
+                      "preferred": true,
+                      "data": {
+                        "story": "A forest holds rabbits with normal legs and a few rabbits with a mutation for extra-powerful hind legs. A wolf population is introduced.",
+                        "question": "What most likely happens to the rabbit population over many generations?",
+                        "answer": "Powerful-legged rabbits escape wolves more often, survive, and reproduce, so that trait becomes more common.",
+                        "options": [
+                          "Powerful-legged rabbits escape wolves more often, survive, and reproduce, so that trait becomes more common.",
+                          "All rabbits gain powerful legs because they need them to escape.",
+                          "Normal-legged rabbits increase because their DNA is not mutated.",
+                          "The wolves cause new mutations that help every rabbit."
+                        ],
+                        "explanation": "Predation selects for the trait that improves escape. The frequency of the powerful-leg allele rises across generations."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.core.selection-pressure.plague",
+                      "data": {
+                        "story": "During a historical plague, some people carried a mutation in a cell-receptor protein that blocked the bacterium. Survivors carried it at a much higher rate than before the outbreak.",
+                        "question": "Why did this mutation become more common in the population afterward?",
+                        "answer": "Carriers survived the outbreak and reproduced, so the protective allele was selected for.",
+                        "options": [
+                          "Carriers survived the outbreak and reproduced, so the protective allele was selected for.",
+                          "The outbreak created the mutation in survivors.",
+                          "A vaccine spread the mutation through the population.",
+                          "The protective allele was selected against during the outbreak."
+                        ],
+                        "explanation": "The disease was the selective pressure. People without the allele died at higher rates, raising the allele's frequency among survivors."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.evolution.core.selection-pressure.frequency",
+                      "data": {
+                        "prompt": "An inherited trait that improves survival and reproduction will increase in _____ in a population over time.",
+                        "acceptable": ["frequency", "frequencies"],
+                        "hint": "How common an allele becomes"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.evolution.core.selection-pressure.fitness",
+                      "data": {
+                        "term": "Fitness, in evolution",
+                        "correct": "Surviving offspring an individual leaves",
+                        "distractors": ["Physical strength", "Body size", "Lifespan by itself"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.evolution.core.selection-pressure",
+                    "emoji": "\ud83d\udc3a",
+                    "shortLabel": "Selected",
+                    "longLabel": "Environment Selects",
+                    "flavor": "You track how a new predator or disease shifts which inherited traits survive into the next generation.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["evolution", "natural-selection", "fitness", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "Covers NC LS.Bio.9.4 (selective pressure outcomes). Concepts drawn from 2025 Biology EOC released items #28 and #45; scenarios reworded, not reproduced."
+                },
+                {
+                  "id": "bio.eoc.evolution.core.resistance",
+                  "slug": "resistance",
+                  "title": "Antibiotic & Pesticide Resistance",
+                  "emoji": "\ud83e\udda0",
+                  "shortLabel": "Resistance",
+                  "longLabel": "Antibiotic & Pesticide Resistance",
+                  "description": "Resistance evolves when a drug selects pre-existing resistant variants.",
+                  "teach": {
+                    "headline": "Resistance Evolves by Selection",
+                    "body": "A few cells in a population already carry resistance mutations *before* any drug arrives. An **antibiotic** kills the susceptible cells but spares the resistant ones, which reproduce and rebuild the population \u2014 now mostly resistant.\n\nOverusing antibiotics or pesticides speeds this up. The drug does not create resistance; it selects for resistant variants that were already there.",
+                    "etymology": {
+                      "termId": "term.antibiotic",
+                      "term": "antibiotic",
+                      "morphemes": [
+                        { "morphemeId": "morph.anti", "asUsed": "anti" },
+                        { "morphemeId": "morph.bio", "asUsed": "biotic" }
+                      ],
+                      "rootSummary": "Greek: anti (against) + bios (life)"
+                    },
+                    "mnemonic": "ANTI = AGAINST. BIO = LIFE. The drug fights microbial LIFE \u2014 but only the resistant survive to multiply.",
+                    "poweredIdea": "Antibiotics select pre-existing resistant variants; they do not create resistance."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.evolution.core.resistance.pesticide",
+                      "preferred": true,
+                      "data": {
+                        "scenario": "A farm sprays the same pesticide on its crops every season for a decade. Each year, fewer insects die.",
+                        "predictPrompt": "Why are the insects harder to kill over time?",
+                        "predictOptions": [
+                          "The pesticide made the surviving insects tougher",
+                          "Resistant insects already existed and were selected \u2014 survivors reproduced",
+                          "The insects chose to resist the pesticide",
+                          "Insects taught each other how to resist"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "A few insects carried resistance alleles before spraying began. Each spray killed susceptible insects and spared resistant ones, which bred. Over ten seasons the population became mostly resistant.",
+                        "truthSummary": "Selection acted on variation already present \u2014 the pesticide filtered the population; it did not toughen individuals.",
+                        "bugCandidates": [
+                          {
+                            "label": "I described the pesticide as making insects stronger",
+                            "isTheBug": true,
+                            "explanation": "The chemical selects survivors that were already resistant; it does not improve any individual insect."
+                          },
+                          {
+                            "label": "I forgot that resistance must exist before spraying",
+                            "isTheBug": false,
+                            "explanation": "Important point, but the main slip here is treating the pesticide as a strengthener."
+                          },
+                          {
+                            "label": "I treated resistance as a learned behavior",
+                            "isTheBug": false,
+                            "explanation": "Resistance is inherited variation, not something insects learn."
+                          }
+                        ],
+                        "poweredIdea": "Repeated chemical use selects for resistant variants already present in the population."
+                      }
+                    },
+                    {
+                      "kind": "speed-reveal-mnemonic",
+                      "id": "quiz.bio.eoc.evolution.core.resistance.roots",
+                      "data": {
+                        "termId": "term.antibiotic",
+                        "root": "Greek: anti (against) + bios (life)",
+                        "mnemonic": "ANTI = AGAINST. BIO = LIFE. The drug fights microbial LIFE \u2014 but only the resistant survive to multiply.",
+                        "question": {
+                          "kind": "multiple-choice",
+                          "prompt": "Why can an antibiotic course leave behind a more resistant bacterial population?",
+                          "options": [
+                            "It causes new resistance mutations in every cell",
+                            "It kills susceptible cells and spares pre-existing resistant ones",
+                            "It teaches the bacteria to resist",
+                            "It makes all bacteria stronger"
+                          ],
+                          "correctIndex": 1
+                        }
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.evolution.core.resistance.reproduce",
+                      "data": {
+                        "prompt": "After a patient takes an antibiotic, any resistant bacteria that survive can continue to _____.",
+                        "acceptable": ["reproduce", "multiply", "divide", "reproduce and multiply"],
+                        "hint": "Make more copies of themselves"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.core.resistance.rebound",
+                      "data": {
+                        "story": "A bacterial population grows steadily, then crashes when an antibiotic is added at generation 40. By generation 100 it has rebounded to an even larger size.",
+                        "question": "What best explains the rebound after generation 70?",
+                        "answer": "Some bacteria had resistance, survived the antibiotic, and reproduced to rebuild the population.",
+                        "options": [
+                          "Some bacteria had resistance, survived the antibiotic, and reproduced to rebuild the population.",
+                          "Every bacterium developed resistance and stopped reproducing.",
+                          "The antibiotic blocked all mutations, letting bacteria thrive.",
+                          "The antibiotic caused a mutation that killed all bacteria."
+                        ],
+                        "explanation": "The crash removed susceptible cells. Resistant survivors multiplied, so the recovered population is mostly resistant."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.evolution.core.resistance",
+                    "emoji": "\ud83e\udda0",
+                    "shortLabel": "Resistant",
+                    "longLabel": "Resistance Evolves",
+                    "flavor": "You explain why overusing a drug breeds resistance: survivors carry the gene and rebuild the population.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.evolution.core.variation-first"],
+                  "difficulty": "core",
+                  "tags": ["evolution", "natural-selection", "resistance", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "Covers NC LS.Bio.9.1. Concepts drawn from 2025 Biology EOC released items #25 and #43; the predict-run-reflect uses an original pesticide framing rather than the schema doc's antibiotic example."
+                },
+                {
+                  "id": "bio.eoc.evolution.core.common-ancestry",
+                  "slug": "common-ancestry",
+                  "title": "Evidence of Common Ancestry",
+                  "emoji": "\ud83c\udf33",
+                  "shortLabel": "Ancestry",
+                  "longLabel": "Evidence of Common Ancestry",
+                  "description": "Molecular data is the most reliable evidence that species share ancestors.",
+                  "teach": {
+                    "headline": "DNA Is the Strongest Evidence",
+                    "body": "Anatomy, embryos, and **homologous** structures all hint at shared ancestry. But molecular evidence is the most reliable: the more similar two species' DNA or protein sequences are, the more recently they shared a common ancestor.\n\nComparing nucleotide sequences also lets a scientist decide whether an organism is a known species or a new one \u2014 looks and behavior can mislead, but sequence data is precise.\n\n![Cladogram of mammals showing branching points of shared ancestry](/content/bio-eoc/figures/bio_eoc_cladogram.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_cladogram",
+                        "alt": "Cladogram of mammals with branch points showing which taxa share the most recent common ancestor",
+                        "caption": "Taxa joining at the most recent branch point are most closely related."
+                      }
+                    ],
+                    "etymology": {
+                      "termId": "term.homologous",
+                      "term": "homologous",
+                      "morphemes": [
+                        { "morphemeId": "morph.homo", "asUsed": "homo" },
+                        { "morphemeId": "morph.logos", "asUsed": "logous" }
+                      ],
+                      "rootSummary": "Greek: homos (same) + logos (relation)"
+                    },
+                    "mnemonic": "HOMO = SAME. Homologous structures share the SAME ancestral blueprint, even when reshaped for new jobs.",
+                    "poweredIdea": "Shared DNA sequences are the most reliable evidence of common ancestry."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.evolution.core.common-ancestry.best-evidence",
+                      "preferred": true,
+                      "data": {
+                        "term": "Most reliable evidence of common ancestry",
+                        "correct": "Nucleotide (DNA) sequences",
+                        "distractors": ["Anatomical structures", "Embryological forms", "Homologous limb bones"]
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.evolution.core.common-ancestry.diagram-relatedness",
+                      "data": {
+                        "prompt": "On the cladogram, organisms sharing the most recent branch point are most _____.",
+                        "acceptable": ["closely related", "related"],
+                        "hint": "Recent shared branch = closest relationship"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.core.common-ancestry.new-species",
+                      "data": {
+                        "story": "A mycologist finds a fungus that looks like a known species but behaves a little differently.",
+                        "question": "What is the best way to determine whether it is a new species?",
+                        "answer": "Compare its DNA sequence to the known species.",
+                        "options": [
+                          "Compare its DNA sequence to the known species.",
+                          "Compare its physical appearance to the known species.",
+                          "Compare its feeding habits to the known species.",
+                          "Compare its surface cells under a microscope."
+                        ],
+                        "explanation": "Molecular data resolves species identity far more reliably than appearance or behavior, which can converge or vary."
+                      }
+                    },
+                    {
+                      "kind": "cladogram-crafter",
+                      "id": "quiz.bio.eoc.evolution.core.common-ancestry.cladogram",
+                      "data": {
+                        "taxa": [
+                          { "id": "lancelet", "name": "Lancelet", "isOutgroup": true },
+                          { "id": "shark", "name": "Shark" },
+                          { "id": "frog", "name": "Frog" },
+                          { "id": "lizard", "name": "Lizard" },
+                          { "id": "mouse", "name": "Mouse" }
+                        ],
+                        "outgroupId": "lancelet",
+                        "traits": [
+                          { "id": "vert", "label": "Vertebrae" },
+                          { "id": "limbs", "label": "Four limbs" },
+                          { "id": "amniotic", "label": "Amniotic egg" },
+                          { "id": "hair", "label": "Hair" }
+                        ],
+                        "traitMatrix": {
+                          "lancelet": { "vert": 0, "limbs": 0, "amniotic": 0, "hair": 0 },
+                          "shark": { "vert": 1, "limbs": 0, "amniotic": 0, "hair": 0 },
+                          "frog": { "vert": 1, "limbs": 1, "amniotic": 0, "hair": 0 },
+                          "lizard": { "vert": 1, "limbs": 1, "amniotic": 1, "hair": 0 },
+                          "mouse": { "vert": 1, "limbs": 1, "amniotic": 1, "hair": 1 }
+                        },
+                        "canonicalOrder": ["lancelet", "shark", "frog", "lizard", "mouse"],
+                        "canonicalParsimonyScore": 4,
+                        "poweredIdea": "Shared derived traits nest species onto the most parsimonious tree of common descent.",
+                        "synapomorphies": [
+                          {
+                            "traitId": "limbs",
+                            "label": "Four limbs unite frogs, lizards, and mice.",
+                            "taxonIds": ["frog", "lizard", "mouse"]
+                          },
+                          {
+                            "traitId": "amniotic",
+                            "label": "The amniotic egg unites lizards and mice.",
+                            "taxonIds": ["lizard", "mouse"]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.evolution.core.common-ancestry.recency",
+                      "data": {
+                        "prompt": "The more similar two species' DNA sequences are, the more _____ they shared a common ancestor.",
+                        "acceptable": ["recently", "recent"],
+                        "hint": "Closer in time"
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.evolution.core.common-ancestry",
+                    "emoji": "\ud83c\udf33",
+                    "shortLabel": "Ancestry",
+                    "longLabel": "Common Ancestry",
+                    "flavor": "You rank the evidence and trust shared DNA sequences most when reconstructing who descended from whom.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["evolution", "common-ancestry", "phylogeny", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.9.2 (evidence of common ancestry; molecular evidence strongest). Secondary LS.Bio.10.2 overlap via cladogram reading only — dichotomous keys live in bio.eoc.evolution.classification.dichotomous-key. Released items #26 and #44; cladogram is an original 5-taxon set."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.evolution.classification",
+              "slug": "classification",
+              "title": "Classification & Phylogeny",
+              "emoji": "🐦",
+              "children": [
+                {
+                  "id": "bio.eoc.evolution.classification.dichotomous-key",
+                  "slug": "dichotomous-key",
+                  "title": "Dichotomous Keys",
+                  "emoji": "🐦",
+                  "shortLabel": "Dich Key",
+                  "longLabel": "Dichotomous Keys",
+                  "description": "Two choices at each step to identify an organism.",
+                  "teach": {
+                    "headline": "Two Choices at Each Step",
+                    "body": "A **dichotomous key** uses **paired choices** to identify organisms. At each step you pick one of two descriptions until you reach a species name.\n\n**Galápagos finch key:**\n1a. Beak long and slender → **Certhidea** (Bird W)\n1b. Beak stout → go to 2\n2a. Lower beak flat → **Geospiza** (Bird X)\n2b. Lower beak curved → go to 3\n3a. Upper beak edge bent → **Camarhynchus** (Bird Y)\n3b. Upper beak edge flat → **Platyspiza** (Bird Z)\n\n![Finch beak shapes W, X, Y, Z for dichotomous key](/content/bio-eoc/figures/bio_eoc_dichotomous_finches.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_dichotomous_finches",
+                        "alt": "Four finch beak shapes labeled W, X, Y, and Z for dichotomous key identification",
+                        "caption": "Follow beak traits through the key to identify each finch genus."
+                      }
+                    ],
+                    "mnemonic": "DICHO = TWO. Each step offers two paths — follow beak traits to the genus name.",
+                    "poweredIdea": "A dichotomous key uses two choices at each step to identify an organism."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.evolution.classification.dichotomous-key.meaning",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Dichotomous means _____ choices at each step of a key.",
+                        "acceptable": ["two", "2"],
+                        "hint": "Di = two"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.classification.dichotomous-key.certhidea",
+                      "data": {
+                        "story": "Using the Galápagos finch key: 1a. Beak long and slender → Certhidea; 1b. Beak stout → go to 2.",
+                        "question": "A finch with a long, slender beak (Bird W) belongs to which genus?",
+                        "answer": "Certhidea",
+                        "options": ["Certhidea", "Geospiza", "Camarhynchus", "Platyspiza"],
+                        "explanation": "Step 1a of the key sends long slender beaks directly to Certhidea."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.classification.dichotomous-key.camarhynchus",
+                      "data": {
+                        "story": "Bird Y has a stout beak with a curved lower beak and a bent upper beak edge.",
+                        "question": "Following the finch key (1b → 2b → 3a), which genus is Bird Y?",
+                        "answer": "Camarhynchus",
+                        "options": ["Camarhynchus", "Geospiza", "Certhidea", "Platyspiza"],
+                        "explanation": "Stout beak (1b), curved lower beak (2b), bent upper edge (3a) → Camarhynchus."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.classification.dichotomous-key.platyspiza",
+                      "data": {
+                        "story": "Bird Z has a stout beak with a curved lower beak and a flat upper beak edge.",
+                        "question": "Which genus does Bird Z belong to?",
+                        "answer": "Platyspiza",
+                        "options": ["Platyspiza", "Geospiza", "Certhidea", "Camarhynchus"],
+                        "explanation": "Stout beak (1b), curved lower beak (2b), flat upper edge (3b) → Platyspiza."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.evolution.classification.dichotomous-key.beak-geospiza",
+                      "data": {
+                        "term": "Stout beak with a flat lower beak (Bird X)",
+                        "correct": "Geospiza",
+                        "distractors": ["Certhidea", "Camarhynchus", "Platyspiza"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.evolution.classification.dichotomous-key",
+                    "emoji": "🐦",
+                    "shortLabel": "Two Paths",
+                    "longLabel": "Dichotomous Keys",
+                    "flavor": "You follow two choices at each step until the beak shape names the finch genus.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["evolution", "dichotomous-key", "classification", "eoc", "LS.Bio.10.2"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.10.2 (classification tools). Maps to released items #30 and #32 (finch key identification). Reworded from biochem.evolution.dichotomous-key; not reproduced. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.evolution.classification.phylogeny-reading",
+                  "slug": "phylogeny-reading",
+                  "title": "Reading Phylogenetic Trees",
+                  "emoji": "🌳",
+                  "shortLabel": "Phylogeny",
+                  "longLabel": "Reading Phylogenetic Trees",
+                  "description": "Sister groups, branch points, and what cladograms do not show.",
+                  "teach": {
+                    "headline": "Branch Points Tell the Story",
+                    "body": "A **cladogram** (phylogenetic tree) shows **relative relationships**, not necessarily time or \"advancement.\" Organisms sharing the **most recent branch point** are **most closely related** — they form a **sister group**.\n\nAn **outgroup** branches off earliest and helps root the tree. A dichotomous key **identifies** organisms; a cladogram shows **evolutionary relationships**.\n\n![Cladogram of mammals showing branching points of shared ancestry](/content/bio-eoc/figures/bio_eoc_cladogram.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_cladogram",
+                        "alt": "Cladogram of mammals with branch points showing which taxa share the most recent common ancestor",
+                        "caption": "The most recent shared branch point marks the closest relationship."
+                      }
+                    ],
+                    "mnemonic": "RECENT BRANCH = CLOSEST RELATIVES. Top of tree ≠ most advanced — cladograms show relationships, not rank.",
+                    "poweredIdea": "On a cladogram, the most recent shared branch point indicates the closest relationship."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.evolution.classification.phylogeny-reading.sister-group",
+                      "preferred": true,
+                      "data": {
+                        "story": "On a cladogram, frogs and salamanders share a branch point more recent than either shares with fish.",
+                        "question": "Which pair is most closely related?",
+                        "answer": "Frogs and salamanders",
+                        "options": [
+                          "Frogs and salamanders",
+                          "Frogs and fish",
+                          "Salamanders and fish",
+                          "All three are equally related"
+                        ],
+                        "explanation": "Taxa joining at the most recent branch point are sister groups — most closely related to each other."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.evolution.classification.phylogeny-reading.diagram-branch",
+                      "data": {
+                        "prompt": "On the cladogram diagram, organisms sharing the most recent branch point are most _____ related.",
+                        "acceptable": ["closely", "close"],
+                        "hint": "Recent shared branch = closest relationship"
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.evolution.classification.phylogeny-reading.advanced-trap",
+                      "data": {
+                        "paragraph": "On a cladogram, organisms placed at the top of the tree are the most biologically advanced and evolved the most recently.",
+                        "bugPhrase": "organisms placed at the top of the tree are the most biologically advanced",
+                        "bugClass": "teleology",
+                        "hint": "Does a cladogram rank organisms from simple to advanced?",
+                        "canonicalFix": "A cladogram shows relative branching order and shared ancestry, not advancement or absolute time. Position at the top does not mean \"most evolved.\"",
+                        "poweredIdea": "Cladograms show relationships, not a ladder of advancement."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.evolution.classification.phylogeny-reading.tools",
+                      "data": {
+                        "term": "Dichotomous key",
+                        "correct": "Identifies an unknown organism using paired choices",
+                        "distractors": ["Shows evolutionary branching order", "Measures DNA gel fragment size", "Predicts offspring genotypes"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.evolution.classification.phylogeny-reading",
+                    "emoji": "🌳",
+                    "shortLabel": "Sister Group",
+                    "longLabel": "Phylogeny Reader",
+                    "flavor": "You pick the closest relatives by the most recent branch, not by who sits at the top.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.evolution.core.common-ancestry"],
+                  "difficulty": "core",
+                  "tags": ["evolution", "phylogeny", "cladogram", "eoc", "LS.Bio.10.2"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.10.2 (phylogenetic trees and cladograms). Reading-focused drills for released item #50 and related cladogram items. Complements common-ancestry cladogram-crafter without duplicating it. No biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "etymologyContributions": [
+    {
+      "id": "morph.mut",
+      "morpheme": "mut-",
+      "language": "Latin",
+      "meaning": "change",
+      "cousins": ["mutate", "mutant", "commute"],
+      "appearsIn": ["term.mutation"]
+    },
+    {
+      "id": "morph.anti",
+      "morpheme": "anti-",
+      "language": "Greek",
+      "meaning": "against",
+      "cousins": ["antibody", "antidote", "antagonist"],
+      "appearsIn": ["term.antibiotic"]
+    },
+    {
+      "id": "morph.bio",
+      "morpheme": "bio-",
+      "language": "Greek",
+      "meaning": "life",
+      "cousins": ["biology", "biome", "symbiosis"],
+      "appearsIn": ["term.antibiotic"]
+    },
+    {
+      "id": "morph.homo",
+      "morpheme": "homo-",
+      "language": "Greek",
+      "meaning": "same",
+      "cousins": ["homozygous", "homogeneous", "homonym"],
+      "appearsIn": ["term.homologous"]
+    },
+    {
+      "id": "morph.logos",
+      "morpheme": "-logos",
+      "language": "Greek",
+      "meaning": "relation, word",
+      "cousins": ["biology", "logic", "analogy"],
+      "appearsIn": ["term.homologous"]
+    }
+  ]
+}

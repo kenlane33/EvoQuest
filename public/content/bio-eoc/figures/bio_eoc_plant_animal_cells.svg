@@ -1,0 +1,243 @@
+<svg viewBox="0 0 720 700" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <style>
+      .title { font-size: 14px; font-weight: bold; fill: #222; }
+      .label { font-size: 10px; fill: #333; }
+      .label-bold { font-size: 10px; fill: #333; font-weight: bold; }
+      .leader { stroke: #555; stroke-width: 0.8; fill: none; }
+    </style>
+  </defs>
+
+  <!-- ============ PLANT CELL (top) ============ -->
+  <text x="360" y="22" text-anchor="middle" class="title">Cross-Section of a Plant Cell</text>
+
+  <!-- Cell Wall (outer rectangle with rounded corners) -->
+  <rect x="140" y="35" width="440" height="280" rx="20" ry="20" fill="none" stroke="#2E7D32" stroke-width="4"/>
+
+  <!-- Cell Membrane (inner rectangle) -->
+  <rect x="150" y="45" width="420" height="260" rx="16" ry="16" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+
+  <!-- Large Central Vacuole -->
+  <ellipse cx="360" cy="175" rx="150" ry="95" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1.5"/>
+
+  <!-- Nucleus -->
+  <ellipse cx="250" cy="140" rx="50" ry="40" fill="#FFF9C4" stroke="#F9A825" stroke-width="1.8"/>
+  <!-- Nucleolus -->
+  <circle cx="250" cy="140" r="12" fill="#FFD54F" stroke="#F57F17" stroke-width="1.2"/>
+  <!-- Nuclear membrane pores (dots) -->
+  <circle cx="215" cy="118" r="2" fill="#F9A825"/>
+  <circle cx="285" cy="118" r="2" fill="#F9A825"/>
+  <circle cx="215" cy="162" r="2" fill="#F9A825"/>
+  <circle cx="285" cy="162" r="2" fill="#F9A825"/>
+
+  <!-- Chloroplasts (bean shapes) -->
+  <ellipse cx="440" cy="90" rx="28" ry="14" fill="#81C784" stroke="#388E3C" stroke-width="1.2" transform="rotate(-20,440,90)"/>
+  <line x1="425" y1="87" x2="455" y2="87" stroke="#388E3C" stroke-width="0.6"/>
+  <line x1="425" y1="93" x2="455" y2="93" stroke="#388E3C" stroke-width="0.6"/>
+
+  <ellipse cx="480" cy="140" rx="26" ry="12" fill="#81C784" stroke="#388E3C" stroke-width="1.2" transform="rotate(10,480,140)"/>
+  <line x1="465" y1="138" x2="495" y2="138" stroke="#388E3C" stroke-width="0.6"/>
+  <line x1="465" y1="143" x2="495" y2="143" stroke="#388E3C" stroke-width="0.6"/>
+
+  <!-- Mitochondria (bean shapes) -->
+  <ellipse cx="200" cy="240" rx="22" ry="10" fill="#FFCCBC" stroke="#E64A19" stroke-width="1.2" transform="rotate(25,200,240)"/>
+  <path d="M 188,237 Q 195,243 188,243 M 198,237 Q 205,243 198,243" stroke="#E64A19" stroke-width="0.6" fill="none"/>
+
+  <ellipse cx="480" cy="230" rx="20" ry="9" fill="#FFCCBC" stroke="#E64A19" stroke-width="1.2" transform="rotate(-15,480,230)"/>
+  <path d="M 470,228 Q 476,233 470,233 M 480,228 Q 486,233 480,233" stroke="#E64A19" stroke-width="0.6" fill="none"/>
+
+  <!-- Rough ER (wavy lines near nucleus) -->
+  <path d="M 305,120 Q 315,112 325,120 Q 335,128 345,120 Q 355,112 365,120" fill="none" stroke="#7B1FA2" stroke-width="1.2"/>
+  <circle cx="310" cy="120" r="1.5" fill="#7B1FA2"/>
+  <circle cx="320" cy="115" r="1.5" fill="#7B1FA2"/>
+  <circle cx="330" cy="124" r="1.5" fill="#7B1FA2"/>
+  <circle cx="340" cy="115" r="1.5" fill="#7B1FA2"/>
+  <circle cx="350" cy="124" r="1.5" fill="#7B1FA2"/>
+  <path d="M 305,132 Q 315,124 325,132 Q 335,140 345,132 Q 355,124 365,132" fill="none" stroke="#7B1FA2" stroke-width="1.2"/>
+
+  <!-- Smooth ER -->
+  <path d="M 305,152 Q 315,144 325,152 Q 335,160 345,152 Q 355,144 365,152" fill="none" stroke="#9C27B0" stroke-width="1.2"/>
+  <path d="M 305,162 Q 315,154 325,162 Q 335,170 345,162 Q 355,154 365,162" fill="none" stroke="#9C27B0" stroke-width="1.2"/>
+
+  <!-- Golgi Apparatus -->
+  <path d="M 420,200 Q 430,190 440,200 Q 450,210 460,200" fill="none" stroke="#FF8F00" stroke-width="1.8"/>
+  <path d="M 418,210 Q 430,200 442,210 Q 454,220 462,210" fill="none" stroke="#FF8F00" stroke-width="1.5"/>
+  <path d="M 416,220 Q 430,210 444,220 Q 458,230 464,220" fill="none" stroke="#FF8F00" stroke-width="1.2"/>
+  <circle cx="470" cy="205" r="4" fill="#FFE082" stroke="#FF8F00" stroke-width="0.8"/>
+  <circle cx="472" cy="215" r="3" fill="#FFE082" stroke="#FF8F00" stroke-width="0.8"/>
+
+  <!-- Ribosomes (tiny dots scattered) -->
+  <circle cx="380" cy="100" r="2" fill="#5D4037"/>
+  <circle cx="395" cy="108" r="2" fill="#5D4037"/>
+  <circle cx="385" cy="115" r="2" fill="#5D4037"/>
+  <circle cx="175" cy="100" r="2" fill="#5D4037"/>
+  <circle cx="185" cy="85" r="2" fill="#5D4037"/>
+  <circle cx="195" cy="95" r="2" fill="#5D4037"/>
+
+  <!-- LABELS (Plant Cell) -->
+  <!-- Cell Wall -->
+  <line x1="140" y1="80" x2="100" y2="55" class="leader"/>
+  <text x="30" y="58" class="label-bold">Cell Wall</text>
+
+  <!-- Cell Membrane -->
+  <line x1="150" y1="120" x2="100" y2="100" class="leader"/>
+  <text x="22" y="103" class="label-bold">Cell Membrane</text>
+
+  <!-- Vacuole -->
+  <line x1="360" y1="210" x2="360" y2="290" class="leader"/>
+  <text x="330" y="305" class="label-bold">Central Vacuole</text>
+
+  <!-- Nucleus -->
+  <line x1="250" y1="100" x2="250" y2="55" class="leader"/>
+  <text x="230" y="50" class="label-bold">Nucleus</text>
+
+  <!-- Nucleolus -->
+  <line x1="262" y1="140" x2="310" y2="80" class="leader"/>
+  <text x="312" y="77" class="label">Nucleolus</text>
+
+  <!-- Nuclear Membrane -->
+  <line x1="200" y1="140" x2="160" y2="165" class="leader"/>
+  <text x="105" y="178" class="label">Nuclear Membrane</text>
+
+  <!-- Chloroplast -->
+  <line x1="440" y1="76" x2="440" y2="50" class="leader"/>
+  <text x="420" y="46" class="label-bold">Chloroplast</text>
+
+  <!-- Mitochondria -->
+  <line x1="200" y1="250" x2="200" y2="275" class="leader"/>
+  <text x="168" y="288" class="label-bold">Mitochondria</text>
+
+  <!-- Rough ER -->
+  <line x1="365" y1="125" x2="400" y2="80" class="leader"/>
+  <text x="402" y="77" class="label">Rough ER</text>
+
+  <!-- Smooth ER -->
+  <line x1="365" y1="157" x2="410" y2="165" class="leader"/>
+  <text x="412" y="168" class="label">Smooth ER</text>
+
+  <!-- Golgi -->
+  <line x1="460" y1="220" x2="510" y2="250" class="leader"/>
+  <text x="512" y="253" class="label-bold">Golgi Apparatus</text>
+
+  <!-- Ribosomes -->
+  <line x1="395" y1="108" x2="430" y2="115" class="leader"/>
+  <text x="432" y="118" class="label">Ribosomes</text>
+
+  <!-- Cytoplasm -->
+  <text x="180" y="205" class="label" fill="#777" font-style="italic">Cytoplasm</text>
+
+
+  <!-- ============ ANIMAL CELL (bottom) ============ -->
+  <text x="360" y="365" text-anchor="middle" class="title">Cross-Section of an Animal Cell</text>
+
+  <!-- Cell Membrane (circle) -->
+  <ellipse cx="360" cy="530" rx="190" ry="150" fill="#FFF3E0" stroke="#E65100" stroke-width="2.5"/>
+
+  <!-- Nucleus -->
+  <ellipse cx="340" cy="510" rx="55" ry="45" fill="#FFF9C4" stroke="#F9A825" stroke-width="1.8"/>
+  <!-- Nucleolus -->
+  <circle cx="340" cy="510" r="14" fill="#FFD54F" stroke="#F57F17" stroke-width="1.2"/>
+  <!-- Nuclear membrane pores -->
+  <circle cx="300" cy="490" r="2" fill="#F9A825"/>
+  <circle cx="380" cy="490" r="2" fill="#F9A825"/>
+  <circle cx="300" cy="530" r="2" fill="#F9A825"/>
+  <circle cx="380" cy="530" r="2" fill="#F9A825"/>
+
+  <!-- Mitochondria -->
+  <ellipse cx="250" cy="590" rx="24" ry="11" fill="#FFCCBC" stroke="#E64A19" stroke-width="1.2" transform="rotate(20,250,590)"/>
+  <path d="M 238,588 Q 244,594 238,594 M 248,588 Q 254,594 248,594" stroke="#E64A19" stroke-width="0.6" fill="none"/>
+
+  <ellipse cx="460" cy="490" rx="22" ry="10" fill="#FFCCBC" stroke="#E64A19" stroke-width="1.2" transform="rotate(-30,460,490)"/>
+  <path d="M 450,488 Q 456,493 450,493 M 460,488 Q 466,493 460,493" stroke="#E64A19" stroke-width="0.6" fill="none"/>
+
+  <!-- Rough ER -->
+  <path d="M 400,490 Q 410,482 420,490 Q 430,498 440,490" fill="none" stroke="#7B1FA2" stroke-width="1.2"/>
+  <circle cx="405" cy="490" r="1.5" fill="#7B1FA2"/>
+  <circle cx="415" cy="485" r="1.5" fill="#7B1FA2"/>
+  <circle cx="425" cy="494" r="1.5" fill="#7B1FA2"/>
+  <path d="M 400,502 Q 410,494 420,502 Q 430,510 440,502" fill="none" stroke="#7B1FA2" stroke-width="1.2"/>
+
+  <!-- Smooth ER -->
+  <path d="M 400,520 Q 410,512 420,520 Q 430,528 440,520" fill="none" stroke="#9C27B0" stroke-width="1.2"/>
+  <path d="M 400,530 Q 410,522 420,530 Q 430,538 440,530" fill="none" stroke="#9C27B0" stroke-width="1.2"/>
+
+  <!-- Golgi Apparatus -->
+  <path d="M 230,440 Q 240,430 250,440 Q 260,450 270,440" fill="none" stroke="#FF8F00" stroke-width="1.8"/>
+  <path d="M 228,450 Q 240,440 252,450 Q 264,460 272,450" fill="none" stroke="#FF8F00" stroke-width="1.5"/>
+  <path d="M 226,460 Q 240,450 254,460 Q 268,470 274,460" fill="none" stroke="#FF8F00" stroke-width="1.2"/>
+  <circle cx="278" cy="445" r="4" fill="#FFE082" stroke="#FF8F00" stroke-width="0.8"/>
+  <circle cx="280" cy="455" r="3" fill="#FFE082" stroke="#FF8F00" stroke-width="0.8"/>
+
+  <!-- Lysosomes -->
+  <circle cx="290" cy="610" r="12" fill="#EF9A9A" stroke="#C62828" stroke-width="1.2"/>
+  <circle cx="290" cy="610" r="5" fill="#FFCDD2" stroke="#C62828" stroke-width="0.6"/>
+
+  <circle cx="430" cy="580" r="10" fill="#EF9A9A" stroke="#C62828" stroke-width="1.2"/>
+  <circle cx="430" cy="580" r="4" fill="#FFCDD2" stroke="#C62828" stroke-width="0.6"/>
+
+  <!-- Centrioles -->
+  <rect x="480" y="540" width="16" height="8" rx="2" fill="none" stroke="#1565C0" stroke-width="1.5" transform="rotate(45,488,544)"/>
+  <rect x="486" y="548" width="16" height="8" rx="2" fill="none" stroke="#1565C0" stroke-width="1.5" transform="rotate(-45,494,552)"/>
+
+  <!-- Vacuole (small) -->
+  <ellipse cx="220" cy="520" rx="20" ry="14" fill="#E1F5FE" stroke="#0288D1" stroke-width="1"/>
+
+  <!-- Ribosomes -->
+  <circle cx="450" cy="440" r="2" fill="#5D4037"/>
+  <circle cx="460" cy="450" r="2" fill="#5D4037"/>
+  <circle cx="440" cy="455" r="2" fill="#5D4037"/>
+  <circle cx="310" cy="440" r="2" fill="#5D4037"/>
+  <circle cx="320" cy="430" r="2" fill="#5D4037"/>
+
+  <!-- LABELS (Animal Cell) -->
+  <!-- Cell Membrane -->
+  <line x1="195" y1="440" x2="140" y2="410" class="leader"/>
+  <text x="52" y="413" class="label-bold">Cell Membrane</text>
+
+  <!-- Nucleus -->
+  <line x1="340" y1="465" x2="340" y2="420" class="leader"/>
+  <text x="315" y="415" class="label-bold">Nucleus</text>
+
+  <!-- Nucleolus -->
+  <line x1="354" y1="510" x2="400" y2="460" class="leader"/>
+  <text x="402" y="457" class="label">Nucleolus</text>
+
+  <!-- Nuclear Membrane -->
+  <line x1="285" y1="510" x2="230" y2="475" class="leader"/>
+  <text x="165" y="472" class="label">Nuclear Membrane</text>
+
+  <!-- Mitochondria -->
+  <line x1="250" y1="601" x2="250" y2="640" class="leader"/>
+  <text x="215" y="653" class="label-bold">Mitochondria</text>
+
+  <!-- Rough ER -->
+  <line x1="440" y1="490" x2="490" y2="478" class="leader"/>
+  <text x="492" y="475" class="label">Rough ER</text>
+
+  <!-- Smooth ER -->
+  <line x1="440" y1="525" x2="500" y2="525" class="leader"/>
+  <text x="502" y="528" class="label">Smooth ER</text>
+
+  <!-- Golgi -->
+  <line x1="226" y1="450" x2="180" y2="440" class="leader"/>
+  <text x="100" y="443" class="label-bold">Golgi Apparatus</text>
+
+  <!-- Lysosomes -->
+  <line x1="290" y1="622" x2="290" y2="650" class="leader"/>
+  <text x="270" y="665" class="label-bold">Lysosome</text>
+
+  <!-- Centrioles -->
+  <line x1="500" y1="548" x2="530" y2="548" class="leader"/>
+  <text x="532" y="551" class="label-bold">Centrioles</text>
+
+  <!-- Vacuole -->
+  <line x1="220" y1="534" x2="220" y2="560" class="leader"/>
+  <text x="200" y="573" class="label">Vacuole</text>
+
+  <!-- Ribosomes -->
+  <line x1="460" y1="450" x2="500" y2="440" class="leader"/>
+  <text x="502" y="443" class="label">Ribosomes</text>
+
+  <!-- Cytoplasm -->
+  <text x="370" y="600" class="label" fill="#777" font-style="italic">Cytoplasm</text>
+</svg>

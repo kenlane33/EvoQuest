@@ -333,6 +333,11 @@ When the blood stain lane matches a suspect's band pattern exactly, that suspect
                   'XY sex chromosomes indicate a _____ patient.',
                   ['male', 'boy', 'man'],
                 ),
+                fillQuiz(
+                  'quiz.biochem.karyotype.trisomy-count',
+                  'The karyotype shows _____ total chromosomes (trisomy 21).',
+                  ['47', 'forty-seven'],
+                ),
               ],
               achievement: ach(
                 'biochem.heredity.karyotype',

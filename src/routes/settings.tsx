@@ -9,13 +9,19 @@ import { Card } from '@/components/common/Card';
 import { cn } from '@/lib/cn';
 import {
   BODY_FONT_OPTIONS,
+  HEADLINE_FONT_OPTIONS,
   ensureGoogleFontLoaded,
+  ensureHeadlineFontLoaded,
 } from '@/lib/google-fonts';
 import { useAppStore } from '@/store/app-store';
 import type { Settings } from '@/types';
 import { HINT_COUNTDOWN_SEC, HINT_REVEAL_SEC } from '@/types/schemas';
 import { useDevPageLabelsEnabled } from '@/components/dev/DevPageLabel';
 import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import {
+  usePocketTtsVoices,
+} from '@/hooks/use-pocket-tts-voices';
+import { formatPocketTtsVoiceLabel } from '@/audio/pocket-tts';
 import { devMark } from '@/lib/dev-mark';
 
 export const Route = createFileRoute('/settings')({
@@ -23,7 +29,10 @@ export const Route = createFileRoute('/settings')({
 });
 
 const SETTINGS_PAGE_READ_TEXT =
-  'Settings. Appearance: contrast, font size, reading font. Hints: countdown before reveal, mnemonic reveal speed. Audio: sound effects, volume, read it with voice Azelma in your browser. Data: export, import backup, reset all progress.';
+  'Settings. Appearance: contrast, font size, display font, reading font. Hints: countdown before reveal, mnemonic reveal speed. Audio: sound effects, volume, read it voice in your browser. Data: export, import backup, reset all progress.';
+
+const HEADLINE_FONT_CORE = HEADLINE_FONT_OPTIONS.filter((f) => f.group === 'core');
+const HEADLINE_FONT_FUN = HEADLINE_FONT_OPTIONS.filter((f) => f.group === 'fun');
 
 function SettingsPage() {
   const settings = useAppStore((s) => s.settings);
@@ -41,6 +50,15 @@ function SettingsPage() {
   const trimmedTryRead = tryReadText.trim();
   const pageReadText = trimmedTryRead || SETTINGS_PAGE_READ_TEXT;
 
+  const {
+    voices: pocketTtsVoices,
+    status: pocketTtsVoicesStatus,
+    error: pocketTtsVoicesError,
+  } = usePocketTtsVoices({
+    enabled: settings.reading.enabled,
+    voice: settings.reading.voice,
+  });
+
   usePageReadAloud(pageReadText, {
     autoRead: Boolean(trimmedTryRead),
     autoReadKey: trimmedTryRead ? `settings-try-${tryReadNonce}` : undefined,
@@ -49,6 +67,9 @@ function SettingsPage() {
   useEffect(() => {
     for (const font of BODY_FONT_OPTIONS) {
       ensureGoogleFontLoaded(font.id);
+    }
+    for (const font of HEADLINE_FONT_OPTIONS) {
+      ensureHeadlineFontLoaded(font.id);
     }
   }, []);
 
@@ -128,6 +149,52 @@ function SettingsPage() {
             </div>
           </Field>
 
+          <Field label="Display font">
+            <p className="mb-3 text-meta text-(--text-faint)">
+              Titles, questions, and buttons.
+            </p>
+            <p className="mb-2 text-meta font-bold uppercase tracking-[0.08em] text-(--text-dim)">
+              Core
+            </p>
+            <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {HEADLINE_FONT_CORE.map((font) => (
+                <Button
+                  key={font.id}
+                  onClick={() => patchAppearance({ headlineFont: font.id })}
+                  className={cn(
+                    'rounded-(--r-md) px-3 py-2.5 text-left text-headline-md font-bold',
+                    settings.appearance.headlineFont === font.id
+                      ? 'border-0 bg-(--accent-cyan) text-(--bg-deep)'
+                      : 'border-0 bg-(--bg-card-active) text-(--text-dim)',
+                  )}
+                  style={{ fontFamily: `"${font.family}", ui-sans-serif, system-ui, sans-serif` }}
+                >
+                  {font.label}
+                </Button>
+              ))}
+            </div>
+            <p className="mb-2 text-meta font-bold uppercase tracking-[0.08em] text-(--text-dim)">
+              Fun
+            </p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {HEADLINE_FONT_FUN.map((font) => (
+                <Button
+                  key={font.id}
+                  onClick={() => patchAppearance({ headlineFont: font.id })}
+                  className={cn(
+                    'rounded-(--r-md) px-3 py-2.5 text-left text-headline-md font-bold',
+                    settings.appearance.headlineFont === font.id
+                      ? 'border-0 bg-(--accent-amber) text-(--bg-deep)'
+                      : 'border-0 bg-(--bg-card-active) text-(--text-dim)',
+                  )}
+                  style={{ fontFamily: `"${font.family}", ui-sans-serif, system-ui, sans-serif` }}
+                >
+                  {font.label}
+                </Button>
+              ))}
+            </div>
+          </Field>
+
           <Field label="Reading font">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {BODY_FONT_OPTIONS.map((font) => (
@@ -159,6 +226,38 @@ function SettingsPage() {
         <p className="mt-3 text-meta text-(--text-faint)">
           EvoQuest is vibrant dark only — no light theme.
         </p>
+      </section>
+
+      <section {...devMark('practice')} className="mb-10">
+        <h2 className="mb-4 text-headline-md font-bold">Practice</h2>
+        <Card className="space-y-5">
+          <Field label="Questions per revisit pass">
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={5}
+                max={30}
+                step={1}
+                value={settings.practice.revisitLength}
+                onChange={(e) =>
+                  setSettings({
+                    practice: {
+                      ...settings.practice,
+                      revisitLength: Number(e.target.value),
+                    },
+                  })
+                }
+                className="w-full accent-(--accent-violet)"
+              />
+              <span className="w-10 shrink-0 text-right text-meta font-bold tabular-nums text-(--text-secondary)">
+                {settings.practice.revisitLength}
+              </span>
+            </div>
+            <p className="mt-2 text-meta text-(--text-faint)">
+              How many least-covered questions to queue when you tap Next lap on the home overview.
+            </p>
+          </Field>
+        </Card>
       </section>
 
       <section {...devMark('hints')} className="mb-10">
@@ -265,10 +364,43 @@ function SettingsPage() {
             Also available in the app header. Speaks page content automatically when it
             changes (briefs, feedback, welcome steps).
           </p>
-          <p className="text-meta text-(--text-faint)">
-            Voice: Azelma. Runs in your browser (WASM); the English model downloads
-            once on first use (~200&nbsp;MB).
-          </p>
+          <Field label="Voice">
+            {pocketTtsVoicesStatus === 'loading' && (
+              <p className="text-meta text-(--text-faint)">
+                Loading voices… first use downloads the English model (~200&nbsp;MB).
+              </p>
+            )}
+            {pocketTtsVoicesStatus === 'error' && (
+              <p className="text-meta text-(--status-wrong)">
+                {pocketTtsVoicesError ?? 'Could not load voices.'}
+              </p>
+            )}
+            {pocketTtsVoices.length > 0 && (
+              <select
+                value={settings.reading.voice}
+                onChange={(e) =>
+                  setSettings({
+                    reading: { ...settings.reading, voice: e.target.value },
+                  })
+                }
+                className="w-full rounded-(--r-lg) border border-(--border-light) bg-(--bg-card-hi) px-4 py-3 text-body text-(--text-primary) outline-none focus:border-(--accent-cyan)"
+              >
+                {pocketTtsVoices.map((voiceId) => (
+                  <option key={voiceId} value={voiceId}>
+                    {formatPocketTtsVoiceLabel(voiceId)}
+                  </option>
+                ))}
+              </select>
+            )}
+            {pocketTtsVoicesStatus === 'idle' && !settings.reading.enabled && (
+              <p className="text-meta text-(--text-faint)">
+                Enable Read it to choose a voice.
+              </p>
+            )}
+            <p className="mt-2 text-meta text-(--text-faint)">
+              Runs in your browser (WASM). Built-in English voices ship with the model.
+            </p>
+          </Field>
           <Field label="Try read-aloud">
             <textarea
               value={tryReadText}

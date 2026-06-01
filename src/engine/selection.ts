@@ -173,6 +173,37 @@ function branchSweep(world: World, state: UserState, nodeId: string): ScheduledI
   return scheduledItemsForUnits(resolveBranchUnits(world, state, nodeId), state);
 }
 
+function getQuizAttemptCount(state: UserState, unitId: string, quizId: string): number {
+  return state.units[unitId]?.quizAttemptCounts?.[quizId] ?? 0;
+}
+
+function revisitTour(world: World, state: UserState, length: number): ScheduledItem[] {
+  const units = collectEnabledUnits(world, state);
+  const ranked: Array<{ count: number; item: ScheduledItem }> = [];
+
+  for (const unit of units) {
+    for (const quiz of unit.quizzes) {
+      ranked.push({
+        count: getQuizAttemptCount(state, unit.id, quiz.id),
+        item: {
+          unitId: unit.id,
+          templateKind: quiz.kind,
+          templateId: quiz.id,
+        },
+      });
+    }
+  }
+
+  ranked.sort(
+    (a, b) =>
+      a.count - b.count ||
+      a.item.unitId.localeCompare(b.item.unitId) ||
+      a.item.templateId.localeCompare(b.item.templateId),
+  );
+
+  return ranked.slice(0, length).map((r) => r.item);
+}
+
 export function buildQueue(
   selection: SelectionDescriptor,
   world: World,
@@ -185,6 +216,8 @@ export function buildQueue(
       return troubleTour(world, state, selection.length);
     case 'branch':
       return branchSweep(world, state, selection.nodeId);
+    case 'revisit':
+      return revisitTour(world, state, selection.length);
     case 'deep-dive': {
       const module = world.modules.find((m) => m.id === selection.nodeId);
       const units = (

@@ -1,0 +1,128 @@
+{
+  "p02_enzyme_substrate": {
+    "title": "Enzyme-substrate complex",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p02_enzyme_activity_graph": {
+    "title": "Effect of temperature on enzyme activity",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p04_plant_animal_cells": {
+    "title": "Plant and animal cell cross-sections",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p05_osmosis_types": {
+    "title": "Osmosis outcomes in plant cells",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p05_specialized_cells": {
+    "title": "Specialized cell types",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p06_cell_cycle": {
+    "title": "Phases of the cell cycle",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p07_dna_hierarchy": {
+    "title": "DNA organization hierarchy",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p07_dna_structure": {
+    "title": "DNA double helix",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p09_dna_fingerprint": {
+    "title": "DNA fingerprint comparison",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p09_gel_deer": {
+    "title": "Gel electrophoresis of deer species",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p10_karyotype": {
+    "title": "Human karyotype with trisomy 21",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p12_evolution_evidence": {
+    "title": "Four panels of evolutionary evidence",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p13_birds_dichotomous": {
+    "title": "Finch beak shapes for dichotomous key",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p13_cladogram": {
+    "title": "Mammal cladogram",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p14_ecology_levels": {
+    "title": "Ecological organization levels",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p15_energy_pyramid": {
+    "title": "Energy pyramid with 10% rule",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p15_food_web": {
+    "title": "Pond food web",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p16_nitrogen_cycle": {
+    "title": "Nitrogen cycle",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p16_population_curves": {
+    "title": "Exponential and logistic growth curves",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p17_deer_population": {
+    "title": "Deer population at carrying capacity",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "p18_ddt_biomagnification": {
+    "title": "DDT biomagnification pyramid",
+    "author": "EvoQuest contributors",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  }
+}

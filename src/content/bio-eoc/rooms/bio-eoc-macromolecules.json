@@ -1,0 +1,528 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC Review",
+  "description": "An EOC review room on the four biological macromolecules and how enzymes catalyze reactions, rebuilt from the 2025 NC Biology EOC released form (LS.Bio.1.1, 1.2).",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780272000000,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.macromolecules",
+          "slug": "macromolecules",
+          "title": "Macromolecules & Enzymes",
+          "emoji": "\u269b\ufe0f",
+          "description": "The four macromolecule classes, their monomers and jobs, and how enzymes speed reactions until heat or pH bends them out of shape.",
+          "children": [
+            {
+              "id": "bio.eoc.macromolecules.builders",
+              "slug": "builders",
+              "title": "Macromolecule Builders",
+              "emoji": "\ud83e\uddf1",
+              "children": [
+                {
+                  "id": "bio.eoc.macromolecules.builders.carbohydrates",
+                  "slug": "carbohydrates",
+                  "title": "Carbohydrates",
+                  "emoji": "\ud83c\udf6c",
+                  "shortLabel": "Carbs",
+                  "longLabel": "Carbohydrates",
+                  "description": "Sugars and their polymers: the cell's quick-energy and structural molecule.",
+                  "teach": {
+                    "headline": "Sugars Build Carbohydrates",
+                    "body": "Carbohydrates are made of carbon, hydrogen, and oxygen. Their monomer is the **monosaccharide** \u2014 a single sugar like glucose.\n\nLink monosaccharides into chains and you get polymers: **starch** and **glycogen** store energy, while **cellulose** builds rigid plant cell walls. So the same sugar building block does double duty \u2014 fast fuel and structure.",
+                    "etymology": {
+                      "termId": "term.monosaccharide",
+                      "term": "monosaccharide",
+                      "morphemes": [
+                        { "morphemeId": "morph.mono", "asUsed": "mono" },
+                        { "morphemeId": "morph.saccharo", "asUsed": "saccharide" }
+                      ],
+                      "rootSummary": "Greek: mono (one) + sakkharon (sugar)"
+                    },
+                    "mnemonic": "MONO = ONE. SACCHAR = SUGAR. ONE sugar is a monosaccharide; chain many for starch.",
+                    "poweredIdea": "Carbohydrates are polymers of monosaccharides used for quick energy and structure."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.macromolecules.builders.carbohydrates.monomer",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The monomer (building block) of a carbohydrate is a _____.",
+                        "acceptable": ["monosaccharide", "monosaccharides", "simple sugar", "sugar"],
+                        "hint": "A single sugar unit, like glucose"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.macromolecules.builders.carbohydrates.cellulose",
+                      "data": {
+                        "term": "Cellulose (plant cell wall fiber)",
+                        "correct": "Carbohydrate",
+                        "distractors": ["Lipid", "Protein", "Nucleic acid"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.macromolecules.builders.carbohydrates.runner",
+                      "data": {
+                        "story": "A runner eats a banana right before a sprint and feels a quick burst of usable energy.",
+                        "question": "Which macromolecule is the runner relying on for that fast energy?",
+                        "answer": "Carbohydrate",
+                        "options": ["Carbohydrate", "Lipid", "Protein", "Nucleic acid"],
+                        "explanation": "Carbohydrates like the sugars in fruit are broken down quickly for readily available energy."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.macromolecules.builders.carbohydrates",
+                    "emoji": "\ud83c\udf6c",
+                    "shortLabel": "Sugars",
+                    "longLabel": "Carbohydrate Builder",
+                    "flavor": "You trace single sugars chaining into starch for fuel and cellulose for structure.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "intro",
+                  "tags": ["macromolecules", "carbohydrates", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.1 (macromolecule structure/function). Concepts align with the 2025 Biology EOC macromolecule items; text and quizzes original. Does not reuse biochem.* ids."
+                },
+                {
+                  "id": "bio.eoc.macromolecules.builders.lipids",
+                  "slug": "lipids",
+                  "title": "Lipids",
+                  "emoji": "\ud83e\uddc8",
+                  "shortLabel": "Lipids",
+                  "longLabel": "Lipids",
+                  "description": "Fats, oils, and phospholipids: long-term energy and the cell membrane.",
+                  "teach": {
+                    "headline": "Lipids Store Energy and Build Membranes",
+                    "body": "Lipids are not built from a single repeating monomer the way the other classes are. Most are assembled from **fatty acids** and **glycerol**, and they are water-fearing (hydrophobic).\n\nTheir jobs: long-term energy storage, insulation, and \u2014 critically \u2014 the **phospholipid** bilayer that forms every cell membrane.",
+                    "etymology": {
+                      "termId": "term.lipid",
+                      "term": "lipid",
+                      "morphemes": [
+                        { "morphemeId": "morph.lip", "asUsed": "lip" }
+                      ],
+                      "rootSummary": "Greek: lipos (fat)"
+                    },
+                    "mnemonic": "LIP = FAT. Lipids are FATS and oils \u2014 water-fearing energy stores that build membranes.",
+                    "poweredIdea": "Lipids store long-term energy and form the phospholipid cell membrane."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.macromolecules.builders.lipids.membrane",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The cell membrane is built mainly from a type of lipid called a _____.",
+                        "acceptable": ["phospholipid", "phospholipids"],
+                        "hint": "Phosphate-headed lipid that forms a bilayer"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.macromolecules.builders.lipids.phospholipid",
+                      "data": {
+                        "term": "Phospholipid",
+                        "correct": "Lipid",
+                        "distractors": ["Carbohydrate", "Protein", "Nucleic acid"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.macromolecules.builders.lipids.bear",
+                      "data": {
+                        "story": "A bear packs on body fat through autumn so it can survive months of winter hibernation without eating.",
+                        "question": "Which macromolecule is the bear storing for long-term energy?",
+                        "answer": "Lipid",
+                        "options": ["Lipid", "Carbohydrate", "Protein", "Nucleic acid"],
+                        "explanation": "Lipids pack the most energy per gram, making them ideal for long-term storage."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.macromolecules.builders.lipids",
+                    "emoji": "\ud83e\uddc8",
+                    "shortLabel": "Fats",
+                    "longLabel": "Lipid Builder",
+                    "flavor": "You see why water-fearing fats store dense energy and line up into the cell membrane.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "intro",
+                  "tags": ["macromolecules", "lipids", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.1 (macromolecule structure/function). Original text and quizzes; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.macromolecules.builders.proteins",
+                  "slug": "proteins",
+                  "title": "Proteins",
+                  "emoji": "\ud83e\udd5a",
+                  "shortLabel": "Proteins",
+                  "longLabel": "Proteins",
+                  "description": "Amino-acid chains that fold into shapes; shape decides the job.",
+                  "teach": {
+                    "headline": "Amino Acids Fold Into Proteins",
+                    "body": "Proteins are chains of **amino acids** (20 kinds). The order of amino acids makes the chain fold into a precise 3D **shape**, and that shape determines what the protein does.\n\nProteins build structures, transport materials, defend as antibodies, and act as enzymes. Change the shape \u2014 by heat or pH \u2014 and the protein stops working.",
+                    "etymology": {
+                      "termId": "term.protein",
+                      "term": "protein",
+                      "morphemes": [
+                        { "morphemeId": "morph.proto", "asUsed": "prote" }
+                      ],
+                      "rootSummary": "Greek: proteios (of first importance)"
+                    },
+                    "mnemonic": "SHAPE = FUNCTION. Amino acids fold; the FOLD does the job. Unfold it and the protein quits.",
+                    "poweredIdea": "Proteins are amino-acid chains whose folded shape determines their function."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.macromolecules.builders.proteins.monomer",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The monomer (building block) of a protein is an _____.",
+                        "acceptable": ["amino acid", "amino acids"],
+                        "hint": "Twenty kinds chain together to make proteins"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.macromolecules.builders.proteins.enzyme",
+                      "data": {
+                        "term": "Enzyme",
+                        "correct": "Protein",
+                        "distractors": ["Carbohydrate", "Lipid", "Nucleic acid"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.macromolecules.builders.proteins.egg",
+                      "data": {
+                        "story": "A clear egg white turns solid and white when fried. The amino-acid sequence has not changed, but the egg can never go back to liquid.",
+                        "question": "What happened to the proteins in the egg white?",
+                        "answer": "Heat changed their shape (denatured them), so they no longer function as before.",
+                        "options": [
+                          "Heat changed their shape (denatured them), so they no longer function as before.",
+                          "Heat changed their amino-acid sequence into a new protein.",
+                          "Heat turned the proteins into carbohydrates.",
+                          "Heat added more amino acids to each protein."
+                        ],
+                        "explanation": "Denaturation unfolds a protein's 3D shape without changing its amino-acid order \u2014 and shape is what determines function."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.macromolecules.builders.proteins",
+                    "emoji": "\ud83e\udd5a",
+                    "shortLabel": "Folds",
+                    "longLabel": "Protein Builder",
+                    "flavor": "You connect amino-acid order to folded shape and shape to the protein's job.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["macromolecules", "proteins", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.1. Sets up shape/denaturation for the enzyme drawer. Original content; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.macromolecules.builders.nucleic-acids",
+                  "slug": "nucleic-acids",
+                  "title": "Nucleic Acids (DNA & RNA)",
+                  "emoji": "\ud83e\uddec",
+                  "shortLabel": "Nucleic Acids",
+                  "longLabel": "Nucleic Acids (DNA & RNA)",
+                  "description": "Nucleotide chains that store and carry genetic information.",
+                  "teach": {
+                    "headline": "Nucleotides Build DNA and RNA",
+                    "body": "The monomer of a nucleic acid is the **nucleotide** \u2014 a sugar, a phosphate, and a nitrogen base.\n\n**DNA** is double-stranded, with alternating **deoxyribose** and **phosphate** groups forming the two sides and the bases **A, G, C, T** paired down the middle. **RNA** is single-stranded, uses **ribose** instead of deoxyribose, and swaps thymine for **uracil (U)**.",
+                    "etymology": {
+                      "termId": "term.nucleotide",
+                      "term": "nucleotide",
+                      "morphemes": [
+                        { "morphemeId": "morph.nucle", "asUsed": "nucle" }
+                      ],
+                      "rootSummary": "Latin: nucleus (kernel)"
+                    },
+                    "mnemonic": "DNA = DEOXYRIBOSE + ThYMINE. RNA = RIBOSE + URACIL. Drop one oxygen, swap one base.",
+                    "poweredIdea": "DNA is a double helix of nucleotides: deoxyribose-phosphate sides with A-G-C-T bases inside."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.macromolecules.builders.nucleic-acids.backbone",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "In DNA, the two sides alternate between the sugar deoxyribose and _____ groups.",
+                        "acceptable": ["phosphate", "phosphates", "phosphate group", "phosphate groups"],
+                        "hint": "The other half of the sugar-_____ backbone"
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.macromolecules.builders.nucleic-acids.rna-mixup",
+                      "data": {
+                        "paragraph": "DNA is a single-stranded molecule with a ribose-and-phosphate backbone and the bases adenine, guanine, cytosine, and uracil running down the middle.",
+                        "bugPhrase": "single-stranded molecule with a ribose-and-phosphate backbone and the bases adenine, guanine, cytosine, and uracil",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "Which features belong to RNA, not DNA?",
+                        "canonicalFix": "DNA is double-stranded with a deoxyribose-and-phosphate backbone, and its bases are adenine, guanine, cytosine, and thymine. Ribose and uracil belong to RNA.",
+                        "poweredIdea": "DNA uses deoxyribose and thymine and is double-stranded; ribose and uracil are RNA's."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.macromolecules.builders.nucleic-acids.uracil",
+                      "data": {
+                        "term": "Uracil",
+                        "correct": "RNA base",
+                        "distractors": ["DNA base", "Amino acid", "Simple sugar"]
+                      }
+                    },
+                    {
+                      "kind": "speed-reveal-mnemonic",
+                      "id": "quiz.bio.eoc.macromolecules.builders.nucleic-acids.deoxy",
+                      "data": {
+                        "termId": "term.nucleotide",
+                        "root": "Greek: deoxy (without oxygen) + ribose (a sugar)",
+                        "mnemonic": "DEOXY = MISSING OXYGEN. DNA's sugar is DEOXYribose \u2014 RNA keeps the oxygen in plain ribose.",
+                        "question": {
+                          "kind": "multiple-choice",
+                          "prompt": "Which sugar forms the backbone of DNA?",
+                          "options": ["Ribose", "Deoxyribose", "Glucose", "Sucrose"],
+                          "correctIndex": 1
+                        }
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.macromolecules.builders.nucleic-acids",
+                    "emoji": "\ud83e\uddec",
+                    "shortLabel": "Code",
+                    "longLabel": "Nucleic Acid Builder",
+                    "flavor": "You keep DNA and RNA straight: deoxyribose and thymine versus ribose and uracil.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["macromolecules", "nucleic-acids", "dna", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.1. Maps to the DNA-structure item (released #1); the debug-the-claim targets the ribose/uracil distractor trap. Reworded, not reproduced. No biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.macromolecules.enzymes",
+              "slug": "enzymes",
+              "title": "Enzymes & Catalysis",
+              "emoji": "\ud83d\udd11",
+              "children": [
+                {
+                  "id": "bio.eoc.macromolecules.enzymes.enzyme-action",
+                  "slug": "enzyme-action",
+                  "title": "Enzymes & Reaction Rate",
+                  "emoji": "\ud83d\udd11",
+                  "shortLabel": "Enzymes",
+                  "longLabel": "Enzymes & Reaction Rate",
+                  "description": "Protein catalysts that speed reactions, work on specific substrates, and denature outside their optimal conditions.",
+                  "teach": {
+                    "headline": "Enzymes Speed Reactions, Never Used Up",
+                    "body": "An **enzyme** is a protein **catalyst**: it lowers the activation energy a reaction needs and speeds it up, yet the enzyme itself is not consumed and can be reused. Each enzyme fits a specific **substrate** like a key in a lock.\n\nAdding more enzyme speeds the reaction as long as substrate is available. But every enzyme has an **optimal** temperature and pH. Move toward that optimum and the rate rises; go past it and the enzyme **denatures** \u2014 its shape changes and it stops working.\n\n![Enzyme-substrate complex with active site, substrate, and products](/content/bio-eoc/figures/bio_eoc_enzyme_substrate.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_enzyme_substrate",
+                        "alt": "Enzyme-substrate complex diagram labeling the active site, substrate, and products",
+                        "caption": "The substrate binds at the enzyme's active site; products are released unchanged enzyme."
+                      }
+                    ],
+                    "etymology": {
+                      "termId": "term.enzyme",
+                      "term": "enzyme",
+                      "morphemes": [
+                        { "morphemeId": "morph.en", "asUsed": "en" },
+                        { "morphemeId": "morph.zyme", "asUsed": "zyme" }
+                      ],
+                      "rootSummary": "Greek: en (in) + zyme (leaven, ferment)"
+                    },
+                    "mnemonic": "SHAPE DOES THE WORK. Too hot and the enzyme DENATURES \u2014 wrong shape, no reaction.",
+                    "poweredIdea": "Enzymes are protein catalysts that lower activation energy; denaturing their shape stops them."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.macromolecules.enzymes.enzyme-action.catalyst",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "A substance that speeds up a reaction without being used up is a _____.",
+                        "acceptable": ["catalyst", "catalysts", "enzyme", "enzymes"],
+                        "hint": "Enzymes are the biological version"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.macromolecules.enzymes.enzyme-action.diagram-active-site",
+                      "data": {
+                        "prompt": "In the diagram, the substrate binds at the enzyme's _____.",
+                        "acceptable": ["active site", "active-site"],
+                        "hint": "The shaped pocket where the substrate fits"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.macromolecules.enzymes.enzyme-action.add-more",
+                      "data": {
+                        "story": "Enzyme X is required for a reaction, and there is plenty of substrate available. A researcher adds extra Enzyme X to the mixture.",
+                        "question": "What is the most likely result?",
+                        "answer": "An increase in the reaction rate",
+                        "options": [
+                          "An increase in the reaction rate",
+                          "A decrease in the reaction rate",
+                          "A decrease in the product concentration",
+                          "An increase in the substrate concentration"
+                        ],
+                        "explanation": "With substrate still available, more enzyme means more reactions happening at once, so the rate goes up."
+                      }
+                    },
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.macromolecules.enzymes.enzyme-action.potato",
+                      "data": {
+                        "scenario": "Hydrogen peroxide poured on a slice of raw potato bubbles vigorously as catalase breaks it into water and oxygen. When the same is poured on a slice of potato that was boiled first, nothing happens.",
+                        "predictPrompt": "Why does the boiled potato show no reaction?",
+                        "predictOptions": [
+                          "Heating made the peroxide evaporate before it could react",
+                          "Heat changed the shape of the catalase enzyme, so it can no longer function",
+                          "Heating released the water and oxygen ahead of time",
+                          "Heating had no effect; the potato simply ran out of peroxide"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "Boiling denatured the catalase. Its active site no longer fits hydrogen peroxide, so the enzyme cannot catalyze the breakdown \u2014 no bubbles. The raw potato's catalase still has its shape, so it works.",
+                        "truthSummary": "High heat denatures an enzyme by changing its 3D shape; a misshapen enzyme cannot bind its substrate.",
+                        "bugCandidates": [
+                          {
+                            "label": "I said the heat made the peroxide evaporate or escape",
+                            "isTheBug": true,
+                            "explanation": "The peroxide is still there; the missing piece is a working enzyme. Heat denatured the catalase, not the peroxide."
+                          },
+                          {
+                            "label": "I forgot that denaturing changes shape, not the amino-acid sequence",
+                            "isTheBug": false,
+                            "explanation": "True and useful, but the central error is blaming the peroxide instead of the enzyme."
+                          },
+                          {
+                            "label": "I treated the enzyme as something that gets used up in the reaction",
+                            "isTheBug": false,
+                            "explanation": "Enzymes are reusable catalysts, but that is not why the boiled potato failed."
+                          }
+                        ],
+                        "poweredIdea": "Heat denatures enzymes \u2014 a changed shape means the substrate no longer fits."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.macromolecules.enzymes.enzyme-action.optimal",
+                      "data": {
+                        "prompt": "An enzyme catalyzes its reaction fastest at its _____ temperature.",
+                        "acceptable": ["optimal", "optimum", "optimal temperature", "ideal"],
+                        "hint": "The 'just right' temperature for that enzyme"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.macromolecules.enzymes.enzyme-action.catalase",
+                      "data": {
+                        "term": "Catalase",
+                        "correct": "Enzyme (a protein)",
+                        "distractors": ["Carbohydrate", "Lipid", "Nucleic acid"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.macromolecules.enzymes.enzyme-action",
+                    "emoji": "\ud83d\udd11",
+                    "shortLabel": "Catalyst",
+                    "longLabel": "Enzyme Action",
+                    "flavor": "You explain why an enzyme speeds a reaction without being used up \u2014 and why heat shuts it down.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.macromolecules.builders.proteins"],
+                  "difficulty": "core",
+                  "tags": ["enzymes", "catalysis", "denaturation", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.2 (enzymes/catalysis and factors affecting rate). Maps to released items #2 (adding enzyme), #9 (boiled-potato catalase), and #29 (optimal temperature). Reworded, not reproduced. No biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "etymologyContributions": [
+    {
+      "id": "morph.mono",
+      "morpheme": "mono-",
+      "language": "Greek",
+      "meaning": "one, single",
+      "cousins": ["monomer", "monocyte", "monotone"],
+      "appearsIn": ["term.monosaccharide"]
+    },
+    {
+      "id": "morph.saccharo",
+      "morpheme": "saccharo-",
+      "language": "Greek",
+      "meaning": "sugar",
+      "cousins": ["saccharide", "saccharin", "polysaccharide"],
+      "appearsIn": ["term.monosaccharide"]
+    },
+    {
+      "id": "morph.lip",
+      "morpheme": "lip-",
+      "language": "Greek",
+      "meaning": "fat",
+      "cousins": ["lipid", "lipoprotein", "liposuction"],
+      "appearsIn": ["term.lipid"]
+    },
+    {
+      "id": "morph.proto",
+      "morpheme": "prot-",
+      "language": "Greek",
+      "meaning": "first, primary",
+      "cousins": ["prototype", "protocol", "proton"],
+      "appearsIn": ["term.protein"]
+    },
+    {
+      "id": "morph.nucle",
+      "morpheme": "nucle-",
+      "language": "Latin",
+      "meaning": "kernel, nucleus",
+      "cousins": ["nucleus", "nuclear", "nucleotide"],
+      "appearsIn": ["term.nucleotide"]
+    },
+    {
+      "id": "morph.en",
+      "morpheme": "en-",
+      "language": "Greek",
+      "meaning": "in, within",
+      "cousins": ["energy", "enzyme", "endemic"],
+      "appearsIn": ["term.enzyme"]
+    },
+    {
+      "id": "morph.zyme",
+      "morpheme": "-zyme",
+      "language": "Greek",
+      "meaning": "leaven, ferment",
+      "cousins": ["enzyme", "zymurgy", "lysozyme"],
+      "appearsIn": ["term.enzyme"]
+    }
+  ]
+}

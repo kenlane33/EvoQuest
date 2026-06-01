@@ -74,6 +74,10 @@ export function TeachPanel({
           {teach.poweredIdea}
         </p>
       ) : null}
+
+      {teach.hook ? (
+        <p className="mt-3 text-meta italic text-(--text-dim)">{teach.hook}</p>
+      ) : null}
     </div>
   );
 }

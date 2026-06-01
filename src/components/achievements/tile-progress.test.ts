@@ -23,6 +23,7 @@ describe('tile progress summaries', () => {
       lastSeenAt: 2,
       lastFiveOutcomes: [],
       templatesEncountered: ['quiz.a', 'quiz.b'],
+      quizAttemptCounts: { 'quiz.a': 1, 'quiz.b': 1 },
       tier: 'bronze',
       achievementEarned: false,
     };
@@ -45,6 +46,7 @@ describe('tile progress summaries', () => {
           lastSeenAt: 2,
           lastFiveOutcomes: [],
           templatesEncountered: ['a'],
+          quizAttemptCounts: { a: 1 },
           tier: 'unlocked',
           achievementEarned: false,
         },

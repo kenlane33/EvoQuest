@@ -121,6 +121,21 @@ export const divisionWing: Wing = {
                   'Chromosomes align along the equator during _____.',
                   ['metaphase'],
                 ),
+                fillQuiz(
+                  'quiz.biochem.cycle.letter-a',
+                  'On the cell cycle diagram, letter A is _____.',
+                  ['interphase', 's phase', 'synthesis'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cycle.letter-d',
+                  'On the cell cycle diagram, letter D is _____.',
+                  ['prophase'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cycle.letter-e',
+                  'On the cell cycle diagram, letter E is _____.',
+                  ['anaphase'],
+                ),
               ],
               achievement: ach(
                 'biochem.division.cell-cycle',

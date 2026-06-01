@@ -4,6 +4,7 @@
  */
 import { ContentModuleSchema } from '../src/types/schemas';
 import { CONTENT_MODULES } from '../src/content';
+import { validateFigureReferences } from '../src/lib/content-figures';
 
 let failed = false;
 
@@ -17,6 +18,15 @@ for (const mod of CONTENT_MODULES) {
     }
   } else {
     console.log(`✓ ${mod.id} — ${mod.title}`);
+  }
+}
+
+const figureIssues = validateFigureReferences(CONTENT_MODULES);
+if (figureIssues.length > 0) {
+  failed = true;
+  console.error('\nFigure reference errors:');
+  for (const issue of figureIssues) {
+    console.error(`  ✗ ${issue.unitId} — ${issue.figureId}: ${issue.detail}`);
   }
 }
 

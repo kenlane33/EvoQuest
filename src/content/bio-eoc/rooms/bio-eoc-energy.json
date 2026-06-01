@@ -1,0 +1,573 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC Review",
+  "description": "Complete NC Biology End-of-Course review aligned to 2023 NCSCOS and the 2025 released form. All four strands: molecules to organisms, ecosystems, heredity, evolution.",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780316205503,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.energy",
+          "slug": "energy",
+          "title": "Photosynthesis & Cellular Respiration",
+          "emoji": "\u2600\ufe0f",
+          "description": "How plants bottle sunlight as sugar and how every cell cashes that sugar in for usable energy \u2014 the two reactions that run all of life.",
+          "children": [
+            {
+              "id": "bio.eoc.energy.photosynthesis",
+              "slug": "photosynthesis",
+              "title": "Photosynthesis",
+              "emoji": "\ud83c\udf31",
+              "children": [
+                {
+                  "id": "bio.eoc.energy.photosynthesis.inputs-outputs",
+                  "slug": "inputs-outputs",
+                  "title": "Photosynthesis: Inputs & Outputs",
+                  "emoji": "\ud83c\udf31",
+                  "shortLabel": "Photo I/O",
+                  "longLabel": "Photosynthesis: Inputs & Outputs",
+                  "description": "What goes into photosynthesis, what comes out, and where it happens.",
+                  "teach": {
+                    "headline": "Sunlight In, Sugar and Oxygen Out",
+                    "body": "Photosynthesis runs inside the **chloroplast**. It takes in **carbon dioxide, water, and light energy** and puts out **glucose** (a sugar) and **oxygen**:\n\n6CO\u2082 + 6H\u2082O + light \u2192 C\u2086H\u2081\u2082O\u2086 + 6O\u2082\n\nWorth sitting with: the oxygen in the breath you just took, and the sugar in whatever you last ate, both came out of this one reaction happening in leaves.\n\n![Chloroplast diagram showing thylakoids and stroma where photosynthesis occurs](/content/bio-eoc/figures/bio_eoc_chloroplast.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_chloroplast",
+                        "alt": "Cross-section of a chloroplast with outer membrane, thylakoid stacks, and stroma labeled",
+                        "caption": "Photosynthesis occurs inside the chloroplast."
+                      }
+                    ],
+                    "etymology": {
+                      "termId": "term.photosynthesis",
+                      "term": "photosynthesis",
+                      "morphemes": [
+                        { "morphemeId": "morph.photo", "asUsed": "photo" },
+                        { "morphemeId": "morph.synthesis", "asUsed": "synthesis" }
+                      ],
+                      "rootSummary": "Greek: photo (light) + synthesis (putting together)"
+                    },
+                    "mnemonic": "IN: CO2 + WATER + LIGHT. OUT: GLUCOSE + OXYGEN. The chloroplast bottles sunlight as sugar.",
+                    "poweredIdea": "Photosynthesis uses CO2, water, and light to make glucose and oxygen inside the chloroplast."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.energy.photosynthesis.inputs-outputs.location",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "In a plant cell, photosynthesis takes place inside the organelle called the _____.",
+                        "acceptable": ["chloroplast", "chloroplasts"],
+                        "hint": "The green, light-capturing organelle"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.energy.photosynthesis.inputs-outputs.diagram-chloroplast",
+                      "data": {
+                        "prompt": "In the diagram, photosynthesis takes place inside the _____.",
+                        "acceptable": ["chloroplast", "chloroplasts"],
+                        "hint": "The green organelle shown in cross-section"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.energy.photosynthesis.inputs-outputs.products",
+                      "data": {
+                        "term": "Products of photosynthesis",
+                        "correct": "Glucose and oxygen",
+                        "distractors": ["Carbon dioxide and water", "ATP and lactic acid", "Amino acids and water"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.energy.photosynthesis.inputs-outputs.transform",
+                      "data": {
+                        "story": "An energy-transfer table lists several processes by their starting and ending energy types.",
+                        "question": "Which transformation represents photosynthesis?",
+                        "answer": "Solar (light) energy to chemical energy",
+                        "options": [
+                          "Solar (light) energy to chemical energy",
+                          "Chemical energy to heat",
+                          "Chemical energy to ATP",
+                          "Solar energy directly to ATP"
+                        ],
+                        "explanation": "Photosynthesis captures light energy and stores it as chemical energy in glucose."
+                      }
+                    },
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.energy.photosynthesis.inputs-outputs.elodea",
+                      "data": {
+                        "scenario": "A student places a sprig of an aquatic plant in water under a bright lamp. Within minutes, small gas bubbles rise from the plant.",
+                        "predictPrompt": "What gas fills the bubbles, and why is it forming?",
+                        "predictOptions": [
+                          "Carbon dioxide, because the plant is breathing it out",
+                          "Oxygen, because the plant is photosynthesizing in the light",
+                          "Nitrogen, pulled out of the water by the roots",
+                          "Water vapor boiling off in the heat of the lamp"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "Bright light drives photosynthesis. The plant uses carbon dioxide and water to build glucose and releases oxygen as a product. That oxygen comes out of solution as visible bubbles.",
+                        "truthSummary": "Bubbles from a brightly lit aquatic plant are oxygen \u2014 a product of photosynthesis.",
+                        "bugCandidates": [
+                          {
+                            "label": "I said the bubbles were carbon dioxide the plant breathes out",
+                            "isTheBug": true,
+                            "explanation": "Photosynthesis consumes CO2 and releases O2, so the light-driven bubbles are oxygen, not carbon dioxide."
+                          },
+                          {
+                            "label": "I forgot that light is what drives the reaction",
+                            "isTheBug": false,
+                            "explanation": "True that light is required, but the headline error is naming the gas as CO2."
+                          },
+                          {
+                            "label": "I assumed the lamp was boiling the water",
+                            "isTheBug": false,
+                            "explanation": "The lamp's warmth is not boiling the water; the gas is a product of photosynthesis."
+                          }
+                        ],
+                        "poweredIdea": "In the light, an aquatic plant bubbles oxygen \u2014 the visible product of photosynthesis."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.energy.photosynthesis.inputs-outputs",
+                    "emoji": "\ud83c\udf31",
+                    "shortLabel": "Sun to Sugar",
+                    "longLabel": "Photosynthesis I/O",
+                    "flavor": "You track CO2, water, and light becoming the glucose and oxygen that the rest of life runs on.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["energy", "photosynthesis", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.3.2 (photosynthesis transforms light to chemical energy). Maps to released items #8 (solar to chemical) and #49 (aquatic plant oxygen bubbles). Deeper than biochem.energy.photosynthesis-respiration; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.energy.photosynthesis.energy-capture",
+                  "slug": "energy-capture",
+                  "title": "Light Energy to Chemical Energy",
+                  "emoji": "\u2600\ufe0f",
+                  "shortLabel": "Light\u2192Sugar",
+                  "longLabel": "Light Energy to Chemical Energy",
+                  "description": "How captured sunlight becomes the chemical energy that feeds food chains.",
+                  "teach": {
+                    "headline": "Sunlight Becomes Energy You Can Eat",
+                    "body": "**Chlorophyll** inside the chloroplast absorbs light. Photosynthesis then converts that **light (solar) energy into chemical energy** locked in the bonds of **glucose**.\n\nPlants are **producers**: they bottle the Sun's energy as sugar, and almost every food chain on Earth runs on that stored sunlight. The calories in your breakfast are, very literally, repackaged sunshine.",
+                    "mnemonic": "PHOTO = LIGHT. Chlorophyll catches LIGHT and locks it into SUGAR bonds \u2014 edible sunshine.",
+                    "poweredIdea": "Photosynthesis converts light energy into chemical energy stored in the bonds of glucose."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.energy.photosynthesis.energy-capture.chemical",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Photosynthesis converts light energy into _____ energy stored in glucose.",
+                        "acceptable": ["chemical"],
+                        "hint": "The form of energy held in chemical bonds"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.energy.photosynthesis.energy-capture.food-chain",
+                      "data": {
+                        "story": "A food chain runs from grass to a grasshopper to a bird. A student asks where all that energy originally came from.",
+                        "question": "What is the original source of the energy in this food chain?",
+                        "answer": "The Sun, captured by producers during photosynthesis",
+                        "options": [
+                          "The Sun, captured by producers during photosynthesis",
+                          "The soil, absorbed directly by the grasshopper",
+                          "ATP made by the bird's mitochondria",
+                          "Carbon dioxide breathed in by the grass"
+                        ],
+                        "explanation": "Producers convert sunlight into chemical energy in glucose, and that stored energy flows up the chain."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.energy.photosynthesis.energy-capture.chlorophyll",
+                      "data": {
+                        "term": "Chlorophyll",
+                        "correct": "Pigment that absorbs light for photosynthesis",
+                        "distractors": ["Molecule that stores the cell's DNA", "Enzyme that breaks glucose down for ATP", "Material that forms the cell wall"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.energy.photosynthesis.energy-capture",
+                    "emoji": "\u2600\ufe0f",
+                    "shortLabel": "Bottled Sun",
+                    "longLabel": "Light to Chemical",
+                    "flavor": "You follow sunlight into sugar bonds and see why producers feed nearly every food chain on Earth.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.energy.photosynthesis.inputs-outputs"],
+                  "difficulty": "core",
+                  "tags": ["energy", "photosynthesis", "producers", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.3.2 (light to chemical energy). Reinforces released #8 energy-transformation pattern and the producer/food-chain link. No biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.energy.respiration",
+              "slug": "respiration",
+              "title": "Cellular Respiration",
+              "emoji": "\ud83d\udd0b",
+              "children": [
+                {
+                  "id": "bio.eoc.energy.respiration.inputs-outputs",
+                  "slug": "inputs-outputs",
+                  "title": "Cellular Respiration: Inputs & Outputs",
+                  "emoji": "\ud83d\udd0b",
+                  "shortLabel": "Resp I/O",
+                  "longLabel": "Cellular Respiration: Inputs/Outputs",
+                  "description": "What cells feed into respiration to make the ATP that powers everything they do.",
+                  "teach": {
+                    "headline": "Burning Sugar to Make ATP",
+                    "body": "Cellular respiration happens mainly in the **mitochondria**. It takes in **glucose and oxygen** and puts out **carbon dioxide, water, and ATP** (the energy currency cells actually spend):\n\nC\u2086H\u2081\u2082O\u2086 + 6O\u2082 \u2192 6CO\u2082 + 6H\u2082O + ATP\n\nEvery heartbeat, every muscle twitch, every thought you're having right now is paid for in ATP made by this reaction.",
+                    "etymology": {
+                      "termId": "term.mitochondrion",
+                      "term": "mitochondrion",
+                      "morphemes": [
+                        { "morphemeId": "morph.mito", "asUsed": "mito" },
+                        { "morphemeId": "morph.chondrion", "asUsed": "chondrion" }
+                      ],
+                      "rootSummary": "Greek: mitos (thread) + chondrion (granule)"
+                    },
+                    "mnemonic": "IN: GLUCOSE + OXYGEN. OUT: CO2 + WATER + ATP. Mitochondria cash sugar in for usable energy.",
+                    "poweredIdea": "Cellular respiration breaks glucose with oxygen in the mitochondria to make CO2, water, and ATP."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.energy.respiration.inputs-outputs.location",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Cellular respiration takes place mainly in the organelle called the _____.",
+                        "acceptable": ["mitochondria", "mitochondrion", "mitochondria (mitochondrion)"],
+                        "hint": "The cell's 'powerhouse'"
+                      }
+                    },
+                    {
+                      "kind": "concept-map-builder",
+                      "id": "quiz.bio.eoc.energy.respiration.inputs-outputs.map",
+                      "data": {
+                        "focalConcept": "Cellular Respiration",
+                        "nodes": [
+                          { "id": "glucose", "label": "Glucose", "icon": "\ud83c\udf6c" },
+                          { "id": "o2", "label": "Oxygen", "icon": "\ud83d\udca8" },
+                          { "id": "mito", "label": "Mitochondrion", "icon": "\ud83d\udd0b" },
+                          { "id": "atp", "label": "ATP", "icon": "\u26a1" },
+                          { "id": "co2", "label": "Carbon dioxide", "icon": "\ud83c\udf2b\ufe0f" }
+                        ],
+                        "canonicalEdges": [
+                          { "from": "glucose", "to": "mito", "label": "enters", "importance": "critical", "reasonIfMissing": "Glucose is the fuel that enters the mitochondrion." },
+                          { "from": "o2", "to": "mito", "label": "enters", "importance": "critical", "reasonIfMissing": "Oxygen enters the mitochondrion as the final electron acceptor." },
+                          { "from": "mito", "to": "atp", "label": "produces", "importance": "critical", "reasonIfMissing": "The mitochondrion harvests ATP from glucose." },
+                          { "from": "mito", "to": "co2", "label": "produces", "importance": "critical", "reasonIfMissing": "Carbon dioxide is a waste product released by respiration." }
+                        ],
+                        "allowedLabels": ["enters", "produces", "consumes", "requires"],
+                        "poweredIdea": "Respiration is a network of inputs (glucose, O2) and outputs (ATP, CO2, water)."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.energy.respiration.inputs-outputs.products",
+                      "data": {
+                        "term": "Products of cellular respiration",
+                        "correct": "Carbon dioxide, water, and ATP",
+                        "distractors": ["Glucose and oxygen", "Light energy and glucose", "Only oxygen"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.energy.respiration.inputs-outputs.transform",
+                      "data": {
+                        "story": "A student compares the energy transformations in different cell processes.",
+                        "question": "Which transformation represents cellular respiration?",
+                        "answer": "Chemical energy (in glucose) to ATP",
+                        "options": [
+                          "Chemical energy (in glucose) to ATP",
+                          "Light energy to chemical energy",
+                          "Light energy directly to ATP",
+                          "ATP to light energy"
+                        ],
+                        "explanation": "Respiration releases the chemical energy stored in glucose and repackages it as ATP."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.energy.respiration.inputs-outputs",
+                    "emoji": "\ud83d\udd0b",
+                    "shortLabel": "Make ATP",
+                    "longLabel": "Respiration I/O",
+                    "flavor": "You feed glucose and oxygen into the mitochondria and collect the ATP that powers your every move.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["energy", "respiration", "atp", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.3.3 (respiration transforms chemical energy into ATP). Concept-map per source preference. Deeper than biochem.energy.photosynthesis-respiration; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.energy.respiration.aerobic-anaerobic",
+                  "slug": "aerobic-anaerobic",
+                  "title": "Aerobic vs Fermentation",
+                  "emoji": "\ud83d\udcaa",
+                  "shortLabel": "Aer/Anaer",
+                  "longLabel": "Aerobic vs Fermentation",
+                  "description": "Why oxygen makes the difference between a big ATP payout and a small one.",
+                  "teach": {
+                    "headline": "With Oxygen vs Without It",
+                    "body": "With oxygen, **aerobic** respiration fully breaks down glucose and yields a large amount of ATP \u2014 about **36** per glucose. When oxygen runs low, cells switch to **fermentation** (anaerobic), which yields only about **2** ATP and leaves behind lactic acid (in muscle) or alcohol and CO\u2082 (in yeast).\n\nThat burn in your legs at the end of a hard sprint is fermentation: your muscles outran their oxygen supply and dropped to the low-yield backup.",
+                    "etymology": {
+                      "termId": "term.aerobic",
+                      "term": "aerobic",
+                      "morphemes": [
+                        { "morphemeId": "morph.aero", "asUsed": "aero" }
+                      ],
+                      "rootSummary": "Greek: aer (air) + bios (life) \u2014 'living with air (oxygen)'"
+                    },
+                    "mnemonic": "OXYGEN = JACKPOT (~36 ATP). NO OXYGEN = FERMENT, scrape ~2 ATP + lactic acid \u2014 hence the burn.",
+                    "poweredIdea": "Aerobic respiration yields far more ATP than anaerobic fermentation, the low-oxygen backup."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "be-the-turtle",
+                      "id": "quiz.bio.eoc.energy.respiration.aerobic-anaerobic.glucose-fate",
+                      "preferred": true,
+                      "data": {
+                        "roleTitle": "You are a glucose molecule",
+                        "setup": "You have just entered a hard-working muscle cell. How much ATP you yield depends on oxygen.",
+                        "startNodeId": "start",
+                        "nodes": [
+                          {
+                            "id": "start",
+                            "prompt": "Glycolysis splits you into pyruvate in the cytoplasm. Oxygen is available right now. What next?",
+                            "choices": [
+                              { "label": "Enter the mitochondrion for aerobic respiration", "nextNodeId": "aerobic", "biology": "Pyruvate crosses into the mitochondrion, where oxygen allows a full breakdown.", "isOptimal": true, "fateTrail": "\u2192 pyruvate \u2192 mitochondrion" },
+                              { "label": "Stay in the cytoplasm and ferment", "nextNodeId": "ferment", "biology": "Skipping the mitochondrion forces a low-yield anaerobic path.", "fateTrail": "\u2192 lactic acid" }
+                            ]
+                          },
+                          {
+                            "id": "aerobic",
+                            "prompt": "Inside the mitochondrion, the full breakdown runs with oxygen.",
+                            "choices": [
+                              { "label": "Complete aerobic respiration", "nextNodeId": null, "biology": "Full breakdown with oxygen yields about 36 ATP.", "isOptimal": true, "fateTrail": "\u2192 CO2 + ~36 ATP" }
+                            ],
+                            "terminalTitle": "Fully spent \u2014 about 36 ATP banked",
+                            "terminalScene": "With oxygen, the muscle squeezed the most energy possible out of you.",
+                            "isOptimalTerminal": true
+                          },
+                          {
+                            "id": "ferment",
+                            "prompt": "Oxygen is too scarce to keep up, so fermentation takes over.",
+                            "choices": [
+                              { "label": "Accept the fermentation path", "nextNodeId": null, "biology": "Without oxygen you yield only about 2 ATP and leave lactic acid behind.", "fateTrail": "\u2192 lactic acid + ~2 ATP" }
+                            ],
+                            "terminalTitle": "Low yield \u2014 about 2 ATP and a muscle burn",
+                            "terminalScene": "Fermentation is the backup: far less energy, and the lactic acid is why the muscle burns.",
+                            "isOptimalTerminal": false
+                          }
+                        ],
+                        "poweredIdea": "Aerobic respiration extracts far more ATP from glucose than anaerobic fermentation."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.energy.respiration.aerobic-anaerobic.ferment",
+                      "data": {
+                        "prompt": "When oxygen is scarce, cells make ATP through the anaerobic process called _____.",
+                        "acceptable": ["fermentation", "anaerobic respiration"],
+                        "hint": "The low-oxygen backup pathway"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.energy.respiration.aerobic-anaerobic.aerobic",
+                      "data": {
+                        "term": "Aerobic respiration",
+                        "correct": "Uses oxygen and yields about 36 ATP",
+                        "distractors": ["Uses no oxygen and yields about 2 ATP", "Stores light energy in glucose", "Occurs only in the chloroplast"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.energy.respiration.aerobic-anaerobic.sprint",
+                      "data": {
+                        "story": "During an all-out sprint, a runner's leg muscles start to burn and build up lactic acid.",
+                        "question": "What best explains this?",
+                        "answer": "Oxygen can't be delivered fast enough, so the muscles switch to fermentation.",
+                        "options": [
+                          "Oxygen can't be delivered fast enough, so the muscles switch to fermentation.",
+                          "The muscles stopped making ATP entirely.",
+                          "The muscles began doing photosynthesis.",
+                          "Extra oxygen flooded the muscles and caused the burn."
+                        ],
+                        "explanation": "Intense effort outpaces oxygen delivery, so muscles use anaerobic fermentation, which produces lactic acid."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.energy.respiration.aerobic-anaerobic.yeast",
+                      "data": {
+                        "story": "Yeast cells ferment glucose when oxygen is limited, as in bread dough rising or wine production.",
+                        "question": "What are the main products of yeast fermentation, and how does ATP yield compare to aerobic respiration?",
+                        "answer": "Alcohol and CO₂ with about 2 ATP — far less than aerobic respiration (~36 ATP).",
+                        "options": [
+                          "Alcohol and CO₂ with about 2 ATP — far less than aerobic respiration (~36 ATP).",
+                          "Lactic acid and O₂ with about 36 ATP — the same as aerobic respiration.",
+                          "Glucose and water with about 2 ATP — more than aerobic respiration.",
+                          "Alcohol and CO₂ with about 36 ATP — more than aerobic respiration."
+                        ],
+                        "explanation": "Yeast fermentation yields alcohol and carbon dioxide plus only about 2 ATP per glucose — aerobic respiration extracts far more energy."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.energy.respiration.aerobic-anaerobic",
+                    "emoji": "\ud83d\udcaa",
+                    "shortLabel": "O2 Payout",
+                    "longLabel": "Aerobic vs Fermentation",
+                    "flavor": "You ride a glucose molecule down two paths and feel why a sprint's last seconds burn.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.energy.respiration.inputs-outputs"],
+                  "difficulty": "core",
+                  "tags": ["energy", "respiration", "fermentation", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.3.3 (aerobic and anaerobic respiration). Covers fermentation vs aerobic ATP yield; yeast alcohol+CO₂ scenario. Module-only note: 2025 form items #33/#48 test photo-resp loop, not fermentation yield directly. Be-the-turtle interactive for glucose-fate decision. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.energy.respiration.photo-resp-cycle",
+                  "slug": "photo-resp-cycle",
+                  "title": "Photosynthesis & Respiration Loop",
+                  "emoji": "\ud83d\udd01",
+                  "shortLabel": "The Loop",
+                  "longLabel": "Photosynthesis & Respiration Loop",
+                  "description": "How the two reactions mirror each other \u2014 and why plants run both.",
+                  "teach": {
+                    "headline": "Two Halves of One Energy Loop",
+                    "body": "Photosynthesis and cellular respiration are mirror images. Photosynthesis **stores** solar energy in glucose and releases O\u2082; respiration **releases** that energy from glucose to make ATP and gives off CO\u2082. The products of one are the reactants of the other.\n\nKey point students miss: **plants do both.** A plant makes glucose by photosynthesis and then runs cellular respiration to use it. You and a maple tree are two ends of the same loop \u2014 each breathing out what the other breathes in.",
+                    "mnemonic": "PHOTO STORES, RESPIRATION SPENDS. O2 \u2194 CO2, glucose \u2194 ATP. PLANTS DO BOTH, not just photo.",
+                    "poweredIdea": "Photosynthesis stores solar energy in glucose; respiration releases it as ATP \u2014 and plants do both."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.energy.respiration.photo-resp-cycle.atp",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Photosynthesis stores energy in glucose; cellular respiration releases it to make _____.",
+                        "acceptable": ["atp", "atp (energy)"],
+                        "hint": "The cell's usable energy currency"
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.energy.respiration.photo-resp-cycle.plants-respire",
+                      "data": {
+                        "paragraph": "Plants carry out photosynthesis to make their food, while only animals carry out cellular respiration to release energy from that food.",
+                        "bugPhrase": "only animals carry out cellular respiration to release energy from that food",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "How does a plant get usable energy out of the glucose it makes?",
+                        "canonicalFix": "Plants run cellular respiration too. They make glucose by photosynthesis and then break it down through respiration to power their own cells.",
+                        "poweredIdea": "Plants do both: photosynthesis to store energy and respiration to release it."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.energy.respiration.photo-resp-cycle.match",
+                      "data": {
+                        "term": "Cellular respiration",
+                        "correct": "Releases energy from glucose to make ATP",
+                        "distractors": ["Stores solar energy in glucose", "Produces glucose and oxygen", "Occurs only inside the chloroplast"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.energy.respiration.photo-resp-cycle.uses-glucose",
+                      "data": {
+                        "story": "A plant cell has just produced glucose through photosynthesis.",
+                        "question": "Which process uses that glucose to make ATP the cell can spend?",
+                        "answer": "Cellular respiration",
+                        "options": ["Cellular respiration", "More photosynthesis", "Transcription", "Active transport"],
+                        "explanation": "Respiration breaks down the glucose made in photosynthesis to release usable energy as ATP."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.energy.respiration.photo-resp-cycle",
+                    "emoji": "\ud83d\udd01",
+                    "shortLabel": "Same Loop",
+                    "longLabel": "Photo-Resp Loop",
+                    "flavor": "You close the loop: one reaction's products feed the other, and plants run both ends.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.energy.photosynthesis.inputs-outputs", "bio.eoc.energy.respiration.inputs-outputs"],
+                  "difficulty": "deep",
+                  "tags": ["energy", "photosynthesis", "respiration", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.3.2/3.3 (relationship of the two processes). Maps to released items #33 and #48 (glucose links the two). Debug-the-claim targets the 'plants don't respire' trap. No biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "etymologyContributions": [
+    {
+      "id": "morph.photo",
+      "morpheme": "photo-",
+      "language": "Greek",
+      "meaning": "light",
+      "cousins": ["photosynthesis", "photograph", "photon"],
+      "appearsIn": ["term.photosynthesis"]
+    },
+    {
+      "id": "morph.synthesis",
+      "morpheme": "synthesis",
+      "language": "Greek",
+      "meaning": "putting together",
+      "cousins": ["photosynthesis", "synthesize", "synthetic"],
+      "appearsIn": ["term.photosynthesis"]
+    },
+    {
+      "id": "morph.mito",
+      "morpheme": "mito-",
+      "language": "Greek",
+      "meaning": "thread",
+      "cousins": ["mitochondrion", "mitosis"],
+      "appearsIn": ["term.mitochondrion"]
+    },
+    {
+      "id": "morph.chondrion",
+      "morpheme": "chondrion",
+      "language": "Greek",
+      "meaning": "granule, grain",
+      "cousins": ["mitochondrion", "chondrite"],
+      "appearsIn": ["term.mitochondrion"]
+    },
+    {
+      "id": "morph.aero",
+      "morpheme": "aero-",
+      "language": "Greek",
+      "meaning": "air",
+      "cousins": ["aerobic", "aerosol", "aeroplane"],
+      "appearsIn": ["term.aerobic"]
+    }
+  ]
+}

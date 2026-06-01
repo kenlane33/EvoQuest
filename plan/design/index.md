@@ -57,10 +57,12 @@ algorithms. Then pick the game types you're rendering from
 ### "I'm authoring content"
 
 → [`authoring.md`](./authoring.md) for the three paths (TypeScript / AI /
-JSON) and the full AI prompt blurb. Then survey
-[`../game-types/`](../game-types/) for the game types you'll author for.
-Reference [`achievements.md`](./achievements.md) for the topic-shaped
-achievement design rules.
+JSON). Use [`ai-authoring-prompt.md`](./ai-authoring-prompt.md) for the
+copy-paste workflow from notes, slides, or example questions (generated
+live at `/content/format`). Then survey [`../game-types/`](../game-types/)
+for the game types you'll author for. Reference
+[`achievements.md`](./achievements.md) for the topic-shaped achievement
+design rules.
 
 ### "I'm designing a new game type"
 

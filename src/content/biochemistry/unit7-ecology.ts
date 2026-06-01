@@ -206,6 +206,11 @@ This is why there are fewer top predators than producers — less energy availab
                   ['10', 'ten'],
                   true,
                 ),
+                fillQuiz(
+                  'quiz.biochem.pyramid.ten-percent',
+                  'From the energy pyramid, about _____% of energy transfers to the next trophic level.',
+                  ['10', 'ten', '10%'],
+                ),
               ],
               achievement: ach(
                 'biochem.ecology.energy-pyramid',

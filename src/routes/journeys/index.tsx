@@ -7,6 +7,7 @@ import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';
 import { CalibrationPanel } from '@/components/journeys/CalibrationPanel';
 import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { computeMasteryOverview } from '@/engine/progress/coverage';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';
 
@@ -26,6 +27,9 @@ function JourneysPage() {
     navigate({ to: '/play/$sessionId', params: { sessionId } });
   }
 
+  const overview = computeMasteryOverview(unitProgress);
+  const lapLine = `${overview.laps} full ${overview.laps === 1 ? 'lap' : 'laps'} through everything · next lap ${overview.nextLapPct}%`;
+
   const journeySummary =
     journeys.length === 0
       ? 'No journeys yet.'
@@ -38,7 +42,7 @@ function JourneysPage() {
           .join('. ');
 
   usePageReadAloud(
-    `Journeys. Your study sessions, archived here. Embark a new mix when you are ready. ${journeySummary}`,
+    `Journeys. ${lapLine}. Your study sessions, archived here. Embark a new mix when you are ready. ${journeySummary}`,
   );
 
   return (
@@ -52,9 +56,10 @@ function JourneysPage() {
       </Link>
 
       <h1 className="text-display-lg mb-2 font-black text-(--text-primary)">Journeys</h1>
-      <p className="mb-8 max-w-(--w-medium) text-body text-(--text-secondary)">
+      <p className="mb-2 max-w-(--w-medium) text-body text-(--text-secondary)">
         Your study sessions, archived here. Embark a new mix when you are ready.
       </p>
+      <p className="mb-8 text-meta text-(--text-dim)">{lapLine}</p>
 
       <Card {...devMark('embark')} className="mb-10">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

@@ -37,8 +37,16 @@ export function updateUnitProgress(
     lastSeenAt: 0,
     lastFiveOutcomes: [],
     templatesEncountered: [],
+    quizAttemptCounts: {},
     tier: 'locked',
     achievementEarned: false,
+  };
+
+  const quizKey = attempt.templateId ?? attempt.templateKind;
+  const prevCounts = base.quizAttemptCounts ?? {};
+  const nextCounts = {
+    ...prevCounts,
+    [quizKey]: (prevCounts[quizKey] ?? 0) + 1,
   };
 
   const next: UnitProgress = {
@@ -50,12 +58,10 @@ export function updateUnitProgress(
       ...base.lastFiveOutcomes,
       { correct: attempt.correct, ms: attempt.ms, templateKind: attempt.templateKind },
     ].slice(-5),
-    templatesEncountered: (() => {
-      const key = attempt.templateId ?? attempt.templateKind;
-      return base.templatesEncountered.includes(key)
-        ? base.templatesEncountered
-        : [...base.templatesEncountered, key];
-    })(),
+    templatesEncountered: base.templatesEncountered.includes(quizKey)
+      ? base.templatesEncountered
+      : [...base.templatesEncountered, quizKey],
+    quizAttemptCounts: nextCounts,
   };
 
   return { ...next, tier: computeTier(next) };

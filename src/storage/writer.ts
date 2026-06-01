@@ -137,3 +137,8 @@ export function cancelPending(key: StorageKey): void {
   }
   pending.delete(key);
 }
+
+/** Attach visibility / unload flush hooks (idempotent). Call once at app boot. */
+export function ensureFlushHooks(): void {
+  attachFlushListeners();
+}

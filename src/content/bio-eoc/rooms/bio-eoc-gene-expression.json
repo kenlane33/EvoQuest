@@ -1,0 +1,495 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC Review",
+  "description": "Complete NC Biology End-of-Course review aligned to 2023 NCSCOS and the 2025 released form. All four strands: molecules to organisms, ecosystems, heredity, evolution.",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780316036546,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.gene-expression",
+          "slug": "gene-expression",
+          "title": "DNA, RNA & Protein Synthesis",
+          "emoji": "\ud83e\uddec",
+          "description": "How base pairing, transcription, translation, and the codon code turn genes into proteins \u2014 and how gene expression and mutations shape cells.",
+          "children": [
+            {
+              "id": "bio.eoc.gene-expression.dogma",
+              "slug": "dogma",
+              "title": "Central Dogma",
+              "emoji": "\ud83d\udcdc",
+              "children": [
+                {
+                  "id": "bio.eoc.gene-expression.dogma.base-pairing",
+                  "slug": "base-pairing",
+                  "title": "Complementary Base Pairing",
+                  "emoji": "\ud83e\uddec",
+                  "shortLabel": "Base Pairs",
+                  "longLabel": "Complementary Base Pairing",
+                  "description": "Which bases pair with which, and how DNA and RNA differ.",
+                  "teach": {
+                    "headline": "A Pairs With T, G Pairs With C",
+                    "body": "In DNA the bases pair in fixed partners: **adenine (A) with thymine (T)** and **guanine (G) with cytosine (C)**. Because the pairing is fixed, each strand is a template for rebuilding the other.\n\nRNA follows the same rule with one swap: it has no thymine, so **adenine pairs with uracil (U)**. This pairing is how DNA is copied and how mRNA is transcribed from a gene.",
+                    "mnemonic": "A-T = APPLE TREE. G-C = GOOD CALL. In RNA, T retires and URACIL pairs with A.",
+                    "poweredIdea": "DNA bases pair A-T and G-C; in RNA, adenine pairs with uracil instead of thymine."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.base-pairing.at",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "In DNA, the base adenine (A) always pairs with _____.",
+                        "acceptable": ["thymine", "t"],
+                        "hint": "A-T are partners in DNA"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.base-pairing.gc",
+                      "data": {
+                        "term": "Cytosine (C)",
+                        "correct": "Pairs with guanine (G)",
+                        "distractors": ["Pairs with adenine (A)", "Pairs with thymine (T)", "Pairs with uracil (U)"]
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.base-pairing.rna",
+                      "data": {
+                        "prompt": "In RNA, adenine pairs with _____ instead of thymine.",
+                        "acceptable": ["uracil", "u"],
+                        "hint": "RNA's replacement for thymine"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.base-pairing.complement",
+                      "data": {
+                        "story": "One strand of a DNA molecule reads T-A-C-G.",
+                        "question": "What is the base sequence of the complementary DNA strand?",
+                        "answer": "A-T-G-C",
+                        "options": ["A-T-G-C", "T-A-C-G", "U-A-G-C", "A-U-G-C"],
+                        "explanation": "Pair each base with its partner: T\u2192A, A\u2192T, C\u2192G, G\u2192C gives A-T-G-C. (Uracil would only appear in RNA.)"
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.gene-expression.dogma.base-pairing",
+                    "emoji": "\ud83e\uddec",
+                    "shortLabel": "Pairs",
+                    "longLabel": "Base Pairing",
+                    "flavor": "You read one strand and write its complement, swapping in uracil whenever the strand is RNA.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "intro",
+                  "tags": ["gene-expression", "base-pairing", "dna", "rna", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.5 (DNA/RNA direct protein synthesis; complementary base pairing). Reworded from released DNA-structure patterns (e.g. #1). Deeper than biochem.protein.dna-vs-rna; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.gene-expression.dogma.central-dogma",
+                  "slug": "central-dogma",
+                  "title": "Transcription & Translation",
+                  "emoji": "\ud83d\udcdc",
+                  "shortLabel": "Dogma",
+                  "longLabel": "Transcription & Translation",
+                  "description": "The DNA-to-RNA-to-protein pipeline and where each step happens.",
+                  "teach": {
+                    "headline": "DNA to RNA to Protein",
+                    "body": "The central dogma is **DNA \u2192 RNA \u2192 protein**.\n\n**Transcription** copies a gene from DNA into messenger RNA inside the **nucleus**. The mRNA then travels out to a **ribosome**, where **translation** reads the mRNA codons and tRNA delivers the matching amino acids to build the protein.\n\n![Labeled DNA double helix showing sugar-phosphate backbone and base pairs](/content/bio-eoc/figures/bio_eoc_dna_structure.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_dna_structure",
+                        "alt": "DNA double helix with sugar-phosphate backbone and nitrogenous base pairs labeled",
+                        "caption": "Genes are stored as DNA base sequences before transcription."
+                      }
+                    ],
+                    "etymology": {
+                      "termId": "term.transcription",
+                      "term": "transcription",
+                      "morphemes": [
+                        { "morphemeId": "morph.trans", "asUsed": "trans" },
+                        { "morphemeId": "morph.scrib", "asUsed": "scrip" }
+                      ],
+                      "rootSummary": "Latin: trans (across) + scribere (to write)"
+                    },
+                    "mnemonic": "TRANSCRIBE = WRITE mRNA in the NUCLEUS. TRANSLATE = READ it at the RIBOSOME.",
+                    "poweredIdea": "Transcription (DNA to mRNA) happens in the nucleus; translation (mRNA to protein) happens at the ribosome."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.central-dogma.transcription",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Copying a gene from DNA into messenger RNA is called _____.",
+                        "acceptable": ["transcription"],
+                        "hint": "Trans + write = copying DNA to mRNA"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.central-dogma.diagram-backbone",
+                      "data": {
+                        "prompt": "In the diagram, the alternating sugar-_____ chain forms the DNA backbone.",
+                        "acceptable": ["phosphate", "phosphates"],
+                        "hint": "Part of the sugar-phosphate backbone"
+                      }
+                    },
+                    {
+                      "kind": "procedure-builder",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.central-dogma.pipeline",
+                      "data": {
+                        "goal": "Order the steps that turn a gene into a working protein.",
+                        "initialState": "Gene in the DNA of the nucleus",
+                        "targetState": "Folded protein in the cytoplasm",
+                        "blocks": [
+                          { "id": "transcribe", "label": "Transcribe gene into mRNA (in the nucleus)", "icon": "\ud83d\udcdd", "narration": "RNA polymerase copies the gene's DNA into messenger RNA." },
+                          { "id": "exit", "label": "mRNA exits the nucleus", "icon": "\ud83d\udeaa", "narration": "The mRNA leaves through a nuclear pore into the cytoplasm." },
+                          { "id": "ribosome", "label": "mRNA attaches to a ribosome", "icon": "\ud83d\udd17", "narration": "The ribosome locks onto the mRNA to begin reading it." },
+                          { "id": "translate", "label": "Ribosome reads codons; tRNA brings amino acids", "icon": "\ud83d\udd24", "narration": "Each codon pairs with a tRNA carrying the matching amino acid." },
+                          { "id": "fold", "label": "Polypeptide folds into a working protein", "icon": "\ud83e\uddf6", "narration": "The finished amino-acid chain folds into its functional shape." }
+                        ],
+                        "canonicalOrder": ["transcribe", "exit", "ribosome", "translate", "fold"],
+                        "poweredIdea": "Gene expression is a pipeline: transcribe in the nucleus, then translate at the ribosome."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.central-dogma.translation",
+                      "data": {
+                        "term": "Translation",
+                        "correct": "Occurs at the ribosome (mRNA to protein)",
+                        "distractors": ["Occurs in the nucleus (DNA to mRNA)", "Copies DNA into more DNA", "Joins two DNA strands together"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.central-dogma.block-ribosome",
+                      "data": {
+                        "story": "An antibiotic works by jamming the ribosomes of bacterial cells so they cannot operate.",
+                        "question": "Which process does the drug stop directly?",
+                        "answer": "Translation (building proteins from mRNA)",
+                        "options": [
+                          "Translation (building proteins from mRNA)",
+                          "Transcription (copying DNA into mRNA)",
+                          "DNA replication",
+                          "Base pairing within the DNA helix"
+                        ],
+                        "explanation": "Ribosomes are the site of translation, so blocking them halts protein synthesis."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.gene-expression.dogma.central-dogma",
+                    "emoji": "\ud83d\udcdc",
+                    "shortLabel": "DNA-RNA-Pro",
+                    "longLabel": "Central Dogma",
+                    "flavor": "You route a gene from nucleus to ribosome: transcribe to mRNA, then translate to protein.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["gene-expression", "transcription", "translation", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.5. Maps to released item #47 (ribosome/tRNA/translation) and transcription-vs-translation location patterns. Procedure-builder per source preference. Deeper than biochem.protein.transcription; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.gene-expression.dogma.codons",
+                  "slug": "codons",
+                  "title": "Codons & the Genetic Code",
+                  "emoji": "\ud83d\udd24",
+                  "shortLabel": "Codons",
+                  "longLabel": "Codons & the Genetic Code",
+                  "description": "Three bases at a time: how mRNA is read into amino acids.",
+                  "teach": {
+                    "headline": "Three Bases Code One Amino Acid",
+                    "body": "mRNA is read in groups of three bases called **codons**. Each codon specifies **one amino acid** (a few codons mean 'start' or 'stop').\n\nA codon table converts each codon to its amino acid. At the ribosome, **tRNA** molecules carrying specific amino acids match the codons one by one, building the amino-acid chain that becomes a protein.",
+                    "mnemonic": "CODON = 3-LETTER WORD = 1 AMINO ACID. Read mRNA three bases at a time.",
+                    "poweredIdea": "Each codon is three mRNA bases that code for one amino acid."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.codons.define",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "A group of three consecutive mRNA bases that codes for one amino acid is a _____.",
+                        "acceptable": ["codon", "codons"],
+                        "hint": "A three-base 'word'"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.codons.significance",
+                      "data": {
+                        "story": "A test item asks about the meaning of three consecutive nucleotides in a gene.",
+                        "question": "What is the significance of three consecutive nucleotides?",
+                        "answer": "They code for one amino acid.",
+                        "options": [
+                          "They code for one amino acid.",
+                          "They code for three amino acids.",
+                          "They code for one complete protein.",
+                          "They code for three complete proteins."
+                        ],
+                        "explanation": "Three bases form a single codon, which specifies exactly one amino acid."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.codons.ribosome-action",
+                      "data": {
+                        "story": "A ribosome is actively translating an mRNA strand into a protein.",
+                        "question": "Which action is taking place at the ribosome?",
+                        "answer": "tRNA molecules carrying specific amino acids match the mRNA codons.",
+                        "options": [
+                          "tRNA molecules carrying specific amino acids match the mRNA codons.",
+                          "mRNA is being copied from one strand of the DNA helix.",
+                          "A polypeptide is broken back down into amino acids and bases.",
+                          "Single-stranded mRNA is converted into double-stranded tRNA."
+                        ],
+                        "explanation": "During translation, each mRNA codon pairs with a tRNA carrying the matching amino acid."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.gene-expression.dogma.codons.trna",
+                      "data": {
+                        "term": "tRNA (transfer RNA)",
+                        "correct": "Brings amino acids to the ribosome",
+                        "distractors": ["Carries the gene's message from the nucleus", "Stores genetic information long-term", "Forms the cell membrane"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.gene-expression.dogma.codons",
+                    "emoji": "\ud83d\udd24",
+                    "shortLabel": "Codon",
+                    "longLabel": "The Genetic Code",
+                    "flavor": "You read mRNA three bases at a time, knowing each codon names exactly one amino acid.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.gene-expression.dogma.central-dogma"],
+                  "difficulty": "core",
+                  "tags": ["gene-expression", "codons", "translation", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.5. Maps to released items #5 (three nucleotides = one amino acid) and #47 (ribosome/tRNA action). Reworded, not reproduced. No biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.gene-expression.regulation",
+              "slug": "regulation",
+              "title": "Gene Expression & Differentiation",
+              "emoji": "\ud83c\udf9b\ufe0f",
+              "children": [
+                {
+                  "id": "bio.eoc.gene-expression.regulation.mutations",
+                  "slug": "mutations",
+                  "title": "Point vs Frameshift Mutations",
+                  "emoji": "\u270f\ufe0f",
+                  "shortLabel": "Mutations",
+                  "longLabel": "Point vs Frameshift Mutations",
+                  "description": "How a one-base change differs from inserting or deleting a base.",
+                  "teach": {
+                    "headline": "One Base Off vs Everything Shifts",
+                    "body": "A **mutation** changes the DNA base sequence. A **point mutation** (substitution) swaps a single base for another, usually altering at most one codon \u2014 so at most one amino acid changes.\n\nA **frameshift** mutation **inserts or deletes** a base. That shifts the reading frame, so every codon downstream is read in the wrong groups \u2014 usually a much larger change to the protein.",
+                    "mnemonic": "POINT = SWAP ONE LETTER. FRAMESHIFT = ADD/DROP A LETTER \u2192 every later WORD is garbled.",
+                    "poweredIdea": "A point mutation swaps one base; a frameshift inserts or deletes a base and shifts every later codon."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.gene-expression.regulation.mutations.frameshift",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "A mutation that inserts or deletes a base and shifts the reading frame is a _____ mutation.",
+                        "acceptable": ["frameshift", "frame shift", "frame-shift"],
+                        "hint": "It shifts how codons are grouped"
+                      }
+                    },
+                    {
+                      "kind": "mutation-lab",
+                      "id": "quiz.bio.eoc.gene-expression.regulation.mutations.point",
+                      "data": {
+                        "scenario": "A point mutation in the hemoglobin gene swaps a single base in the second codon.",
+                        "templateDna": "ATGGAGGGCTAA",
+                        "editableIndex": 4,
+                        "replacements": ["A", "T", "G", "C"],
+                        "correctReplacement": "T",
+                        "correctMutationType": "missense",
+                        "clinicalHook": "Changing GAG to GTG swaps glutamic acid for valine \u2014 the change behind sickle cell trait.",
+                        "poweredIdea": "A single base substitution can change one amino acid and alter the whole protein's behavior."
+                      }
+                    },
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.gene-expression.regulation.mutations.compare",
+                      "data": {
+                        "scenario": "Near the start of a gene, compare two mutations: (1) one base is swapped for a different base, and (2) one extra base is inserted.",
+                        "predictPrompt": "Which mutation more drastically changes the resulting protein?",
+                        "predictOptions": [
+                          "The single-base swap, because it rewrites the whole protein",
+                          "The inserted base, because it shifts the reading frame and garbles every codon after it",
+                          "Both change exactly one amino acid, so they are equal",
+                          "Neither one changes the protein at all"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "The swap changes at most the one codon it sits in \u2014 often a single amino acid. The insertion pushes every base after it into new codon groupings, so all downstream codons (and their amino acids) are read differently.",
+                        "truthSummary": "A substitution is local; a frameshift insertion or deletion shifts the reading frame and changes everything downstream.",
+                        "bugCandidates": [
+                          {
+                            "label": "I assumed both mutations just change one amino acid",
+                            "isTheBug": true,
+                            "explanation": "A frameshift re-groups every downstream base into new codons, so far more than one amino acid changes."
+                          },
+                          {
+                            "label": "I thought a single-base swap rewrites the entire protein",
+                            "isTheBug": false,
+                            "explanation": "A substitution usually alters at most the one codon it lands in."
+                          },
+                          {
+                            "label": "I assumed mutations never affect the protein",
+                            "isTheBug": false,
+                            "explanation": "Some substitutions are silent, but inserting a base near the start clearly changes the protein."
+                          }
+                        ],
+                        "poweredIdea": "A frameshift shifts the reading frame, changing far more of the protein than a single-base swap."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.gene-expression.regulation.mutations.match",
+                      "data": {
+                        "term": "Frameshift mutation",
+                        "correct": "An insertion or deletion that shifts the reading frame",
+                        "distractors": ["A single base swapped for another base", "A mutation that is always harmless", "A change only to the start codon"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.gene-expression.regulation.mutations",
+                    "emoji": "\u270f\ufe0f",
+                    "shortLabel": "Edits",
+                    "longLabel": "Point vs Frameshift",
+                    "flavor": "You weigh a one-base swap against an insertion and know which one garbles every codon downstream.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.gene-expression.dogma.codons"],
+                  "difficulty": "core",
+                  "tags": ["gene-expression", "mutations", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.5 (changes to DNA affect proteins). Covers point vs frameshift per source. Predict-run-reflect targets the 'both mutations are equal' trap. Deeper than biochem.protein.mutations; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.gene-expression.regulation.expression-differentiation",
+                  "slug": "expression-differentiation",
+                  "title": "Gene Expression & Cancer",
+                  "emoji": "\ud83c\udf9b\ufe0f",
+                  "shortLabel": "Expression",
+                  "longLabel": "Gene Expression & Cancer",
+                  "description": "Same DNA, different genes switched on \u2014 and what happens when cell-cycle control is lost.",
+                  "teach": {
+                    "headline": "Same DNA, Different Genes Switched On",
+                    "body": "Every cell in an organism carries the **same DNA**. Cells differ because they **express** (switch on) different genes \u2014 proteins regulate which genes are active. This drives **differentiation**: a skin cell and a nerve cell read different pages of the same instruction book.\n\nWhen the genes that **control the cell cycle** are damaged, a cell can divide without stopping. That uncontrolled growth is **cancer**.",
+                    "mnemonic": "SAME BOOK, DIFFERENT PAGES OPEN. Cells differ by which GENES are ON \u2014 not by different DNA.",
+                    "poweredIdea": "Cells share identical DNA but differentiate by expressing different genes; lost cell-cycle control causes cancer."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.gene-expression.regulation.expression-differentiation.express",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Cells in one organism become specialized by turning on different _____.",
+                        "acceptable": ["genes", "gene"],
+                        "hint": "Same DNA, but different ones are switched on"
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.gene-expression.regulation.expression-differentiation.different-dna",
+                      "data": {
+                        "paragraph": "Among birds, skin cells that grow feathers must contain different DNA than the skin cells that grow scales.",
+                        "bugPhrase": "must contain different DNA than the skin cells that grow scales",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "Do specialized cells in one body actually carry different DNA?",
+                        "canonicalFix": "All of the bird's cells share the same DNA. Feather-growing and scale-growing cells differ because they express different genes, not because their DNA is different.",
+                        "poweredIdea": "Specialized cells share identical DNA; they differ by which genes they express."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.gene-expression.regulation.expression-differentiation.cancer",
+                      "data": {
+                        "story": "A cell's cell-cycle control genes are damaged, and the cell begins dividing nonstop, forming a growing mass of cells.",
+                        "question": "What does this situation best illustrate?",
+                        "answer": "Cancer \u2014 a loss of control over the cell cycle leading to uncontrolled division",
+                        "options": [
+                          "Cancer \u2014 a loss of control over the cell cycle leading to uncontrolled division",
+                          "Normal differentiation into a specialized tissue",
+                          "A cell that has stopped dividing entirely",
+                          "A cell switching from mitosis to meiosis"
+                        ],
+                        "explanation": "When cell-cycle regulation is lost, cells divide uncontrollably \u2014 the defining feature of cancer."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.gene-expression.regulation.expression-differentiation.differentiation",
+                      "data": {
+                        "term": "Cell differentiation",
+                        "correct": "Expressing different genes from the same DNA",
+                        "distractors": ["Each cell type carrying different DNA", "Cells losing their DNA over time", "Random mutation of every gene"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.gene-expression.regulation.expression-differentiation",
+                    "emoji": "\ud83c\udf9b\ufe0f",
+                    "shortLabel": "Genes On",
+                    "longLabel": "Expression & Cancer",
+                    "flavor": "You explain specialization as different genes switched on \u2014 and cancer as lost cell-cycle control.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.gene-expression.dogma.central-dogma"],
+                  "difficulty": "core",
+                  "tags": ["gene-expression", "differentiation", "cancer", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.2.2 (proteins regulate gene expression; differentiation, specialization, uncontrolled growth). Maps to released item #7 (specialized cells, same DNA) and cancer/cell-cycle patterns. Debug-the-claim targets the 'different cells = different DNA' trap. Deeper than biochem.division.stem-cells; no biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "etymologyContributions": [
+    {
+      "id": "morph.trans",
+      "morpheme": "trans-",
+      "language": "Latin",
+      "meaning": "across, over",
+      "cousins": ["transcription", "translation", "transport"],
+      "appearsIn": ["term.transcription"]
+    },
+    {
+      "id": "morph.scrib",
+      "morpheme": "scrib-",
+      "language": "Latin",
+      "meaning": "to write",
+      "cousins": ["transcribe", "describe", "manuscript"],
+      "appearsIn": ["term.transcription"]
+    }
+  ]
+}

@@ -294,6 +294,18 @@ Which codes for amino acids? The **sequence of nucleotides in mRNA** (codons) â€
                   'Salivary amylase converts starch into smaller _____.',
                   ['carbohydrates', 'carbs', 'carbohydrate'],
                 ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.active-site',
+                  'In the diagram, the substrate binds at the enzymeâ€™s _____.',
+                  ['active site', 'active-site'],
+                  'The shaped pocket on the enzyme surface',
+                ),
+                fillQuiz(
+                  'quiz.biochem.enzymes.release-products',
+                  'After the reaction, the enzyme releases _____ and is unchanged.',
+                  ['products', 'product'],
+                  'They leave the active site',
+                ),
               ],
               achievement: ach(
                 'biochem.enzymes.basics',

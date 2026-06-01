@@ -12,6 +12,7 @@ function baseProgress(overrides: Partial<UnitProgress> = {}): UnitProgress {
     lastSeenAt: 0,
     lastFiveOutcomes: [],
     templatesEncountered: [],
+    quizAttemptCounts: {},
     tier: 'locked',
     achievementEarned: false,
     ...overrides,
@@ -107,6 +108,13 @@ describe('scoring', () => {
       const prog = baseProgress({ templatesEncountered: ['quiz.evo.origin.miller-urey.sr-1'] });
       const next = updateUnitProgress(prog, makeAttempt({ correct: true }));
       expect(next.templatesEncountered).toEqual(['quiz.evo.origin.miller-urey.sr-1']);
+    });
+
+    it('increments quizAttemptCounts on each attempt', () => {
+      let prog = baseProgress();
+      prog = updateUnitProgress(prog, makeAttempt({ correct: true }));
+      prog = updateUnitProgress(prog, makeAttempt({ correct: false }));
+      expect(prog.quizAttemptCounts['quiz.evo.origin.miller-urey.sr-1']).toBe(2);
     });
 
     it('tracks distinct quiz ids even when template kind repeats', () => {

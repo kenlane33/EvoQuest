@@ -1,0 +1,1115 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC Review",
+  "description": "Complete NC Biology End-of-Course review aligned to 2023 NCSCOS and the 2025 released form. All four strands: molecules to organisms, ecosystems, heredity, evolution.",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780316300000,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.heredity",
+          "slug": "heredity",
+          "title": "Heredity & Genetics",
+          "emoji": "\ud83d\udc6a",
+          "description": "How meiosis and fertilization mix genes, how Punnett squares predict offspring, and how many genes plus the environment shape complex traits.",
+          "children": [
+            {
+              "id": "bio.eoc.heredity.meiosis",
+              "slug": "meiosis",
+              "title": "Meiosis & Variation",
+              "emoji": "\ud83d\udd00",
+              "children": [
+                {
+                  "id": "bio.eoc.heredity.meiosis.variation",
+                  "slug": "variation",
+                  "title": "Meiosis & Genetic Variation",
+                  "emoji": "\ud83d\udd00",
+                  "shortLabel": "Variation",
+                  "longLabel": "Meiosis & Genetic Variation",
+                  "description": "The two shuffles in meiosis that make every gamete unique.",
+                  "teach": {
+                    "headline": "Meiosis Shuffles the Genetic Deck",
+                    "body": "Meiosis makes haploid gametes and is a major source of **genetic variation**. Two mechanisms do the shuffling: **crossing-over**, where homologous chromosomes swap matching segments, and **independent assortment**, where chromosome pairs line up in random orientations.\n\nBoth mean every gamete carries a unique mix of alleles \u2014 part of why no two siblings (other than identical twins) are quite alike.\n\n![Diagram of chromosomal crossover during meiosis](/content/bio-eoc/figures/bio_eoc_crossing_over.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_crossing_over",
+                        "alt": "Homologous chromosomes exchanging segments during crossing-over in meiosis",
+                        "caption": "Crossing-over swaps alleles between homologous chromosomes, increasing variation."
+                      }
+                    ],
+                    "mnemonic": "CROSSING-OVER = SWAP SEGMENTS. INDEPENDENT ASSORTMENT = SHUFFLE PAIRS. Every gamete is a new hand.",
+                    "poweredIdea": "Meiosis creates genetic variation through crossing-over and independent assortment of chromosomes."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.meiosis.variation.crossing-over",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "When homologous chromosomes exchange matching segments during meiosis, the process is called _____.",
+                        "acceptable": ["crossing-over", "crossing over", "crossover", "recombination"],
+                        "hint": "Chromosomes 'cross' and swap pieces"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.meiosis.variation.diagram-crossing-over",
+                      "data": {
+                        "prompt": "In the diagram, homologous chromosomes exchange matching segments during _____.",
+                        "acceptable": ["crossing-over", "crossing over", "crossover", "recombination"],
+                        "hint": "The process shown between paired chromosomes"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.meiosis.variation.effect",
+                      "data": {
+                        "story": "During meiosis, homologous chromosomes swap segments through crossing-over.",
+                        "question": "How does crossing-over most affect the resulting offspring?",
+                        "answer": "It increases genetic variation among the offspring.",
+                        "options": [
+                          "It increases genetic variation among the offspring.",
+                          "It makes all offspring genetically identical.",
+                          "It doubles the chromosome number of each gamete.",
+                          "It removes all the recessive alleles."
+                        ],
+                        "explanation": "Swapping segments creates new allele combinations, increasing variation among gametes and offspring."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.meiosis.variation.assortment",
+                      "data": {
+                        "term": "Independent assortment",
+                        "correct": "Random lineup of chromosome pairs during meiosis",
+                        "distractors": ["Exact copying of a DNA strand", "Fusion of two gametes", "Splitting of the cytoplasm"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.meiosis.variation.siblings",
+                      "data": {
+                        "story": "Two siblings have the same two parents but look quite different from each other.",
+                        "question": "Which best explains this genetic difference?",
+                        "answer": "Meiosis and fertilization produce unique combinations of alleles in each offspring.",
+                        "options": [
+                          "Meiosis and fertilization produce unique combinations of alleles in each offspring.",
+                          "Each sibling has completely different DNA from the parents.",
+                          "Mitosis gave each sibling a random set of genes.",
+                          "The siblings' DNA mutated identically at birth."
+                        ],
+                        "explanation": "Crossing-over, independent assortment, and the random pairing of gametes give each child a unique mix."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.meiosis.variation",
+                    "emoji": "\ud83d\udd00",
+                    "shortLabel": "Shuffler",
+                    "longLabel": "Genetic Variation",
+                    "flavor": "You name the two shuffles in meiosis that make every gamete \u2014 and every sibling \u2014 a new combination.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["heredity", "meiosis", "variation", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.6.1 (meiosis and sources of genetic variation). Maps to released item #20 (crossing-over increases variation). Deeper than the bundled scan content; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.heredity.meiosis.fertilization",
+                  "slug": "fertilization",
+                  "title": "Gametes & Fertilization",
+                  "emoji": "\ud83e\udd5a",
+                  "shortLabel": "Fertilize",
+                  "longLabel": "Gametes & Fertilization",
+                  "description": "How two half-sets combine into a full set with genes from both parents.",
+                  "teach": {
+                    "headline": "Two Halves Make a Full Set",
+                    "body": "Gametes (egg and sperm) are **haploid (n)** \u2014 they carry one set of chromosomes. **Fertilization** combines a haploid egg and a haploid sperm into a **diploid (2n)** zygote, restoring the full chromosome number.\n\nThat is why you inherit half your DNA from each parent: the zygote you started as was one gamete from each, joined together.",
+                    "mnemonic": "n + n = 2n. HAPLOID EGG + HAPLOID SPERM \u2192 DIPLOID ZYGOTE. Half from each parent.",
+                    "poweredIdea": "Fertilization joins two haploid gametes into a diploid zygote, mixing both parents' genes."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.meiosis.fertilization.define",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The joining of a haploid egg and a haploid sperm to form a diploid zygote is called _____.",
+                        "acceptable": ["fertilization", "fertilisation"],
+                        "hint": "Egg meets sperm"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.meiosis.fertilization.chromosome-number",
+                      "data": {
+                        "story": "A human egg carries 23 chromosomes and a human sperm carries 23 chromosomes. They fuse during fertilization.",
+                        "question": "How many chromosomes will the resulting zygote have?",
+                        "answer": "46 (diploid)",
+                        "options": ["46 (diploid)", "23 (haploid)", "92", "12"],
+                        "explanation": "Fertilization adds the two haploid sets: 23 + 23 = 46, the diploid number for humans."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.meiosis.fertilization.gamete",
+                      "data": {
+                        "term": "A human gamete (egg or sperm)",
+                        "correct": "Haploid \u2014 one set of chromosomes",
+                        "distractors": ["Diploid \u2014 two sets of chromosomes", "Has no DNA at all", "Identical to a normal body cell"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.meiosis.fertilization.two-processes",
+                      "data": {
+                        "story": "One process produces gametes with half the chromosome number; another restores the full number in the next generation.",
+                        "question": "Which pairing is correct?",
+                        "answer": "Meiosis makes the haploid gametes; fertilization restores the diploid number.",
+                        "options": [
+                          "Meiosis makes the haploid gametes; fertilization restores the diploid number.",
+                          "Mitosis makes the gametes; meiosis restores the diploid number.",
+                          "Fertilization makes the gametes; mitosis halves the number.",
+                          "Meiosis both makes gametes and doubles the chromosome number."
+                        ],
+                        "explanation": "Meiosis halves the chromosome number to make gametes; fertilization recombines two gametes back to diploid."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.meiosis.fertilization",
+                    "emoji": "\ud83e\udd5a",
+                    "shortLabel": "Half + Half",
+                    "longLabel": "Fertilization",
+                    "flavor": "You add two haploid sets into one diploid zygote and see why half your DNA came from each parent.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.heredity.meiosis.variation"],
+                  "difficulty": "core",
+                  "tags": ["heredity", "fertilization", "diploid", "haploid", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.6.1. Maps to released items #36 (fertilization restores diploid) and #19 (meiosis vs the process restoring number). Reworded, not reproduced. No biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.heredity.mendel",
+              "slug": "mendel",
+              "title": "Mendelian Inheritance",
+              "emoji": "\ud83d\udfe3",
+              "children": [
+                {
+                  "id": "bio.eoc.heredity.mendel.alleles",
+                  "slug": "alleles",
+                  "title": "Alleles, Genotype & Phenotype",
+                  "emoji": "\ud83d\udfe3",
+                  "shortLabel": "Genotype",
+                  "longLabel": "Alleles, Genotype & Phenotype",
+                  "description": "Dominant and recessive alleles, and the difference between genotype and phenotype.",
+                  "teach": {
+                    "headline": "Dominant Hides, Recessive Waits",
+                    "body": "An organism carries two **alleles** for each gene, one from each parent. A **dominant** allele shows whenever it is present; a **recessive** allele shows only when both alleles are recessive.\n\n**Genotype** is the allele combination (like Tt); **phenotype** is the visible trait (like tall). **Homozygous** means two identical alleles; **heterozygous** means two different ones.\n\n![Autosomal recessive pedigree chart](/content/bio-eoc/figures/bio_eoc_pedigree.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_pedigree",
+                        "alt": "Pedigree chart showing autosomal recessive inheritance across three generations",
+                        "caption": "Two unaffected carrier parents can have an affected child when a trait is recessive."
+                      }
+                    ],
+                    "etymology": {
+                      "termId": "term.heterozygous",
+                      "term": "heterozygous",
+                      "morphemes": [
+                        { "morphemeId": "morph.hetero", "asUsed": "hetero" },
+                        { "morphemeId": "morph.zygo", "asUsed": "zygous" }
+                      ],
+                      "rootSummary": "Greek: heteros (different) + zygon (yoke, pair)"
+                    },
+                    "mnemonic": "BIG LETTER BULLIES the little one (dominant masks recessive). GENOTYPE = letters, PHENOTYPE = look.",
+                    "poweredIdea": "Genotype is the allele pair; phenotype is the visible trait; recessive shows only when homozygous."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.mendel.alleles.heterozygous",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "An organism with two different alleles for a trait (for example, Tt) is _____ for that trait.",
+                        "acceptable": ["heterozygous", "heterozygote"],
+                        "hint": "Hetero = different"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.mendel.alleles.diagram-pedigree",
+                      "data": {
+                        "prompt": "In the pedigree diagram, two unaffected parents with an affected child suggest a _____ trait.",
+                        "acceptable": ["recessive", "autosomal recessive", "autosomal-recessive"],
+                        "hint": "The affected child inherited two hidden alleles"
+                      }
+                    },
+                    {
+                      "kind": "pedigree-detective",
+                      "id": "quiz.bio.eoc.heredity.mendel.alleles.pedigree",
+                      "data": {
+                        "traitLabel": "A recessive trait (e.g., short stature)",
+                        "people": [
+                          { "id": "I-1", "label": "I-1", "sex": "M", "affected": false, "generation": 1 },
+                          { "id": "I-2", "label": "I-2", "sex": "F", "affected": false, "generation": 1 },
+                          { "id": "II-1", "label": "II-1", "sex": "F", "affected": false, "generation": 2, "motherId": "I-2", "fatherId": "I-1" },
+                          { "id": "II-2", "label": "II-2", "sex": "M", "affected": true, "generation": 2, "motherId": "I-2", "fatherId": "I-1" }
+                        ],
+                        "canonical": {
+                          "pattern": "autosomal-recessive",
+                          "poweredIdea": "Two unaffected parents producing an affected child is the hallmark of a recessive trait."
+                        },
+                        "hints": [
+                          "Are either of the parents affected?",
+                          "Can two unaffected parents have an affected child?"
+                        ]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.mendel.alleles.tall-parents",
+                      "data": {
+                        "story": "Two tall pea plants are crossed, and some of their offspring are short.",
+                        "question": "What does this reveal about the short trait?",
+                        "answer": "Short is recessive, and both tall parents carried a hidden recessive allele.",
+                        "options": [
+                          "Short is recessive, and both tall parents carried a hidden recessive allele.",
+                          "Short is dominant over tall.",
+                          "The short offspring must have a mutation neither parent carried.",
+                          "Tall and short are controlled by completely different genes."
+                        ],
+                        "explanation": "Two tall (dominant-looking) parents producing short offspring means each parent was heterozygous and short is recessive."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.mendel.alleles.homozygous",
+                      "data": {
+                        "term": "Homozygous recessive genotype",
+                        "correct": "Two recessive alleles (for example, tt)",
+                        "distractors": ["Two dominant alleles (TT)", "One dominant and one recessive (Tt)", "No alleles at all"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.mendel.alleles",
+                    "emoji": "\ud83d\udfe3",
+                    "shortLabel": "Hidden Allele",
+                    "longLabel": "Genotype & Phenotype",
+                    "flavor": "You read a pedigree and realize two unaffected parents can hide a recessive allele between them.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["heredity", "alleles", "genotype", "phenotype", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.6.2/7.1 (genotype-phenotype, dominant/recessive). Maps to released item #37 (two tall parents, short child reveals recessive). Pedigree-detective interactive. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.heredity.mendel.punnett",
+                  "slug": "punnett",
+                  "title": "Punnett Squares & Ratios",
+                  "emoji": "\u25fc\ufe0f",
+                  "shortLabel": "Punnett",
+                  "longLabel": "Punnett Squares & Ratios",
+                  "description": "Predicting offspring genotypes and phenotype ratios from a cross.",
+                  "teach": {
+                    "headline": "Predicting Offspring Combinations",
+                    "body": "A **Punnett square** predicts the probability of offspring genotypes. Put each parent's possible gametes on the sides, fill the boxes, and count the ratios.\n\nFor **ABO blood type**, alleles I\u1d2c and I\u1d2e are **codominant** (both show) and i is recessive. So a cross between a type A parent (I\u1d2ci) and a type B parent (I\u1d2ei) can give type A, B, AB, or O children.\n\n![Punnett square for ABO blood type cross](/content/bio-eoc/figures/bio_eoc_punnett_blood_types.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_punnett_blood_types",
+                        "alt": "Punnett square showing possible ABO blood types from an IA i cross with an IB i parent",
+                        "caption": "Codominant IA and IB alleles produce four possible blood types in offspring."
+                      }
+                    ],
+                    "mnemonic": "GAMETES ON THE SIDES, COMBINE IN THE BOXES. Count the boxes = the odds for each offspring.",
+                    "poweredIdea": "A Punnett square uses each parent's gametes to predict offspring genotype and phenotype ratios."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "punnett-builder",
+                      "id": "quiz.bio.eoc.heredity.mendel.punnett.bloodtype",
+                      "preferred": true,
+                      "data": {
+                        "scenario": "Cross a type A parent (IA i) with a type B parent (IB i). What blood types are possible in their children?",
+                        "parents": [
+                          { "label": "Parent 1 \u2014 type A (IA i)", "alleles": ["A", "i"] },
+                          { "label": "Parent 2 \u2014 type B (IB i)", "alleles": ["B", "i"] }
+                        ],
+                        "phenotypeMap": {
+                          "AB": { "label": "Type AB", "color": "#a855f7", "icon": "\ud83d\udfe3" },
+                          "BA": { "label": "Type AB", "color": "#a855f7", "icon": "\ud83d\udfe3" },
+                          "Ai": { "label": "Type A", "color": "#ef4444", "icon": "\ud83d\udd34" },
+                          "iA": { "label": "Type A", "color": "#ef4444", "icon": "\ud83d\udd34" },
+                          "Bi": { "label": "Type B", "color": "#3b82f6", "icon": "\ud83d\udd35" },
+                          "iB": { "label": "Type B", "color": "#3b82f6", "icon": "\ud83d\udd35" },
+                          "ii": { "label": "Type O", "color": "#94a3b8", "icon": "\u26aa" }
+                        },
+                        "dominantPhenotype": "Type AB",
+                        "expectedRatio": "1:1:1:1",
+                        "notes": "Each child has a 1 in 4 chance of type AB, A, B, or O. IA and IB are codominant; i is recessive."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.mendel.punnett.diagram-square",
+                      "data": {
+                        "prompt": "In the Punnett square diagram, each box shows one possible offspring _____.",
+                        "acceptable": ["genotype", "genotypes"],
+                        "hint": "The allele combination, not just the visible trait"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.mendel.punnett.define",
+                      "data": {
+                        "prompt": "A diagram used to predict the genotypes of offspring from a genetic cross is a _____ square.",
+                        "acceptable": ["punnett"],
+                        "hint": "Named for Reginald Punnett"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.mendel.punnett.testcross",
+                      "data": {
+                        "story": "In pea plants, tall (T) is dominant over short (t). A heterozygous tall plant (Tt) is crossed with a short plant (tt).",
+                        "question": "What ratio of tall to short offspring is expected?",
+                        "answer": "About 1 tall : 1 short",
+                        "options": [
+                          "About 1 tall : 1 short",
+                          "All tall offspring",
+                          "About 3 tall : 1 short",
+                          "All short offspring"
+                        ],
+                        "explanation": "Tt \u00d7 tt gives half Tt (tall) and half tt (short), a 1:1 ratio."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.mendel.punnett.monohybrid",
+                      "data": {
+                        "term": "Heterozygous \u00d7 heterozygous (Tt \u00d7 Tt)",
+                        "correct": "About a 3:1 dominant-to-recessive phenotype ratio",
+                        "distractors": ["All offspring show the recessive trait", "A 1:1 phenotype ratio", "All offspring are genetically identical"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.mendel.punnett",
+                    "emoji": "\u25fc\ufe0f",
+                    "shortLabel": "Cross It",
+                    "longLabel": "Punnett Squares",
+                    "flavor": "You line up gametes and read the odds, even for a codominant blood-type cross with four outcomes.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.heredity.mendel.alleles"],
+                  "difficulty": "core",
+                  "tags": ["heredity", "punnett", "blood-type", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.7.1 (Mendelian inheritance, Punnett squares). Maps to released item #21 (ABO blood-type cross). Punnett-builder interactive; phenotypeMap covers both allele orderings. No biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.heredity.beyond-mendel",
+              "slug": "beyond-mendel",
+              "title": "Beyond Mendel",
+              "emoji": "🎨",
+              "children": [
+                {
+                  "id": "bio.eoc.heredity.beyond.incomplete-codominance",
+                  "slug": "incomplete-codominance",
+                  "title": "Incomplete Dominance & Codominance",
+                  "emoji": "🎨",
+                  "shortLabel": "Non-Mendel",
+                  "longLabel": "Incomplete & Codominance",
+                  "description": "When heterozygotes look blended or show both alleles at once.",
+                  "teach": {
+                    "headline": "Not Every Cross Is Tall vs Short",
+                    "body": "**Incomplete dominance:** heterozygotes show a **blended** phenotype. Red cattle (RR) crossed with white (rr) produce **roan** offspring (Rr) — a mix of red and white hairs.\n\n**Codominance:** both alleles are **fully expressed** at once. Type AB blood shows both A and B antigens — not a blend.\n\n**Multiple alleles:** ABO blood has three common alleles (I^A, I^B, i). Compare roan (blend) with type AB (both visible).",
+                    "mnemonic": "INCOMPLETE = BLEND (roan). CODOMINANT = BOTH SHOW (type AB). Neither is simple dominant/recessive.",
+                    "poweredIdea": "Incomplete dominance blends phenotypes; codominance expresses both alleles fully."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "punnett-builder",
+                      "id": "quiz.bio.eoc.heredity.beyond.incomplete-codominance.roan",
+                      "preferred": true,
+                      "data": {
+                        "scenario": "Cross two roan cattle (Rr × Rr). What coat-color phenotypes appear in the offspring?",
+                        "parents": [
+                          { "label": "Parent 1 — roan (Rr)", "alleles": ["R", "r"] },
+                          { "label": "Parent 2 — roan (Rr)", "alleles": ["R", "r"] }
+                        ],
+                        "phenotypeMap": {
+                          "RR": { "label": "Red", "color": "#ef4444", "icon": "🔴" },
+                          "Rr": { "label": "Roan", "color": "#f97316", "icon": "🟠" },
+                          "rR": { "label": "Roan", "color": "#f97316", "icon": "🟠" },
+                          "rr": { "label": "White", "color": "#94a3b8", "icon": "⚪" }
+                        },
+                        "dominantPhenotype": "Roan",
+                        "expectedRatio": "1:2:1",
+                        "notes": "Incomplete dominance: Rr is roan (blended), not red. Expect 1 red : 2 roan : 1 white."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.beyond.incomplete-codominance.ab-blood",
+                      "data": {
+                        "story": "A person with type AB blood has both A and B antigens on their red blood cells.",
+                        "question": "Which inheritance pattern does type AB blood illustrate?",
+                        "answer": "Codominance — both alleles are fully expressed.",
+                        "options": [
+                          "Codominance — both alleles are fully expressed.",
+                          "Incomplete dominance — a blended intermediate phenotype.",
+                          "Sex-linked inheritance on the X chromosome.",
+                          "Polygenic inheritance from many genes."
+                        ],
+                        "explanation": "Type AB shows both A and B antigens at once; neither allele is hidden or blended."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.beyond.incomplete-codominance.patterns",
+                      "data": {
+                        "term": "Roan cattle coat (Rr shows a mix of red and white hairs)",
+                        "correct": "Incomplete dominance",
+                        "distractors": ["Codominance", "Sex-linked inheritance", "Polygenic inheritance"]
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.heredity.beyond.incomplete-codominance.blend-trap",
+                      "data": {
+                        "paragraph": "Codominance means a heterozygote shows a blended intermediate phenotype, like pink flowers from red and white parents.",
+                        "bugPhrase": "Codominance means a heterozygote shows a blended intermediate phenotype",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "Does type AB blood look blended, or do both antigens show?",
+                        "canonicalFix": "A blended intermediate is incomplete dominance (e.g., roan cattle). Codominance means both alleles are fully expressed at once (e.g., type AB blood).",
+                        "poweredIdea": "Blended = incomplete dominance; both fully visible = codominance."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.beyond.incomplete-codominance.examples",
+                      "data": {
+                        "term": "Type AB blood (both A and B antigens visible)",
+                        "correct": "Codominance",
+                        "distractors": ["Incomplete dominance", "Autosomal recessive", "X-linked recessive"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.beyond.incomplete-codominance",
+                    "emoji": "🎨",
+                    "shortLabel": "Blend vs Both",
+                    "longLabel": "Incomplete & Codominance",
+                    "flavor": "You separate a roan blend from type AB showing both alleles at once.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.heredity.mendel.punnett"],
+                  "difficulty": "core",
+                  "tags": ["heredity", "incomplete-dominance", "codominance", "eoc", "LS.Bio.7.2"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.7.2 (incomplete dominance, codominance). Roan cattle punnett-builder; AB blood codominance scenario. Module-only on 2025 form — no released item tests roan or codominance vs incomplete. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.heredity.beyond.sex-linked",
+                  "slug": "sex-linked",
+                  "title": "Sex-Linked Inheritance",
+                  "emoji": "♂️",
+                  "shortLabel": "X-Linked",
+                  "longLabel": "Sex-Linked Inheritance",
+                  "description": "Genes on the X chromosome — colorblindness and hemophilia patterns.",
+                  "teach": {
+                    "headline": "Genes on the X Chromosome",
+                    "body": "**Sex-linked** (X-linked) traits are carried on the **X chromosome**. Males (XY) have only one X, so a single recessive allele on that X is expressed. Females (XX) need two copies to show a recessive X-linked trait.\n\n**Colorblindness** and **hemophilia** are classic X-linked recessive traits. Carrier females are often unaffected but can pass the allele to sons.\n\nKey rule: an affected X-linked recessive male got his X from his **mother** — **fathers do not pass X-linked alleles to sons**.\n\n![Pedigree diagram showing inheritance across generations](/content/bio-eoc/figures/bio_eoc_pedigree.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_pedigree",
+                        "alt": "Pedigree chart with squares for males, circles for females, and filled symbols for affected individuals",
+                        "caption": "Pedigrees track how a trait passes through families across generations."
+                      }
+                    ],
+                    "mnemonic": "MALES HAVE ONE X — ONE RECESSIVE ALLELE SHOWS. DAD'S X GOES TO DAUGHTERS, NOT SONS.",
+                    "poweredIdea": "X-linked recessive traits appear more often in males; fathers do not pass them to sons."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "pedigree-detective",
+                      "id": "quiz.bio.eoc.heredity.beyond.sex-linked.colorblind-pedigree",
+                      "preferred": true,
+                      "data": {
+                        "traitLabel": "Red-green colorblindness (X-linked recessive)",
+                        "people": [
+                          { "id": "I-1", "label": "I-1", "sex": "M", "affected": true, "generation": 1 },
+                          { "id": "I-2", "label": "I-2", "sex": "F", "affected": false, "generation": 1 },
+                          { "id": "II-1", "label": "II-1", "sex": "F", "affected": false, "generation": 2, "motherId": "I-2", "fatherId": "I-1" },
+                          { "id": "II-2", "label": "II-2", "sex": "M", "affected": false, "generation": 2, "motherId": "I-2", "fatherId": "I-1" },
+                          { "id": "III-1", "label": "III-1", "sex": "M", "affected": true, "generation": 3, "motherId": "II-1", "fatherId": "II-2" }
+                        ],
+                        "canonical": {
+                          "pattern": "x-linked-recessive",
+                          "poweredIdea": "X-linked recessive: affected males, carrier females, no father-to-son transmission."
+                        },
+                        "hints": [
+                          "Are more males than females affected?",
+                          "Can an affected father pass this trait directly to his son?"
+                        ]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.beyond.sex-linked.hemophilia-cross",
+                      "data": {
+                        "story": "A woman is a carrier for hemophilia (X^H X^h). She has children with an unaffected man (X^H Y).",
+                        "question": "What is the probability their son has hemophilia?",
+                        "answer": "50% — sons inherit their X from the mother.",
+                        "options": [
+                          "50% — sons inherit their X from the mother.",
+                          "0% — fathers pass hemophilia to sons.",
+                          "100% — all children of a carrier are affected.",
+                          "25% — the same as a standard Punnett square for autosomal traits."
+                        ],
+                        "explanation": "Sons get X from mother and Y from father. A carrier mother gives X^h half the time, so half of sons are affected."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.beyond.sex-linked.define",
+                      "data": {
+                        "prompt": "A gene located on the X chromosome is described as _____ inheritance.",
+                        "acceptable": ["sex-linked", "X-linked", "x-linked"],
+                        "hint": "Linked to a sex chromosome"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.beyond.sex-linked.transmission",
+                      "data": {
+                        "term": "X-linked recessive trait in a family",
+                        "correct": "Affected males more common; no father-to-son transmission",
+                        "distractors": ["Affected females more common than males", "Every affected child has an affected parent", "Passed from fathers to all sons"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.beyond.sex-linked.carrier-female",
+                      "data": {
+                        "story": "A woman has normal color vision but her father is colorblind and her mother has normal color vision.",
+                        "question": "What is her most likely genetic status for colorblindness?",
+                        "answer": "She is a carrier — she inherited her father's X with the colorblind allele.",
+                        "options": [
+                          "She is a carrier — she inherited her father's X with the colorblind allele.",
+                          "She is affected — daughters always show X-linked recessive traits.",
+                          "She cannot be a carrier because she has normal vision.",
+                          "She inherited the trait from her mother on an autosome."
+                        ],
+                        "explanation": "Daughters get one X from each parent. A colorblind father gives every daughter his affected X — making them carriers if the trait is recessive."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.beyond.sex-linked",
+                    "emoji": "♂️",
+                    "shortLabel": "X Marks It",
+                    "longLabel": "Sex-Linked Traits",
+                    "flavor": "You read an X-linked pedigree and know an affected son's allele came through his mother.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.heredity.beyond.incomplete-codominance"],
+                  "difficulty": "core",
+                  "tags": ["heredity", "sex-linked", "colorblindness", "hemophilia", "eoc", "LS.Bio.7.2"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.7.2 (sex-linked traits). Pedigree-detective for X-linked recessive colorblindness; hemophilia cross scenario. Module-only on 2025 form. No biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.heredity.pedigrees",
+              "slug": "pedigrees-chromosomes",
+              "title": "Pedigrees & Chromosomes",
+              "emoji": "🧬",
+              "children": [
+                {
+                  "id": "bio.eoc.heredity.pedigrees.disorders",
+                  "slug": "disorders",
+                  "title": "Pedigrees & Genetic Disorders",
+                  "emoji": "📋",
+                  "shortLabel": "Pedigrees",
+                  "longLabel": "Pedigrees & Disorders",
+                  "description": "Reading pedigrees for autosomal dominant and recessive disorders.",
+                  "teach": {
+                    "headline": "Pedigrees Reveal Inheritance Patterns",
+                    "body": "A **pedigree** tracks a trait through generations. Squares = males, circles = females, filled symbols = affected.\n\n**Autosomal dominant** (e.g., Huntington disease): every affected person has at least one affected parent; trait appears every generation.\n\n**Autosomal recessive** (e.g., cystic fibrosis): trait can **skip generations** — two unaffected parents can have an affected child if both are carriers.\n\n![Pedigree diagram showing inheritance across generations](/content/bio-eoc/figures/bio_eoc_pedigree.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_pedigree",
+                        "alt": "Pedigree chart with squares for males, circles for females, and filled symbols for affected individuals",
+                        "caption": "Filled symbols mark affected individuals; open symbols are unaffected."
+                      }
+                    ],
+                    "mnemonic": "DOMINANT = NO SKIP — affected child, affected parent. RECESSIVE = CAN SKIP — two carriers, affected child.",
+                    "poweredIdea": "Pedigree shape reveals autosomal dominant (no skip) vs recessive (can skip generations)."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "pedigree-detective",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.disorders.dominant",
+                      "preferred": true,
+                      "data": {
+                        "traitLabel": "Huntington disease (autosomal dominant)",
+                        "people": [
+                          { "id": "I-1", "label": "I-1", "sex": "M", "affected": true, "generation": 1 },
+                          { "id": "I-2", "label": "I-2", "sex": "F", "affected": false, "generation": 1 },
+                          { "id": "II-1", "label": "II-1", "sex": "F", "affected": true, "generation": 2, "motherId": "I-2", "fatherId": "I-1" },
+                          { "id": "II-2", "label": "II-2", "sex": "M", "affected": false, "generation": 2, "motherId": "I-2", "fatherId": "I-1" },
+                          { "id": "III-1", "label": "III-1", "sex": "M", "affected": true, "generation": 3, "motherId": "II-1", "fatherId": "II-2" }
+                        ],
+                        "canonical": {
+                          "pattern": "autosomal-dominant",
+                          "poweredIdea": "Autosomal dominant: every affected person has an affected parent; no skipping."
+                        },
+                        "hints": [
+                          "Does every affected person have at least one affected parent?",
+                          "Can two unaffected parents have an affected child in this pedigree?"
+                        ]
+                      }
+                    },
+                    {
+                      "kind": "pedigree-detective",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.disorders.recessive",
+                      "data": {
+                        "traitLabel": "Cystic fibrosis (autosomal recessive)",
+                        "people": [
+                          { "id": "I-1", "label": "I-1", "sex": "M", "affected": false, "generation": 1 },
+                          { "id": "I-2", "label": "I-2", "sex": "F", "affected": false, "generation": 1 },
+                          { "id": "II-1", "label": "II-1", "sex": "F", "affected": false, "generation": 2, "motherId": "I-2", "fatherId": "I-1" },
+                          { "id": "II-2", "label": "II-2", "sex": "M", "affected": true, "generation": 2, "motherId": "I-2", "fatherId": "I-1" },
+                          { "id": "III-1", "label": "III-1", "sex": "F", "affected": true, "generation": 3, "motherId": "II-1", "fatherId": "II-2" }
+                        ],
+                        "canonical": {
+                          "pattern": "autosomal-recessive",
+                          "poweredIdea": "Autosomal recessive can skip a generation — two unaffected parents can have an affected child."
+                        },
+                        "hints": [
+                          "Can two unaffected parents have an affected child?",
+                          "Does the trait skip a generation anywhere?"
+                        ]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.disorders.carrier",
+                      "data": {
+                        "story": "Two unaffected parents have a child with cystic fibrosis.",
+                        "question": "What must be true about both parents?",
+                        "answer": "Both are carriers — each has one recessive allele.",
+                        "options": [
+                          "Both are carriers — each has one recessive allele.",
+                          "One parent must be affected for the child to be affected.",
+                          "The child must have a new mutation unrelated to the parents.",
+                          "At least one parent must be homozygous dominant."
+                        ],
+                        "explanation": "Autosomal recessive traits require two recessive alleles. Unaffected carrier parents (Aa × Aa) can produce an affected child (aa)."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.disorders.pattern-match",
+                      "data": {
+                        "term": "Every affected person has an affected parent",
+                        "correct": "Autosomal dominant inheritance",
+                        "distractors": ["Autosomal recessive inheritance", "X-linked recessive inheritance", "Polygenic inheritance"]
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.disorders.diagram-filled",
+                      "data": {
+                        "prompt": "In the pedigree diagram, a filled (shaded) symbol means the individual is _____ for the trait.",
+                        "acceptable": ["affected", "expressing the trait"],
+                        "hint": "Shaded = shows the trait"
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.pedigrees.disorders",
+                    "emoji": "📋",
+                    "shortLabel": "Read Lines",
+                    "longLabel": "Pedigree Patterns",
+                    "flavor": "You tell dominant from recessive by whether the trait skips a generation.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.heredity.beyond.sex-linked"],
+                  "difficulty": "core",
+                  "tags": ["heredity", "pedigree", "genetic-disorders", "eoc", "LS.Bio.7.3"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.7.3 (pedigrees and genetic disorders). Huntington autosomal-dominant and CF autosomal-recessive pedigree-detective quizzes. Module-only on 2025 form. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.heredity.pedigrees.karyotype",
+                  "slug": "karyotype",
+                  "title": "Karyotypes & Nondisjunction",
+                  "emoji": "🔬",
+                  "shortLabel": "Karyotype",
+                  "longLabel": "Karyotypes & Nondisjunction",
+                  "description": "Reading chromosome spreads, trisomy, and sex chromosome identification.",
+                  "teach": {
+                    "headline": "A Snapshot of Every Chromosome",
+                    "body": "A **karyotype** arranges an organism's chromosomes by size and shape. It reveals **extra or missing chromosomes** caused by **nondisjunction** — chromosomes failing to separate during meiosis.\n\n**Trisomy 21** (three copies of chromosome 21) causes **Down syndrome**. Count the chromosomes: a normal human karyotype has **46** (22 pairs + XX or XY).\n\n**XX** = female; **XY** = male — read the sex chromosomes in the lower-right of the spread.\n\n![Human karyotype showing trisomy 21](/content/bio-eoc/figures/bio_eoc_karyotype.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_karyotype",
+                        "alt": "Human karyotype with chromosomes arranged by size; chromosome 21 shows three copies indicating trisomy 21",
+                        "caption": "Three copies of chromosome 21 indicate trisomy 21 (Down syndrome)."
+                      }
+                    ],
+                    "mnemonic": "KARYOTYPE = CHROMOSOME PHOTO ALBUM. Extra copy of 21 = Down. XX or XY tells sex.",
+                    "poweredIdea": "Karyotypes reveal trisomy and sex chromosomes; nondisjunction in meiosis causes wrong chromosome numbers."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.karyotype.trisomy21",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "An extra copy of chromosome 21 on a karyotype indicates _____ syndrome.",
+                        "acceptable": ["Down", "Down's", "Down syndrome"],
+                        "hint": "Trisomy 21"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.karyotype.diagram-trisomy",
+                      "data": {
+                        "prompt": "In the karyotype diagram, three copies of chromosome 21 indicate trisomy _____.",
+                        "acceptable": ["21", "twenty-one"],
+                        "hint": "Which chromosome has the extra copy?"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.karyotype.sex-chromosomes",
+                      "data": {
+                        "story": "A karyotype shows 22 pairs of autosomes plus two X chromosomes and no Y chromosome.",
+                        "question": "What is this individual's biological sex?",
+                        "answer": "Female (XX)",
+                        "options": [
+                          "Female (XX)",
+                          "Male (XY)",
+                          "Cannot be determined from a karyotype",
+                          "Intersex — always has both X and Y"
+                        ],
+                        "explanation": "Two X chromosomes and no Y indicate a female karyotype."
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.karyotype.nondisjunction",
+                      "data": {
+                        "paragraph": "Nondisjunction during mitosis is the usual cause of trisomy 21, because body cells fail to split chromosome 21 pairs evenly.",
+                        "bugPhrase": "Nondisjunction during mitosis is the usual cause of trisomy 21",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "Which division makes gametes with half the chromosome number?",
+                        "canonicalFix": "Trisomy 21 usually starts when nondisjunction during meiosis produces a gamete with an extra chromosome 21. Fertilization then creates a zygote with three copies.",
+                        "poweredIdea": "Nondisjunction in meiosis creates gametes with wrong chromosome counts, leading to trisomy at fertilization."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.pedigrees.karyotype.terms",
+                      "data": {
+                        "term": "Trisomy 21",
+                        "correct": "Down syndrome — three copies of chromosome 21",
+                        "distractors": ["Turner syndrome — missing an X", "Normal male karyotype — 46 XY", "Haploid gamete — 23 chromosomes"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.pedigrees.karyotype",
+                    "emoji": "🔬",
+                    "shortLabel": "Count 'Em",
+                    "longLabel": "Karyotype Reader",
+                    "flavor": "You spot an extra chromosome 21 and name the nondisjunction that put it there.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.heredity.pedigrees.disorders"],
+                  "difficulty": "core",
+                  "tags": ["heredity", "karyotype", "nondisjunction", "trisomy", "eoc", "LS.Bio.7.3", "LS.Bio.6.1"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.7.3 (genetic disorders/karyotype) and LS.Bio.6.1 (chromosome structure). Trisomy 21 diagram-backed quizzes; nondisjunction debug-the-claim. Module-only on 2025 form. No biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.heredity.complex",
+              "slug": "complex",
+              "title": "Complex Traits & Environment",
+              "emoji": "\ud83d\udcca",
+              "children": [
+                {
+                  "id": "bio.eoc.heredity.complex.polygenic",
+                  "slug": "polygenic",
+                  "title": "Polygenic & Complex Traits",
+                  "emoji": "\ud83d\udcca",
+                  "shortLabel": "Polygenic",
+                  "longLabel": "Polygenic & Complex Traits",
+                  "description": "Why many traits come in a smooth range instead of two clean categories.",
+                  "teach": {
+                    "headline": "Many Genes, a Range of Outcomes",
+                    "body": "Some traits are **polygenic** \u2014 controlled by many genes acting together. Human **height** and skin color are classic examples.\n\nPolygenic traits show **continuous variation**: a smooth range of phenotypes rather than two clear categories. They usually form a bell-shaped curve, with most people near the middle and only a few at the extremes.\n\n![Bell curve showing continuous variation in a polygenic trait](/content/bio-eoc/figures/bio_eoc_polygenic_curve.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_polygenic_curve",
+                        "alt": "Normal distribution bell curve with most individuals near the mean and fewer at the extremes",
+                        "caption": "Polygenic traits cluster in the middle; extreme phenotypes are rare."
+                      }
+                    ],
+                    "etymology": {
+                      "termId": "term.polygenic",
+                      "term": "polygenic",
+                      "morphemes": [
+                        { "morphemeId": "morph.poly", "asUsed": "poly" },
+                        { "morphemeId": "morph.gen", "asUsed": "genic" }
+                      ],
+                      "rootSummary": "Greek: poly (many) + genos (origin, kind)"
+                    },
+                    "mnemonic": "MANY GENES = MANY STEPS = a SMOOTH RANGE. Bell curve: crowd in the middle, rare at the ends.",
+                    "poweredIdea": "Polygenic traits are controlled by many genes and form a continuous range, with rare extremes."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.complex.polygenic.define",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "A trait controlled by many genes acting together is described as _____.",
+                        "acceptable": ["polygenic", "polygenic trait"],
+                        "hint": "Poly = many"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.complex.polygenic.diagram-curve",
+                      "data": {
+                        "prompt": "In the diagram, most individuals cluster near the middle of the bell curve because polygenic traits show _____ variation.",
+                        "acceptable": ["continuous", "continuous variation"],
+                        "hint": "A smooth range, not just two categories"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.complex.polygenic.range",
+                      "data": {
+                        "story": "Human height varies smoothly across a whole range, not just 'tall' or 'short' like a single Mendelian trait.",
+                        "question": "What best explains this smooth range of heights?",
+                        "answer": "Height is polygenic \u2014 many genes contribute, producing continuous variation.",
+                        "options": [
+                          "Height is polygenic \u2014 many genes contribute, producing continuous variation.",
+                          "Height is controlled by a single dominant allele.",
+                          "Height is not inherited at all.",
+                          "Only the environment determines height, not genes."
+                        ],
+                        "explanation": "Many genes each adding a small effect produce a continuous spread instead of two categories."
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.heredity.complex.polygenic.single-gene",
+                      "data": {
+                        "paragraph": "Human height is controlled by a single gene with one tall allele and one short allele, exactly like Mendel's pea plants.",
+                        "bugPhrase": "controlled by a single gene with one tall allele and one short allele",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "Does height come in just two categories, or a whole range?",
+                        "canonicalFix": "Human height is polygenic \u2014 many genes contribute, and the environment matters too \u2014 which is why it forms a continuous range rather than two categories.",
+                        "poweredIdea": "Continuous traits like height come from many genes, not a single dominant/recessive pair."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.complex.polygenic.extremes",
+                      "data": {
+                        "story": "In a large population, both very short and very tall people are uncommon, while most people are near average height.",
+                        "question": "Why are the extreme heights rare?",
+                        "answer": "Polygenic traits cluster around the middle, so the extreme combinations of many genes are rare.",
+                        "options": [
+                          "Polygenic traits cluster around the middle, so the extreme combinations of many genes are rare.",
+                          "Extreme heights are caused only by mutations.",
+                          "Tall and short are recessive while average is dominant.",
+                          "The environment cannot affect a polygenic trait."
+                        ],
+                        "explanation": "With many genes, most people land near the average; lining up many 'tall' or many 'short' alleles at once is uncommon."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.complex.polygenic",
+                    "emoji": "\ud83d\udcca",
+                    "shortLabel": "Bell Curve",
+                    "longLabel": "Polygenic Traits",
+                    "flavor": "You explain a smooth range of heights as many genes adding up, not a single tall-or-short switch.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.heredity.mendel.alleles"],
+                  "difficulty": "core",
+                  "tags": ["heredity", "polygenic", "complex-traits", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.7.2 (polygenic/complex traits). Maps to released items #38 (height polygenic) and #39 (rare extreme phenotypes). Debug-the-claim targets the 'single gene controls height' trap. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.heredity.complex.environment",
+                  "slug": "environment",
+                  "title": "Genes & the Environment",
+                  "emoji": "\ud83c\udf26\ufe0f",
+                  "shortLabel": "Gene\u00d7Env",
+                  "longLabel": "Genes & the Environment",
+                  "description": "Why the same genes can produce different traits in different conditions.",
+                  "teach": {
+                    "headline": "Your Genes Aren't the Whole Story",
+                    "body": "**Phenotype = genotype + environment.** Even with the same genes, conditions change how a trait turns out. Human height depends on genes *and* on nutrition during growth.\n\nGenetically identical organisms (clones) raised in different environments can look different. A trait you see is really a conversation between DNA and the world it develops in \u2014 your height is part genes, part dinner plate.",
+                    "mnemonic": "GENES PROPOSE, ENVIRONMENT DISPOSES. Same DNA + different conditions = different phenotype.",
+                    "poweredIdea": "Phenotype comes from genotype and environment together \u2014 the same genes can give different results."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.heredity.complex.environment.clones",
+                      "preferred": true,
+                      "data": {
+                        "scenario": "Two genetically identical plants (clones) are grown for a season \u2014 one in rich soil with full sun, the other in poor soil and deep shade.",
+                        "predictPrompt": "How will the two clones most likely compare at the end of the season?",
+                        "predictOptions": [
+                          "They will look identical because their DNA is identical",
+                          "They will differ in size and health because environment shapes phenotype",
+                          "Their DNA will change to match their environments",
+                          "Only the shaded plant will have different genes"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "The clone in rich soil and sun grows larger and healthier; the one in poor soil and shade grows smaller. Their genes are the same, but the environment shaped how those genes were expressed.",
+                        "truthSummary": "Identical genotypes can produce different phenotypes when the environment differs.",
+                        "bugCandidates": [
+                          {
+                            "label": "I assumed identical DNA must produce an identical appearance",
+                            "isTheBug": true,
+                            "explanation": "Phenotype depends on genotype AND environment, so identical genes can still look different in different conditions."
+                          },
+                          {
+                            "label": "I thought the environment rewrites the plants' DNA",
+                            "isTheBug": false,
+                            "explanation": "The environment changes how genes are expressed; it does not change the DNA sequence here."
+                          },
+                          {
+                            "label": "I assumed only one plant would be a true clone",
+                            "isTheBug": false,
+                            "explanation": "Both are genuine clones with identical DNA; the difference is purely environmental."
+                          }
+                        ],
+                        "poweredIdea": "Clones with identical DNA can still differ in phenotype when raised in different environments."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.heredity.complex.environment.define",
+                      "data": {
+                        "prompt": "An organism's observable traits come from its genotype together with its _____.",
+                        "acceptable": ["environment", "surroundings"],
+                        "hint": "The conditions it grows in"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.heredity.complex.environment.nutrition",
+                      "data": {
+                        "story": "Two people inherited similar sets of height genes, but one grew up much taller than the other.",
+                        "question": "What most likely explains the difference?",
+                        "answer": "Environmental factors such as nutrition during growth affected their height.",
+                        "options": [
+                          "Environmental factors such as nutrition during growth affected their height.",
+                          "One of them has completely different DNA now.",
+                          "Height is unaffected by anything but genes.",
+                          "Their genes mutated to make them different heights."
+                        ],
+                        "explanation": "Height is shaped by genes and environment; differences in nutrition can lead to different adult heights even with similar genes."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.heredity.complex.environment.twins",
+                      "data": {
+                        "term": "Identical twins raised apart with very different diets",
+                        "correct": "May differ in traits like height because of the environment",
+                        "distractors": ["Must be identical in every single trait", "Have different DNA from each other", "Cannot be compared at all"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.heredity.complex.environment",
+                    "emoji": "\ud83c\udf26\ufe0f",
+                    "shortLabel": "Nature+Nurture",
+                    "longLabel": "Genes & Environment",
+                    "flavor": "You treat a visible trait as a conversation between DNA and the conditions it grows up in.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.heredity.complex.polygenic"],
+                  "difficulty": "core",
+                  "tags": ["heredity", "environment", "phenotype", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.7.3 (genotype x environment). Maps to released items #40 (environment/nutrition affects height) and #46 (clones differ by environment). Predict-run-reflect targets the 'identical genes = identical look' trap. No biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "etymologyContributions": [
+    {
+      "id": "morph.hetero",
+      "morpheme": "hetero-",
+      "language": "Greek",
+      "meaning": "different, other",
+      "cousins": ["heterozygous", "heterogeneous", "heterotroph"],
+      "appearsIn": ["term.heterozygous"]
+    },
+    {
+      "id": "morph.zygo",
+      "morpheme": "-zygous",
+      "language": "Greek",
+      "meaning": "yoke, pair, join",
+      "cousins": ["heterozygous", "homozygous", "zygote"],
+      "appearsIn": ["term.heterozygous"]
+    },
+    {
+      "id": "morph.poly",
+      "morpheme": "poly-",
+      "language": "Greek",
+      "meaning": "many",
+      "cousins": ["polygenic", "polymer", "polygon"],
+      "appearsIn": ["term.polygenic"]
+    },
+    {
+      "id": "morph.gen",
+      "morpheme": "-gen",
+      "language": "Greek",
+      "meaning": "origin, produce",
+      "cousins": ["polygenic", "gene", "generate"],
+      "appearsIn": ["term.polygenic"]
+    }
+  ]
+}

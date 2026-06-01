@@ -77,6 +77,16 @@ Human and chimpanzee share the most similar sequences — most closely related.`
                   'Preserved remains that show change over time are _____ evidence.',
                   ['fossil', 'fossils', 'the fossil record'],
                 ),
+                fillQuiz(
+                  'quiz.biochem.evidence.panel-fossil',
+                  'The fossil panel in the diagram shows _____ evidence.',
+                  ['fossil', 'fossils', 'the fossil record'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.evidence.panel-embryology',
+                  'Similar early developmental stages in the diagram are _____ evidence.',
+                  ['embryology', 'embryological', 'embryo'],
+                ),
               ],
               achievement: ach(
                 'biochem.evolution.evidence',
@@ -237,6 +247,11 @@ Rodents and rabbits share a recent common ancestor on the cladogram — more clo
                   'quiz.biochem.classify.rodents-rabbits',
                   'On the mammal cladogram, rodents and rabbits share a recent common _____ because they branch together.',
                   ['ancestor'],
+                ),
+                fillQuiz(
+                  'quiz.biochem.cladogram.sister-group',
+                  'On the cladogram, organisms sharing the most recent branch point are most _____.',
+                  ['closely related', 'related'],
                 ),
                 cladogramQuiz(
                   'quiz.biochem.classify.tetrapod-tree',

@@ -34,6 +34,8 @@ type WorkerMessage = {
   type: string;
   error?: string;
   data?: Float32Array;
+  voices?: string[];
+  defaultVoice?: string | null;
   label?: string;
   sinceOrigin?: number;
   sincePrev?: number;
@@ -78,6 +80,12 @@ function bindAbortSignal(signal: AbortSignal | undefined, onAbort: () => void): 
   return () => signal.removeEventListener('abort', onAbort);
 }
 
+export type PocketTtsSpeakOptions = {
+  voice?: string;
+  volume?: number;
+  signal?: AbortSignal;
+};
+
 export class PocketTtsEngine {
   private status: PocketTtsEngineStatus = 'uninitialized';
   private statusError: string | null = null;
@@ -96,6 +104,31 @@ export class PocketTtsEngine {
   /** Serializes speak calls so chained handoffs wait for playback to finish. */
   private speakChain: Promise<void> = Promise.resolve();
   private markedFirstChunkThisSpeak = false;
+  private availableVoices: string[] = [];
+  private bundleDefaultVoice: string | null = null;
+  private voiceListeners = new Set<() => void>();
+
+  getAvailableVoices(): readonly string[] {
+    return this.availableVoices;
+  }
+
+  getBundleDefaultVoice(): string | null {
+    return this.bundleDefaultVoice;
+  }
+
+  /** Notified when the worker reports built-in voices after bundle load. */
+  subscribeVoices(listener: () => void): () => void {
+    this.voiceListeners.add(listener);
+    return () => {
+      this.voiceListeners.delete(listener);
+    };
+  }
+
+  private notifyVoicesChanged(): void {
+    for (const listener of this.voiceListeners) {
+      listener();
+    }
+  }
 
   getStatus(): PocketTtsEngineStatus {
     return this.status;
@@ -257,7 +290,7 @@ export class PocketTtsEngine {
 
   async speak(
     text: string,
-    options?: { voice?: string; volume?: number; signal?: AbortSignal },
+    options?: PocketTtsSpeakOptions,
   ): Promise<void> {
     const waitFor = this.speakChain;
     let advance!: () => void;
@@ -275,19 +308,43 @@ export class PocketTtsEngine {
     }
   }
 
+  /** Stop an in-flight preload so speak can own the worker (preload is best-effort). */
+  private cancelPendingCollect(): void {
+    const pending = this.pendingCollect;
+    if (!pending) return;
+    this.pendingCollect = null;
+    this.worker?.postMessage({ type: 'stop' });
+    pending.resolve();
+  }
+
+  /**
+   * Avoid racing preload synthesis: wait for a matching preload, or cancel
+   * any other in-flight collect before starting playback.
+   */
+  private async prepareForSpeak(voice: string, trimmed: string): Promise<void> {
+    const key = ttsCacheKey(voice, trimmed);
+    const inFlightPreload = this.preloadTasks.get(key);
+    if (inFlightPreload) {
+      await inFlightPreload.catch(() => {
+        /* preload is optional */
+      });
+      return;
+    }
+    if (this.pendingCollect) {
+      this.cancelPendingCollect();
+    }
+  }
+
   private async speakInternal(
     text: string,
-    options?: { voice?: string; volume?: number; signal?: AbortSignal },
+    options?: PocketTtsSpeakOptions,
   ): Promise<void> {
     const trimmed = prepareTextForSpeech(text);
     if (!trimmed) return;
 
     const voice = options?.voice ?? this.activeVoice;
     await this.ensureReady(voice);
-
-    if (this.pendingCollect) {
-      this.finishPendingCollect();
-    }
+    await this.prepareForSpeak(voice, trimmed);
     if (options?.signal?.aborted) return;
 
     const key = ttsCacheKey(voice, trimmed);
@@ -373,7 +430,7 @@ export class PocketTtsEngine {
 
   private async playCached(
     chunks: CachedAudio,
-    options?: { volume?: number; signal?: AbortSignal },
+    options?: PocketTtsSpeakOptions,
   ): Promise<void> {
     if (options?.signal?.aborted) return;
 
@@ -449,13 +506,6 @@ export class PocketTtsEngine {
     pending.resolve();
   }
 
-  private finishPendingCollect(): void {
-    const pending = this.pendingCollect;
-    if (!pending) return;
-    this.pendingCollect = null;
-    pending.resolve();
-  }
-
   private rejectCollect(err?: Error): void {
     const pending = this.pendingCollect;
     if (!pending) return;
@@ -486,6 +536,13 @@ export class PocketTtsEngine {
           ttsWorkerMark(msg.label, msg.sinceOrigin, msg.sincePrev, msg.detail);
         }
         break;
+      case 'voices_loaded':
+        if (msg.voices && msg.voices.length > 0) {
+          this.availableVoices = [...msg.voices].sort((a, b) => a.localeCompare(b));
+          this.bundleDefaultVoice = msg.defaultVoice ?? null;
+          this.notifyVoicesChanged();
+        }
+        break;
       case 'audio_chunk':
         if (!data) break;
         if (!this.markedFirstChunkThisSpeak && this.pendingSpeak && !this.pendingCollect) {
@@ -495,7 +552,7 @@ export class PocketTtsEngine {
         if (this.pendingCollect) {
           this.pendingCollect.chunks.push(new Float32Array(data));
         } else if (this.player && this.pendingSpeak) {
-          this.player.playAudio(data);
+          this.player.playAudio(new Float32Array(data));
         }
         break;
       case 'stream_ended':

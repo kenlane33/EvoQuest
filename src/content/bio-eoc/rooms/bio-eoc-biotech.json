@@ -1,0 +1,422 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC Review",
+  "description": "Complete NC Biology End-of-Course review aligned to 2023 NCSCOS and the 2025 released form. All four strands: molecules to organisms, ecosystems, heredity, evolution.",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780316343478,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.biotech",
+          "slug": "biotech",
+          "title": "Biotechnology",
+          "emoji": "\ud83d\udd2c",
+          "description": "How scientists separate, read, cut, and rewrite DNA \u2014 from gel electrophoresis and DNA fingerprinting to recombinant organisms, CRISPR, and the ethics they raise.",
+          "children": [
+            {
+              "id": "bio.eoc.biotech.techniques",
+              "slug": "techniques",
+              "title": "Lab Techniques",
+              "emoji": "\ud83e\uddea",
+              "children": [
+                {
+                  "id": "bio.eoc.biotech.techniques.gel-electrophoresis",
+                  "slug": "gel-electrophoresis",
+                  "title": "Gel Electrophoresis",
+                  "emoji": "\ud83e\uddea",
+                  "shortLabel": "Gel Bands",
+                  "longLabel": "Gel Electrophoresis",
+                  "description": "How a gel sorts DNA fragments by size so you can read them like a ruler.",
+                  "teach": {
+                    "headline": "Smaller DNA Travels Farther",
+                    "body": "**Gel electrophoresis** separates DNA fragments by **size**. An electric current pulls the negatively charged DNA through a gel; **smaller fragments move faster and travel farther**, while large fragments lag near the wells where the DNA was loaded.\n\nThe result is a pattern of **bands**. You read it like a ruler: the distance a band traveled tells you the size of that fragment.\n\n![DNA gel electrophoresis showing marker and sample bands by fragment size](/content/bio-eoc/figures/bio_eoc_gel_electrophoresis.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_gel_electrophoresis",
+                        "alt": "Gel electrophoresis diagram with marker lane and sample bands; smaller fragments migrated farther from the wells",
+                        "caption": "Smaller DNA fragments travel farther through the gel than larger fragments."
+                      }
+                    ],
+                    "etymology": {
+                      "termId": "term.electrophoresis",
+                      "term": "electrophoresis",
+                      "morphemes": [
+                        { "morphemeId": "morph.electro", "asUsed": "electro" },
+                        { "morphemeId": "morph.phoresis", "asUsed": "phoresis" }
+                      ],
+                      "rootSummary": "Greek: elektron (electricity) + phoresis (a carrying)"
+                    },
+                    "mnemonic": "SMALL = SPEEDY = FAR. Big fragments lag at the top; small ones sprint toward the bottom of the gel.",
+                    "poweredIdea": "Gel electrophoresis sorts DNA by size; smaller fragments travel farther through the gel."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.biotech.techniques.gel-electrophoresis.smaller",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "In gel electrophoresis, the _____ DNA fragments travel the farthest through the gel.",
+                        "acceptable": ["smaller", "smallest", "small"],
+                        "hint": "Size is inversely related to distance traveled"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.biotech.techniques.gel-electrophoresis.diagram-farthest",
+                      "data": {
+                        "prompt": "In the diagram, the band that traveled farthest from the well represents the _____ DNA fragment.",
+                        "acceptable": ["smallest", "smaller", "small"],
+                        "hint": "Small fragments move through the gel faster"
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.biotech.techniques.gel-electrophoresis.bigger-farther",
+                      "data": {
+                        "paragraph": "On the gel, the band that traveled the farthest from the well must be the largest DNA fragment in the sample.",
+                        "bugPhrase": "the farthest from the well must be the largest DNA fragment",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "Which fragments slip through the gel mesh most easily \u2014 big or small?",
+                        "canonicalFix": "The band that traveled farthest is the smallest fragment. Small fragments move through the gel faster and farther; large fragments stay near the well.",
+                        "poweredIdea": "Farthest-traveled bands are the smallest fragments, not the largest."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.biotech.techniques.gel-electrophoresis.read-gel",
+                      "data": {
+                        "story": "A gel shows two bands from one sample: one sits near the well at the top, the other near the bottom.",
+                        "question": "Which band represents the larger DNA fragment?",
+                        "answer": "The band near the well at the top",
+                        "options": [
+                          "The band near the well at the top",
+                          "The band near the bottom",
+                          "Both bands are the same size",
+                          "Neither band is DNA"
+                        ],
+                        "explanation": "Large fragments move slowly and stay near the well; the band that barely moved is the larger fragment."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.biotech.techniques.gel-electrophoresis.well-band",
+                      "data": {
+                        "term": "A DNA fragment that stays near the well (top of the gel)",
+                        "correct": "A large fragment that moved slowly",
+                        "distractors": ["A small fragment that moved quickly", "The fastest fragment in the gel", "A protein rather than DNA"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.biotech.techniques.gel-electrophoresis",
+                    "emoji": "\ud83e\uddea",
+                    "shortLabel": "Read the Gel",
+                    "longLabel": "Gel Electrophoresis",
+                    "flavor": "You read a gel like a ruler, knowing the farthest band is the smallest fragment, not the biggest.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["biotech", "gel-electrophoresis", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.8.1 (biotechnology techniques; reading gels). Covers size-vs-distance gel-reading pattern. Debug-the-claim targets the 'larger fragments travel farther' trap. Form item #23 tests paternity matching only — migration-direction trap is module-only. Deeper than biochem.heredity.gel-electrophoresis; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.biotech.techniques.dna-fingerprinting",
+                  "slug": "dna-fingerprinting",
+                  "title": "DNA Fingerprinting",
+                  "emoji": "\ud83d\udd0d",
+                  "shortLabel": "DNA ID",
+                  "longLabel": "DNA Fingerprinting",
+                  "description": "Why each person's banding pattern can identify them and reveal relatedness.",
+                  "teach": {
+                    "headline": "Everyone's Band Pattern Is Unique",
+                    "body": "A **DNA fingerprint** (DNA profile) is the banding pattern made when a person's DNA is cut into fragments and run on a gel. Because everyone's DNA sequence differs \u2014 except identical twins \u2014 the pattern is nearly unique to each individual.\n\nInvestigators **compare patterns** to match a suspect to a crime-scene sample, confirm family relationships, or identify remains.",
+                    "mnemonic": "MATCH THE BANDS, MATCH THE PERSON. Your DNA pattern is yours alone \u2014 unless you have an identical twin.",
+                    "poweredIdea": "A DNA fingerprint is a near-unique banding pattern used to identify a person or match a sample."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.biotech.techniques.dna-fingerprinting.match",
+                      "preferred": true,
+                      "data": {
+                        "story": "DNA from a crime scene is run beside DNA from three suspects on the same gel. Suspect 2's bands line up exactly with the crime-scene bands.",
+                        "question": "What is the best conclusion?",
+                        "answer": "Suspect 2's DNA matches the crime-scene sample.",
+                        "options": [
+                          "Suspect 2's DNA matches the crime-scene sample.",
+                          "All three suspects left the sample.",
+                          "The sample could not have come from any suspect.",
+                          "DNA fingerprints cannot be compared on a gel."
+                        ],
+                        "explanation": "Matching banding patterns indicate the same DNA source, pointing to suspect 2."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.biotech.techniques.dna-fingerprinting.define",
+                      "data": {
+                        "prompt": "The unique banding pattern of an individual's DNA on a gel is called a DNA _____.",
+                        "acceptable": ["fingerprint", "profile", "fingerprint (profile)"],
+                        "hint": "Like a fingerprint, but made of DNA bands"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.biotech.techniques.dna-fingerprinting.twins",
+                      "data": {
+                        "term": "Two people with identical DNA fingerprints",
+                        "correct": "Are most likely identical twins",
+                        "distractors": ["Must be unrelated strangers", "Have no DNA in common", "Are always parent and child"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.biotech.techniques.dna-fingerprinting.paternity",
+                      "data": {
+                        "story": "In a paternity test, a child's DNA bands are compared with the mother's and a possible father's.",
+                        "question": "What pattern would support that the man is the biological father?",
+                        "answer": "The child's bands not from the mother match bands in the man's DNA.",
+                        "options": [
+                          "The child's bands not from the mother match bands in the man's DNA.",
+                          "The child shares no bands with either adult.",
+                          "The child's bands all come from the mother only.",
+                          "The man and mother have identical fingerprints."
+                        ],
+                        "explanation": "A child inherits half its DNA from each parent; the non-maternal bands should match the biological father."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.biotech.techniques.dna-fingerprinting",
+                    "emoji": "\ud83d\udd0d",
+                    "shortLabel": "Band Match",
+                    "longLabel": "DNA Fingerprinting",
+                    "flavor": "You match banding patterns to identify a person or trace a family line from their DNA alone.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.biotech.techniques.gel-electrophoresis"],
+                  "difficulty": "core",
+                  "tags": ["biotech", "dna-fingerprint", "forensics", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.8.1. Maps to released item #23 (DNA fingerprint identification). Reworded, not reproduced. Deeper than biochem.heredity.dna-fingerprint; no biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.biotech.engineering",
+              "slug": "engineering",
+              "title": "Genetic Engineering",
+              "emoji": "\ud83e\uddec",
+              "children": [
+                {
+                  "id": "bio.eoc.biotech.engineering.recombinant",
+                  "slug": "recombinant",
+                  "title": "Recombinant DNA & GMOs",
+                  "emoji": "\ud83e\uddec",
+                  "shortLabel": "Recombinant",
+                  "longLabel": "Recombinant DNA & GMOs",
+                  "description": "Cutting DNA with restriction enzymes and combining genes from different sources.",
+                  "teach": {
+                    "headline": "Cut, Paste, and Combine DNA",
+                    "body": "**Restriction enzymes** cut DNA at specific sequences, leaving ends that can join with other cut DNA. Splicing DNA from two sources makes **recombinant DNA**.\n\nInsert that DNA into an organism and you get a **transgenic** organism, or **GMO** \u2014 like bacteria engineered to make human insulin, or crops carrying a pest-resistance gene from another species.",
+                    "mnemonic": "RESTRICTION ENZYME = MOLECULAR SCISSORS. Cut two DNAs, paste into one = RECOMBINANT DNA.",
+                    "poweredIdea": "Restriction enzymes cut DNA so genes from different sources can be combined into recombinant DNA."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.biotech.engineering.recombinant.restriction",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Enzymes that cut DNA at specific sequences in genetic engineering are called _____ enzymes.",
+                        "acceptable": ["restriction"],
+                        "hint": "They 'restrict' DNA by cutting it at set sites"
+                      }
+                    },
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.biotech.engineering.recombinant.insulin",
+                      "data": {
+                        "scenario": "Scientists use restriction enzymes to insert the human insulin gene into a bacterium's DNA (recombinant DNA), then grow the bacteria.",
+                        "predictPrompt": "What will the engineered bacteria most likely do?",
+                        "predictOptions": [
+                          "Nothing \u2014 bacteria cannot read a human gene",
+                          "Produce human insulin, because the inserted gene is transcribed and translated",
+                          "Turn into human cells",
+                          "Immediately delete the human gene"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "The genetic code is nearly universal, so the bacterium's ribosomes read the human insulin gene and build human insulin. This is how much medical insulin is actually produced.",
+                        "truthSummary": "Because the genetic code is shared across life, a gene moved into bacteria can still be transcribed and translated into its protein.",
+                        "bugCandidates": [
+                          {
+                            "label": "I assumed bacteria cannot use a human gene",
+                            "isTheBug": true,
+                            "explanation": "The genetic code is nearly universal, so bacterial ribosomes can translate a human gene into its protein."
+                          },
+                          {
+                            "label": "I forgot restriction enzymes were needed to insert the gene",
+                            "isTheBug": false,
+                            "explanation": "They are needed, but the key insight is that the inserted gene actually gets expressed."
+                          },
+                          {
+                            "label": "I thought adding the gene turns the bacteria human",
+                            "isTheBug": false,
+                            "explanation": "Adding one gene just adds one protein; it does not change what the organism is."
+                          }
+                        ],
+                        "poweredIdea": "The genetic code is universal, so a gene inserted into a new host can still be expressed."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.biotech.engineering.recombinant.define",
+                      "data": {
+                        "term": "Recombinant DNA",
+                        "correct": "DNA combined from two different sources",
+                        "distractors": ["DNA duplicated during mitosis", "A mutation that deletes a gene", "DNA that contains no genes"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.biotech.engineering.recombinant.gmo",
+                      "data": {
+                        "story": "A crop is given a gene from a bacterium so that it can resist insect pests.",
+                        "question": "What is this engineered crop called?",
+                        "answer": "A genetically modified (transgenic) organism",
+                        "options": [
+                          "A genetically modified (transgenic) organism",
+                          "A naturally selected variety",
+                          "A clone of the bacterium",
+                          "A hybrid produced by meiosis"
+                        ],
+                        "explanation": "Adding a gene from another species by genetic engineering produces a transgenic organism, or GMO."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.biotech.engineering.recombinant",
+                    "emoji": "\ud83e\uddec",
+                    "shortLabel": "Cut & Paste",
+                    "longLabel": "Recombinant DNA",
+                    "flavor": "You cut DNA with restriction enzymes and splice genes across species to engineer a new trait.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["biotech", "recombinant-dna", "gmo", "transgenic", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.8.2 (genetic engineering applications). Maps to released item #24 (GMO/transgenic). Predict-run-reflect leverages the universal genetic code (insulin bacteria). Deeper than biochem.heredity.biotech; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.biotech.engineering.applications-ethics",
+                  "slug": "applications-ethics",
+                  "title": "CRISPR, Uses & Ethics",
+                  "emoji": "\u2696\ufe0f",
+                  "shortLabel": "CRISPR/Ethics",
+                  "longLabel": "CRISPR, Uses & Ethics",
+                  "description": "Precise gene editing, its applications, and the questions it raises.",
+                  "teach": {
+                    "headline": "New Tools, New Questions",
+                    "body": "**CRISPR** is a precise gene-editing tool that can add, remove, or change specific DNA sequences. Biotechnology has powerful uses \u2014 treating disease, engineering higher-yield or pest-resistant crops, and producing life-saving medicines.\n\nIt also raises **ethical questions**: Should we edit human embryos? Are GMOs safe to grow and eat? Is cloning acceptable? These are debated by scientists and society \u2014 biology can tell us what is *possible*, not what we *should* do.",
+                    "mnemonic": "CRISPR = FIND-AND-REPLACE FOR DNA. 'CAN we?' is a science question; 'SHOULD we?' is an ethics question.",
+                    "poweredIdea": "CRISPR edits specific DNA sequences; biotech's power raises ethical questions society must weigh."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.biotech.engineering.applications-ethics.crispr",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The gene-editing tool that can precisely change specific DNA sequences is called _____.",
+                        "acceptable": ["crispr", "crispr-cas9", "crispr/cas9"],
+                        "hint": "A find-and-replace tool for DNA"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.biotech.engineering.applications-ethics.edit",
+                      "data": {
+                        "story": "A research team wants to correct a single disease-causing mutation in a gene with high precision.",
+                        "question": "Which biotechnology tool is best suited to this?",
+                        "answer": "CRISPR gene editing",
+                        "options": [
+                          "CRISPR gene editing",
+                          "Gel electrophoresis",
+                          "A DNA fingerprint",
+                          "A Punnett square"
+                        ],
+                        "explanation": "CRISPR can target and edit a specific DNA sequence, making it suited to correcting a precise mutation."
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.biotech.engineering.applications-ethics.is-ought",
+                      "data": {
+                        "paragraph": "Because CRISPR makes it possible to edit human embryos, science has already proven that editing human embryos is the right thing to do.",
+                        "bugPhrase": "science has already proven that editing human embryos is the right thing to do",
+                        "bugClass": "other",
+                        "hint": "Does being able to do something settle whether we should?",
+                        "canonicalFix": "Whether we should edit human embryos is an ethical and societal question. The fact that CRISPR makes it possible does not, by itself, prove it is right \u2014 biology shows what is possible, not what is moral.",
+                        "poweredIdea": "Being able to do something biologically does not settle whether it is ethical to do."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.biotech.engineering.applications-ethics.ethics",
+                      "data": {
+                        "term": "An ethical question about biotechnology",
+                        "correct": "Should humans edit the genes of embryos?",
+                        "distractors": ["How many bases make up a codon?", "What sugar is found in DNA?", "Where in the cell does translation occur?"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.biotech.engineering.applications-ethics",
+                    "emoji": "\u2696\ufe0f",
+                    "shortLabel": "Can vs Should",
+                    "longLabel": "CRISPR & Ethics",
+                    "flavor": "You separate what biotech can do from what society should do, and place ethics outside the lab bench.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.biotech.engineering.recombinant"],
+                  "difficulty": "core",
+                  "tags": ["biotech", "crispr", "ethics", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.8.2 (genetic engineering applications and ethics). Covers CRISPR basics and GMO/cloning ethics per source. Debug-the-claim targets the is/ought confusion (possibility does not equal moral justification). No biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "etymologyContributions": [
+    {
+      "id": "morph.electro",
+      "morpheme": "electro-",
+      "language": "Greek",
+      "meaning": "electricity, amber",
+      "cousins": ["electrophoresis", "electron", "electric"],
+      "appearsIn": ["term.electrophoresis"]
+    },
+    {
+      "id": "morph.phoresis",
+      "morpheme": "-phoresis",
+      "language": "Greek",
+      "meaning": "a carrying, a bearing",
+      "cousins": ["electrophoresis", "pheromone"],
+      "appearsIn": ["term.electrophoresis"]
+    }
+  ]
+}

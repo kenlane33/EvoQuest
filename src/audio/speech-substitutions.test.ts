@@ -47,7 +47,7 @@ describe('prepareTextForSpeech', () => {
 
   it('preserves plain prose', () => {
     expect(prepareTextForSpeech('Keep going — every attempt builds the map.')).toBe(
-      'Keep going, every attempt builds the map.',
+      'Keep going - every attempt builds the map.',
     );
   });
 });

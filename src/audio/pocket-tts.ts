@@ -7,6 +7,15 @@ export const POCKET_TTS_DEFAULT_LANGUAGE = 'english_2026-04';
 /** @deprecated Server mode removed; kept for stored settings compatibility. */
 export const POCKET_TTS_DEFAULT_URL = '';
 
+/** Human-readable label for a built-in voice id (e.g. bill_boerst → Bill Boerst). */
+export function formatPocketTtsVoiceLabel(voiceId: string): string {
+  return voiceId
+    .split(/[_-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
 export class PocketTtsError extends Error {
   constructor(message: string) {
     super(message);

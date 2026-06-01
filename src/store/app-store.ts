@@ -4,37 +4,92 @@ import { create } from 'zustand';
 import { ulid } from '@/lib/id';
 import { buildGameQueue, introBiochemUnitIds } from '@/content/catalog';
 import type {
+  AchievementState,
   ActiveSession,
   CalibrationRecord,
   Journey,
+  PowerUpInventory,
+  PowerUpInstance,
   ScheduledItem,
   SelectionDescriptor,
   SessionState,
   Settings,
-  StoredBlob,
   UnitProgress,
   UserState,
 } from '@/types';
 import { HINT_COUNTDOWN_MS, HINT_REVEAL_MS } from '@/types/schemas';
+import { rollStreakPowerUp } from '@/engine/powerups/rolls';
+import { advanceDailyStreak } from '@/engine/achievements/detect';
+import {
+  exportAll,
+  flushNow,
+  importAll,
+  loadState,
+  removeState,
+  saveState,
+} from '@/storage';
+import { STORAGE_KEY_PREFIX, STORAGE_KEYS } from '@/storage/keys';
 
-const APP_VERSION = '0.1.0';
-const SCHEMA_VERSION = 1;
+export const DEFAULT_POWERUP_INVENTORY: PowerUpInventory = {
+  slots: [null, null, null],
+  earned: 0,
+  spent: 0,
+  firstUseShown: [],
+};
 
-export const STORAGE_KEYS = {
-  session: 'evo-quest.v1.session',
-  sessionBackup: 'evo-quest.v1.session.backup',
-  units: 'evo-quest.v1.units',
-  journeys: 'evo-quest.v1.journeys',
-  settings: 'evo-quest.v1.settings',
-  firstRun: 'evo-quest.v1.firstRun',
-  calibration: 'evo-quest.v1.calibration',
-} as const;
+function dayKeyFromTimestamp(ts: number): string {
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+export const DEFAULT_ACHIEVEMENT_STATE: AchievementState = {
+  earned: {},
+  dailyStreak: { count: 0, lastDayKey: dayKeyFromTimestamp(Date.now()) },
+  firstClearedWingIds: [],
+};
+
+function loadPayload<T>(key: (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS], fallback: T): T {
+  const result = loadState<T>(key);
+  return result.ok ? result.value : fallback;
+}
+
+function mergeSettings(raw: Settings): Settings {
+  return {
+    ...DEFAULT_SETTINGS,
+    ...raw,
+    appearance: { ...DEFAULT_SETTINGS.appearance, ...raw.appearance },
+    audio: { ...DEFAULT_SETTINGS.audio, ...raw.audio },
+    reading: { ...DEFAULT_SETTINGS.reading, ...raw.reading },
+    reveals: { ...DEFAULT_SETTINGS.reveals, ...raw.reveals },
+    practice: {
+      ...DEFAULT_SETTINGS.practice,
+      ...raw.practice,
+      revisitLength: raw.practice?.revisitLength ?? DEFAULT_SETTINGS.practice.revisitLength,
+    },
+    privacy: { ...DEFAULT_SETTINGS.privacy, ...raw.privacy },
+  };
+}
+
+function persistIfHydrated(hydrated: boolean, key: (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS], payload: unknown) {
+  if (hydrated) saveState(key, payload);
+}
+
+function persistSession(hydrated: boolean, sessionState: SessionState) {
+  if (!hydrated) return;
+  const session = extractActiveSession(sessionState);
+  if (session) {
+    saveState(STORAGE_KEYS.SESSION, session);
+  } else {
+    removeState(STORAGE_KEYS.SESSION);
+  }
+}
 
 export const DEFAULT_SETTINGS: Settings = {
   appearance: {
     contrast: 'normal',
     fontSize: 'md',
     bodyFont: 'nunito',
+    headlineFont: 'syne',
     colorBlindSafe: false,
   },
   motion: 'full',
@@ -57,6 +112,7 @@ export const DEFAULT_SETTINGS: Settings = {
     confidenceFrequency: 'every-3',
     defaultMood: 'mixed',
     defaultLength: 10,
+    revisitLength: 12,
   },
   privacy: {
     anonymousCrashReports: false,
@@ -67,13 +123,33 @@ type AppState = {
   hydrated: boolean;
   settings: Settings;
   unitProgress: Record<string, UnitProgress>;
+  powerups: PowerUpInventory;
+  achievementState: AchievementState;
+  morphemeProgress: Record<string, import('@/types').MorphemeProgress>;
   sessionState: SessionState;
   journeys: Journey[];
   calibrationRecords: CalibrationRecord[];
   firstRunCompleted: boolean;
+  /** Journey-scoped rewards earned this session (for end screen). */
+  pendingJourneyRewards: {
+    achievementsEarned: string[];
+    powerupsEarned: PowerUpInstance[];
+    morphemesTouchedFirst: string[];
+    tierUps: Array<{ unitId: string; tier: UnitProgress['tier'] }>;
+  };
   loadFromStorage: () => void;
   setSettings: (patch: Partial<Settings> | ((s: Settings) => Settings)) => void;
   updateUnitProgress: (unitId: string, progress: UnitProgress) => void;
+  grantPowerUp: (instance: PowerUpInstance) => { granted: boolean; needsSwap: boolean; instance: PowerUpInstance };
+  swapPowerUp: (slotIndex: 0 | 1 | 2, instance: PowerUpInstance) => void;
+  usePowerUp: (slotIndex: 0 | 1 | 2) => PowerUpInstance | null;
+  markPowerUpFirstUseShown: (powerUpId: string) => void;
+  rollStreakReward: (streak: number, recentWingId?: string) => PowerUpInstance | null;
+  earnAchievement: (achievementId: string) => boolean;
+  updateAchievementState: (patch: Partial<AchievementState>) => void;
+  updateMorphemeProgress: (morphemeId: string, progress: import('@/types').MorphemeProgress) => void;
+  resetPendingJourneyRewards: () => void;
+  appendPendingJourneyReward: (patch: Partial<AppState['pendingJourneyRewards']>) => void;
   setSessionState: (state: SessionState) => void;
   setSession: (session: ActiveSession | null) => void;
   addJourney: (journey: Journey) => void;
@@ -85,71 +161,6 @@ type AppState = {
   importAllData: (json: string) => boolean;
   resetAllData: () => void;
 };
-
-function wrap<T>(payload: T): StoredBlob<T> {
-  return {
-    schemaVersion: SCHEMA_VERSION,
-    savedAt: Date.now(),
-    appVersion: APP_VERSION,
-    payload,
-  };
-}
-
-function readBlob<T>(key: string): T | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as StoredBlob<T> | T;
-    if (parsed && typeof parsed === 'object' && 'payload' in parsed) {
-      return (parsed as StoredBlob<T>).payload;
-    }
-    return parsed as T;
-  } catch {
-    return null;
-  }
-}
-
-function writeBlob<T>(key: string, payload: T, rotateBackup = false) {
-  if (typeof window === 'undefined') return;
-  try {
-    if (rotateBackup) {
-      const existing = localStorage.getItem(key);
-      if (existing) {
-        localStorage.setItem(STORAGE_KEYS.sessionBackup, existing);
-      }
-    }
-    localStorage.setItem(key, JSON.stringify(wrap(payload)));
-  } catch {
-    /* quota or private mode */
-  }
-}
-
-function removeKey(key: string) {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(key);
-}
-
-let persistTimer: ReturnType<typeof setTimeout> | null = null;
-
-function schedulePersist(state: AppState) {
-  if (typeof window === 'undefined' || !state.hydrated) return;
-  if (persistTimer) clearTimeout(persistTimer);
-  persistTimer = setTimeout(() => {
-    writeBlob(STORAGE_KEYS.settings, state.settings);
-    writeBlob(STORAGE_KEYS.units, state.unitProgress);
-    writeBlob(STORAGE_KEYS.journeys, state.journeys);
-    writeBlob(STORAGE_KEYS.calibration, state.calibrationRecords);
-    writeBlob(STORAGE_KEYS.firstRun, { completedAt: state.firstRunCompleted ? Date.now() : undefined });
-
-    const session = extractActiveSession(state.sessionState);
-    if (session) {
-      writeBlob(STORAGE_KEYS.session, session, true);
-    } else {
-      removeKey(STORAGE_KEYS.session);
-    }
-  }, 300);
-}
 
 function extractActiveSession(state: SessionState): ActiveSession | null {
   switch (state.phase) {
@@ -164,7 +175,8 @@ function extractActiveSession(state: SessionState): ActiveSession | null {
 }
 
 function sessionFromStorage(): SessionState {
-  const saved = readBlob<ActiveSession>(STORAGE_KEYS.session);
+  const result = loadState<ActiveSession>(STORAGE_KEYS.SESSION);
+  const saved = result.ok ? result.value : null;
   if (saved && saved.queue?.length && saved.currentIndex < saved.queue.length) {
     return { phase: 'brief', session: saved };
   }
@@ -178,23 +190,21 @@ export const useAppStore = create<AppState>((set, get) => ({
   sessionState: { phase: 'loading' },
   journeys: [],
   calibrationRecords: [],
+  powerups: DEFAULT_POWERUP_INVENTORY,
+  achievementState: DEFAULT_ACHIEVEMENT_STATE,
+  morphemeProgress: {},
   firstRunCompleted: false,
+  pendingJourneyRewards: {
+    achievementsEarned: [],
+    powerupsEarned: [],
+    morphemesTouchedFirst: [],
+    tierUps: [],
+  },
 
   loadFromStorage: () => {
-    const rawSettings = readBlob<Settings>(STORAGE_KEYS.settings);
-    const settings = rawSettings
-      ? {
-          ...DEFAULT_SETTINGS,
-          ...rawSettings,
-          appearance: { ...DEFAULT_SETTINGS.appearance, ...rawSettings.appearance },
-          audio: { ...DEFAULT_SETTINGS.audio, ...rawSettings.audio },
-          reading: { ...DEFAULT_SETTINGS.reading, ...rawSettings.reading },
-          reveals: { ...DEFAULT_SETTINGS.reveals, ...rawSettings.reveals },
-          practice: { ...DEFAULT_SETTINGS.practice, ...rawSettings.practice },
-          privacy: { ...DEFAULT_SETTINGS.privacy, ...rawSettings.privacy },
-        }
-      : DEFAULT_SETTINGS;
-    const storedProgress = readBlob<Record<string, UnitProgress>>(STORAGE_KEYS.units) ?? {};
+    const rawSettings = loadPayload<Settings | null>(STORAGE_KEYS.SETTINGS, null);
+    const settings = rawSettings ? mergeSettings(rawSettings) : DEFAULT_SETTINGS;
+    const storedProgress = loadPayload<Record<string, UnitProgress>>(STORAGE_KEYS.UNITS, {});
     const unitProgress = { ...storedProgress };
     for (const unitId of introBiochemUnitIds()) {
       if (!unitProgress[unitId]) {
@@ -206,22 +216,44 @@ export const useAppStore = create<AppState>((set, get) => ({
           lastSeenAt: 0,
           lastFiveOutcomes: [],
           templatesEncountered: [],
+          quizAttemptCounts: {},
           tier: 'unlocked',
           unlockedAt: Date.now(),
           achievementEarned: false,
         };
       }
     }
-    const journeys = readBlob<Journey[]>(STORAGE_KEYS.journeys) ?? [];
-    const calibrationRecords =
-      readBlob<CalibrationRecord[]>(STORAGE_KEYS.calibration) ?? [];
-    const firstRun = readBlob<{ completedAt?: number }>(STORAGE_KEYS.firstRun);
+    const journeys = loadPayload<Journey[]>(STORAGE_KEYS.JOURNEYS, []);
+    const calibrationRecords = loadPayload<CalibrationRecord[]>(STORAGE_KEYS.CALIBRATION, []);
+    const firstRun = loadPayload<{ completedAt?: number }>(STORAGE_KEYS.FIRST_RUN, {});
+    const rawPowerups = loadPayload<PowerUpInventory | null>(STORAGE_KEYS.POWERUPS, null);
+    const powerups: PowerUpInventory = rawPowerups
+      ? {
+          ...DEFAULT_POWERUP_INVENTORY,
+          ...rawPowerups,
+          firstUseShown: rawPowerups.firstUseShown ?? [],
+        }
+      : DEFAULT_POWERUP_INVENTORY;
+    const rawAchievements = loadPayload<AchievementState | null>(STORAGE_KEYS.ACHIEVEMENTS, null);
+    const achievementState: AchievementState = rawAchievements
+      ? {
+          ...DEFAULT_ACHIEVEMENT_STATE,
+          ...rawAchievements,
+          dailyStreak: rawAchievements.dailyStreak ?? DEFAULT_ACHIEVEMENT_STATE.dailyStreak,
+          firstClearedWingIds: rawAchievements.firstClearedWingIds ?? [],
+        }
+      : DEFAULT_ACHIEVEMENT_STATE;
+    const morphemeProgress =
+      loadPayload<Record<string, import('@/types').MorphemeProgress>>(STORAGE_KEYS.MORPHEMES, {});
     const sessionState = sessionFromStorage();
 
     set({
       hydrated: true,
       settings,
       unitProgress,
+      powerups,
+      achievementState,
+      morphemeProgress,
       journeys,
       calibrationRecords,
       firstRunCompleted: Boolean(firstRun?.completedAt),
@@ -244,7 +276,7 @@ export const useAppStore = create<AppState>((set, get) => ({
               practice: { ...s.settings.practice, ...patch.practice },
               privacy: { ...s.settings.privacy, ...patch.privacy },
             };
-      schedulePersist({ ...s, settings: next });
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.SETTINGS, next);
       return { settings: next };
     });
   },
@@ -252,14 +284,165 @@ export const useAppStore = create<AppState>((set, get) => ({
   updateUnitProgress: (unitId, progress) => {
     set((s) => {
       const unitProgress = { ...s.unitProgress, [unitId]: progress };
-      schedulePersist({ ...s, unitProgress });
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.UNITS, unitProgress);
       return { unitProgress };
     });
   },
 
+  grantPowerUp: (instance) => {
+    const state = get();
+    const emptyIndex = state.powerups.slots.findIndex((s) => s === null);
+    if (emptyIndex === -1) {
+      return { granted: false, needsSwap: true, instance };
+    }
+    const slots = [...state.powerups.slots] as PowerUpInventory['slots'];
+    slots[emptyIndex] = instance;
+    const powerups: PowerUpInventory = {
+      ...state.powerups,
+      slots,
+      earned: state.powerups.earned + 1,
+    };
+    set((s) => {
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.POWERUPS, powerups);
+      return {
+        powerups,
+        pendingJourneyRewards: {
+          ...s.pendingJourneyRewards,
+          powerupsEarned: [...s.pendingJourneyRewards.powerupsEarned, instance],
+        },
+      };
+    });
+    return { granted: true, needsSwap: false, instance };
+  },
+
+  swapPowerUp: (slotIndex, instance) => {
+    set((s) => {
+      const slots = [...s.powerups.slots] as PowerUpInventory['slots'];
+      slots[slotIndex] = instance;
+      const powerups: PowerUpInventory = {
+        ...s.powerups,
+        slots,
+        earned: s.powerups.earned + 1,
+      };
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.POWERUPS, powerups);
+      return {
+        powerups,
+        pendingJourneyRewards: {
+          ...s.pendingJourneyRewards,
+          powerupsEarned: [...s.pendingJourneyRewards.powerupsEarned, instance],
+        },
+      };
+    });
+  },
+
+  usePowerUp: (slotIndex) => {
+    const state = get();
+    const instance = state.powerups.slots[slotIndex];
+    if (!instance) return null;
+    const slots = [...state.powerups.slots] as PowerUpInventory['slots'];
+    slots[slotIndex] = null;
+    const powerups: PowerUpInventory = {
+      ...state.powerups,
+      slots,
+      spent: state.powerups.spent + 1,
+    };
+    set((s) => {
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.POWERUPS, powerups);
+      return { powerups };
+    });
+    return instance;
+  },
+
+  markPowerUpFirstUseShown: (powerUpId) => {
+    set((s) => {
+      if (s.powerups.firstUseShown.includes(powerUpId)) return s;
+      const powerups: PowerUpInventory = {
+        ...s.powerups,
+        firstUseShown: [...s.powerups.firstUseShown, powerUpId],
+      };
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.POWERUPS, powerups);
+      return { powerups };
+    });
+  },
+
+  rollStreakReward: (streak, recentWingId) => {
+    const state = get();
+    const roll = rollStreakPowerUp(streak, recentWingId, state.powerups);
+    if (!roll) return null;
+    const result = get().grantPowerUp(roll.instance);
+    if (result.needsSwap) {
+      return roll.instance;
+    }
+    return result.granted ? roll.instance : null;
+  },
+
+  earnAchievement: (achievementId) => {
+    const state = get();
+    if (state.achievementState.earned[achievementId]) return false;
+    const achievementState: AchievementState = {
+      ...state.achievementState,
+      earned: { ...state.achievementState.earned, [achievementId]: Date.now() },
+    };
+    set((s) => {
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.ACHIEVEMENTS, achievementState);
+      return {
+        achievementState,
+        pendingJourneyRewards: {
+          ...s.pendingJourneyRewards,
+          achievementsEarned: [...s.pendingJourneyRewards.achievementsEarned, achievementId],
+        },
+      };
+    });
+    return true;
+  },
+
+  updateAchievementState: (patch) => {
+    set((s) => {
+      const achievementState: AchievementState = {
+        ...s.achievementState,
+        ...patch,
+        earned: patch.earned ?? s.achievementState.earned,
+        dailyStreak: patch.dailyStreak ?? s.achievementState.dailyStreak,
+        firstClearedWingIds: patch.firstClearedWingIds ?? s.achievementState.firstClearedWingIds,
+      };
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.ACHIEVEMENTS, achievementState);
+      return { achievementState };
+    });
+  },
+
+  updateMorphemeProgress: (morphemeId, progress) => {
+    set((s) => {
+      const morphemeProgress = { ...s.morphemeProgress, [morphemeId]: progress };
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.MORPHEMES, morphemeProgress);
+      return { morphemeProgress };
+    });
+  },
+
+  resetPendingJourneyRewards: () => {
+    set({
+      pendingJourneyRewards: {
+        achievementsEarned: [],
+        powerupsEarned: [],
+        morphemesTouchedFirst: [],
+        tierUps: [],
+      },
+    });
+  },
+
+  appendPendingJourneyReward: (patch) => {
+    set((s) => ({
+      pendingJourneyRewards: {
+        achievementsEarned: patch.achievementsEarned ?? s.pendingJourneyRewards.achievementsEarned,
+        powerupsEarned: patch.powerupsEarned ?? s.pendingJourneyRewards.powerupsEarned,
+        morphemesTouchedFirst: patch.morphemesTouchedFirst ?? s.pendingJourneyRewards.morphemesTouchedFirst,
+        tierUps: patch.tierUps ?? s.pendingJourneyRewards.tierUps,
+      },
+    }));
+  },
+
   setSessionState: (sessionState) => {
     set((s) => {
-      schedulePersist({ ...s, sessionState });
+      persistSession(s.hydrated, sessionState);
       return { sessionState };
     });
   },
@@ -269,7 +452,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       const sessionState: SessionState = session
         ? { phase: 'brief', session }
         : { phase: 'menu' };
-      schedulePersist({ ...s, sessionState });
+      persistSession(s.hydrated, sessionState);
       return { sessionState };
     });
   },
@@ -277,7 +460,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   addJourney: (journey) => {
     set((s) => {
       const journeys = [journey, ...s.journeys].slice(0, 500);
-      schedulePersist({ ...s, journeys });
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.JOURNEYS, journeys);
       return { journeys };
     });
   },
@@ -290,25 +473,38 @@ export const useAppStore = create<AppState>((set, get) => ({
         recordedAt: Date.now(),
       };
       const calibrationRecords = [entry, ...s.calibrationRecords].slice(0, 2000);
-      schedulePersist({ ...s, calibrationRecords });
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.CALIBRATION, calibrationRecords);
       return { calibrationRecords };
     });
   },
 
   completeFirstRun: () => {
     set((s) => {
-      schedulePersist({ ...s, firstRunCompleted: true });
+      persistIfHydrated(s.hydrated, STORAGE_KEYS.FIRST_RUN, { completedAt: Date.now() });
       return { firstRunCompleted: true };
     });
   },
 
   embarkNewQuest: (selection) => {
+    const state = get();
     const desc: SelectionDescriptor = selection ?? {
       kind: 'quick-mix',
-      length: get().settings.practice.defaultLength,
+      length: state.settings.practice.defaultLength,
     };
+    const { next: dailyStreak, achievements: dailyAchievements } = advanceDailyStreak(
+      state.achievementState,
+    );
+    if (dailyStreak !== state.achievementState.dailyStreak) {
+      get().updateAchievementState({ dailyStreak });
+    }
+    for (const ach of dailyAchievements) {
+      get().earnAchievement(ach.id);
+    }
+
+    get().resetPendingJourneyRewards();
+
     const userState: UserState = {
-      units: get().unitProgress,
+      units: state.unitProgress,
     };
     const queue = buildGameQueue(desc, userState);
     const session: ActiveSession = {
@@ -328,49 +524,28 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   clearSession: (resetState = true) => {
-    removeKey(STORAGE_KEYS.session);
-    removeKey(STORAGE_KEYS.sessionBackup);
+    removeState(STORAGE_KEYS.SESSION);
+    removeState(STORAGE_KEYS.SESSION_BACKUP);
     if (resetState) {
       set({ sessionState: { phase: 'menu' } });
     }
   },
 
   exportAllData: () => {
-    const keys = Object.values(STORAGE_KEYS);
-    const storageKeys: Record<string, unknown> = {};
-    if (typeof window !== 'undefined') {
-      for (const key of keys) {
-        const raw = localStorage.getItem(key);
-        if (raw) {
-          try {
-            storageKeys[key] = JSON.parse(raw);
-          } catch {
-            storageKeys[key] = raw;
-          }
-        }
-      }
-    }
-    return JSON.stringify(
-      {
-        formatVersion: 1,
-        exportedAt: Date.now(),
-        appVersion: APP_VERSION,
-        storageKeys,
-      },
-      null,
-      2,
-    );
+    flushNow();
+    return JSON.stringify(exportAll(), null, 2);
   },
 
   importAllData: (json) => {
     try {
-      const envelope = JSON.parse(json) as { storageKeys?: Record<string, unknown> };
-      if (!envelope.storageKeys || typeof window === 'undefined') return false;
-      for (const [key, value] of Object.entries(envelope.storageKeys)) {
-        localStorage.setItem(key, JSON.stringify(value));
+      const data = JSON.parse(json) as unknown;
+      if (typeof window === 'undefined') return false;
+      flushNow();
+      const result = importAll(data);
+      if (result.imported.length > 0) {
+        get().loadFromStorage();
       }
-      get().loadFromStorage();
-      return true;
+      return result.ok;
     } catch {
       return false;
     }
@@ -378,50 +553,33 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   resetAllData: () => {
     if (typeof window !== 'undefined') {
-      for (const key of Object.values(STORAGE_KEYS)) {
-        localStorage.removeItem(key);
+      flushNow();
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const key = localStorage.key(i);
+        if (key?.startsWith(STORAGE_KEY_PREFIX)) {
+          localStorage.removeItem(key);
+        }
       }
     }
     set({
       settings: DEFAULT_SETTINGS,
       unitProgress: {},
+      powerups: DEFAULT_POWERUP_INVENTORY,
+      achievementState: DEFAULT_ACHIEVEMENT_STATE,
+      morphemeProgress: {},
       sessionState: { phase: 'menu' },
       journeys: [],
       calibrationRecords: [],
       firstRunCompleted: false,
+      pendingJourneyRewards: {
+        achievementsEarned: [],
+        powerupsEarned: [],
+        morphemesTouchedFirst: [],
+        tierUps: [],
+      },
     });
   },
 }));
-
-/** Subscribe once at app boot to flush on tab hide / unload. */
-export function attachPersistHooks() {
-  if (typeof window === 'undefined') return () => {};
-
-  const flush = () => {
-    const state = useAppStore.getState();
-    if (!state.hydrated) return;
-    if (persistTimer) clearTimeout(persistTimer);
-    writeBlob(STORAGE_KEYS.settings, state.settings);
-    writeBlob(STORAGE_KEYS.units, state.unitProgress);
-    writeBlob(STORAGE_KEYS.journeys, state.journeys);
-    writeBlob(STORAGE_KEYS.calibration, state.calibrationRecords);
-    writeBlob(STORAGE_KEYS.firstRun, { completedAt: state.firstRunCompleted ? Date.now() : undefined });
-    const session = extractActiveSession(state.sessionState);
-    if (session) writeBlob(STORAGE_KEYS.session, session, true);
-  };
-
-  const onHide = () => {
-    if (document.visibilityState === 'hidden') flush();
-  };
-
-  window.addEventListener('beforeunload', flush);
-  document.addEventListener('visibilitychange', onHide);
-
-  return () => {
-    window.removeEventListener('beforeunload', flush);
-    document.removeEventListener('visibilitychange', onHide);
-  };
-}
 
 export function useHydrated() {
   return useAppStore((s) => s.hydrated);
@@ -442,3 +600,13 @@ export function useSessionState() {
 export function useJourneys() {
   return useAppStore((s) => s.journeys);
 }
+
+export function usePowerups() {
+  return useAppStore((s) => s.powerups);
+}
+
+export function useAchievementState() {
+  return useAppStore((s) => s.achievementState);
+}
+
+export { dayKeyFromTimestamp };

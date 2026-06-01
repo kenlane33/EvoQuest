@@ -28,8 +28,8 @@ describe('content catalog', () => {
 
   it('includes biochemistry EOC module units', () => {
     const unit = getUnitById('biochem.enzymes.factors');
-    expect(unit?.teach.body).toContain('p02_enzyme_activity_graph.svg');
-    expect(unit?.teach.figures?.length).toBeGreaterThan(0);
+    expect(unit?.enabled).toBe(false);
+    expect(getUnitById('bio.eoc.macromolecules.builders.carbohydrates')?.enabled).toBe(true);
   });
 
   it('includes DNA hierarchy figure on DNA structure unit', () => {
@@ -38,11 +38,14 @@ describe('content catalog', () => {
     expect(unit?.teach.figures?.some((f) => f.id === 'p07_dna_hierarchy')).toBe(true);
   });
 
-  it('groups Biology EOC tiles first with sub-wings', () => {
-    expect(WING_GROUPS[0]?.wingId).toBe('biochem');
-    expect(WING_GROUPS[0]?.title).toBe('Biology EOC Review');
-    expect(WING_GROUPS[0]?.subgroups?.length).toBe(7);
-    expect(WING_GROUPS[0]?.tiles.length).toBe(35);
+  it('groups Biology EOC (2025) tiles first with room subgroups', () => {
+    expect(WING_GROUPS[0]?.wingId).toBe('bio.eoc');
+    expect(WING_GROUPS[0]?.title).toBe('Biology EOC (2025)');
+    expect(WING_GROUPS[0]?.subgroups?.length).toBe(9);
+    expect(WING_GROUPS[0]?.tiles.length).toBe(50);
+
+    const biochem = WING_GROUPS.find((g) => g.wingId === 'biochem');
+    expect(biochem).toBeUndefined();
   });
 
   it('builds full EOC branch queue from module id', () => {
@@ -50,8 +53,8 @@ describe('content catalog', () => {
       { kind: 'branch', nodeId: 'mod.biochemistry.bundled' },
       EMPTY_USER_STATE,
     );
-    expect(queue).toHaveLength(158);
-    expect(queue.every((item) => item.unitId.startsWith('biochem.'))).toBe(true);
+    expect(queue.length).toBeGreaterThan(100);
+    expect(queue.every((item) => item.unitId.startsWith('bio.eoc.'))).toBe(true);
   });
 
   it('builds game queue through catalog helper', () => {

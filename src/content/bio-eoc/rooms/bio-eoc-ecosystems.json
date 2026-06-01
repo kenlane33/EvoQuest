@@ -1,0 +1,637 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC Review",
+  "description": "Complete NC Biology End-of-Course review aligned to 2023 NCSCOS and the 2025 released form. All four strands: molecules to organisms, ecosystems, heredity, evolution.",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780316242928,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.ecosystems",
+          "slug": "ecosystems",
+          "title": "Ecosystems & Population Dynamics",
+          "emoji": "\ud83c\udf3f",
+          "description": "How energy flows and matter cycles through ecosystems, why populations level off, and how interactions and disturbances shape stability.",
+          "children": [
+            {
+              "id": "bio.eoc.ecosystems.energy",
+              "slug": "energy",
+              "title": "Energy & Matter Flow",
+              "emoji": "\ud83d\udd78\ufe0f",
+              "children": [
+                {
+                  "id": "bio.eoc.ecosystems.energy.food-webs",
+                  "slug": "food-webs",
+                  "title": "Food Webs & Energy Flow",
+                  "emoji": "\ud83d\udd78\ufe0f",
+                  "shortLabel": "Food Webs",
+                  "longLabel": "Food Webs & Energy Flow",
+                  "description": "Who eats whom, and how energy enters and moves through an ecosystem.",
+                  "teach": {
+                    "headline": "Who Eats Whom, and the Energy Path",
+                    "body": "A food web maps who eats whom. **Producers** (plants, algae) make their own food; **consumers** eat other organisms; **decomposers** recycle dead material.\n\nEnergy enters through producers and flows upward. Remove one species and the effect ripples through the web \u2014 lose the producers at the base and every level above it loses its food supply.\n\n![Food web diagram showing producers, consumers, and decomposers](/content/bio-eoc/figures/bio_eoc_food_web.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_food_web",
+                        "alt": "Food web with producers at the base, consumers in the middle, and decomposers recycling nutrients",
+                        "caption": "Arrows trace energy flow from producers up through consumers."
+                      }
+                    ],
+                    "mnemonic": "PRODUCERS START IT, CONSUMERS PASS IT, DECOMPOSERS RECYCLE IT. Pull one thread, the web shakes.",
+                    "poweredIdea": "Energy enters a food web through producers and flows upward; removing one species ripples through the web."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.ecosystems.energy.food-webs.producers",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Organisms that make their own food and form the base of a food web are called _____.",
+                        "acceptable": ["producers", "producer", "autotrophs"],
+                        "hint": "Plants and algae are examples"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.ecosystems.energy.food-webs.diagram-producers",
+                      "data": {
+                        "prompt": "In the food web diagram, organisms that make their own food at the base are called _____.",
+                        "acceptable": ["producers", "producer", "autotrophs"],
+                        "hint": "They capture energy from the Sun"
+                      }
+                    },
+                    {
+                      "kind": "food-web-builder",
+                      "id": "quiz.bio.eoc.ecosystems.energy.food-webs.estuary",
+                      "data": {
+                        "ecosystem": "Estuary food web",
+                        "nodes": [
+                          { "id": "algae", "name": "Algae", "trophicLevel": "producer", "icon": "\ud83d\udfe2" },
+                          { "id": "zooplankton", "name": "Zooplankton", "trophicLevel": "primary", "icon": "\ud83e\udd90" },
+                          { "id": "fingermullet", "name": "Finger mullet", "trophicLevel": "secondary", "icon": "\ud83d\udc1f" },
+                          { "id": "bluefish", "name": "Bluefish", "trophicLevel": "tertiary", "icon": "\ud83d\udc20" },
+                          { "id": "heron", "name": "Heron", "trophicLevel": "tertiary", "icon": "\ud83e\udda9" }
+                        ],
+                        "requiredEdges": [
+                          { "preyId": "algae", "predatorId": "zooplankton" },
+                          { "preyId": "zooplankton", "predatorId": "fingermullet" },
+                          { "preyId": "fingermullet", "predatorId": "bluefish" },
+                          { "preyId": "fingermullet", "predatorId": "heron" }
+                        ],
+                        "perturbation": {
+                          "removeNodeId": "algae",
+                          "description": "A pollution event wipes out most of the algae."
+                        },
+                        "predictNodes": [
+                          { "nodeId": "zooplankton", "expected": "crash", "reason": "Zooplankton lose the producer they feed on." },
+                          { "nodeId": "fingermullet", "expected": "crash", "reason": "Finger mullets lose the zooplankton they eat." }
+                        ],
+                        "poweredIdea": "Knock out the producers and the loss cascades up every level that depends on them."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.ecosystems.energy.food-webs.decomposers",
+                      "data": {
+                        "term": "Decomposers",
+                        "correct": "Recycle nutrients from dead organisms",
+                        "distractors": ["Make food directly from sunlight", "Are always the top predator", "Eat only living producers"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.ecosystems.energy.food-webs.algae-drop",
+                      "data": {
+                        "story": "In an estuary web, algae are eaten by zooplankton, which are eaten by finger mullets. The algae population drops sharply.",
+                        "question": "What is the most likely effect on the finger mullet population?",
+                        "answer": "It decreases, because the zooplankton it eats also decrease.",
+                        "options": [
+                          "It decreases, because the zooplankton it eats also decrease.",
+                          "It increases, because the zooplankton increase.",
+                          "It increases, because algae are not part of its food chain.",
+                          "It stays the same, because algae do not affect it."
+                        ],
+                        "explanation": "Fewer algae means fewer zooplankton, which means less food for finger mullets, so their population falls."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.ecosystems.energy.food-webs",
+                    "emoji": "\ud83d\udd78\ufe0f",
+                    "shortLabel": "Web Weaver",
+                    "longLabel": "Food Webs",
+                    "flavor": "You trace energy from producers up the web and predict the cascade when one species disappears.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["ecosystems", "food-web", "energy-flow", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.4.1 (matter and energy flow). Maps to released items #14 and #15 (estuary food web). Food-web-builder reworks the released estuary web rather than copying it. Deeper than biochem.ecology.food-web; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.ecosystems.energy.energy-pyramid",
+                  "slug": "energy-pyramid",
+                  "title": "Energy Pyramids & the 10% Rule",
+                  "emoji": "\ud83d\udd3a",
+                  "shortLabel": "10% Rule",
+                  "longLabel": "Energy Pyramids & the 10% Rule",
+                  "description": "Why energy shrinks at each level and producers vastly outnumber top predators.",
+                  "teach": {
+                    "headline": "Only About 10% Moves Up",
+                    "body": "Only about **10%** of the energy stored at one trophic level passes to the next. The rest is lost as heat or used for the organisms' own life processes.\n\nThat is why an ecosystem has many **producers** at the base and only a few top predators at the peak \u2014 an energy **pyramid**. The most energy is available at the bottom, not the top.\n\n![Energy pyramid showing about 10% transfer between trophic levels](/content/bio-eoc/figures/bio_eoc_energy_pyramid.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_energy_pyramid",
+                        "alt": "Ecological energy pyramid with producers at the wide base and fewer organisms at each higher trophic level",
+                        "caption": "Roughly 10% of energy passes to the next level."
+                      }
+                    ],
+                    "mnemonic": "10% RULE: each step up keeps ~1/10 the energy. BIG BASE, TINY TOP \u2014 most energy sits at the bottom.",
+                    "poweredIdea": "About 10% of energy passes to the next level, so the most energy is at the producer base."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.ecosystems.energy.energy-pyramid.ten-percent",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Roughly _____ percent of the energy at one trophic level is passed on to the next level.",
+                        "acceptable": ["10", "ten", "10%"],
+                        "hint": "One tenth"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.ecosystems.energy.energy-pyramid.diagram-ten-percent",
+                      "data": {
+                        "prompt": "From the energy pyramid, about _____% of energy transfers to the next trophic level.",
+                        "acceptable": ["10", "ten", "10%"],
+                        "hint": "The pyramid shows only a fraction passes upward"
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.ecosystems.energy.energy-pyramid.top-most-energy",
+                      "data": {
+                        "paragraph": "The hawks and other top predators have the most energy available to them because they sit at the very top of the food chain.",
+                        "bugPhrase": "have the most energy available to them because they sit at the very top",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "If only 10% passes up each level, where is energy most plentiful?",
+                        "canonicalFix": "The most energy is available at the producer base. Only about 10% passes up at each level, so top predators actually have the least energy available.",
+                        "poweredIdea": "Energy is greatest at the producer base and smallest at the top, not the other way around."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.ecosystems.energy.energy-pyramid.phytoplankton-trout",
+                      "data": {
+                        "story": "A pond sample contains tens of thousands of phytoplankton but only a few trout near the top of the food chain.",
+                        "question": "Why are there so many more producers than top consumers?",
+                        "answer": "Producers capture energy directly from the Sun, and only about 10% passes up at each level.",
+                        "options": [
+                          "Producers capture energy directly from the Sun, and only about 10% passes up at each level.",
+                          "Trout need less energy than a single phytoplankton.",
+                          "Phytoplankton get their energy by eating the trout.",
+                          "Insect larvae make food from the Sun and feed everything else."
+                        ],
+                        "explanation": "Producers harvest sunlight and hold the most energy; the steep energy loss up each level leaves room for only a few top consumers."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.ecosystems.energy.energy-pyramid.shape",
+                      "data": {
+                        "term": "Energy pyramid of a stable ecosystem",
+                        "correct": "Widest at the producers, narrowest at the top predators",
+                        "distractors": ["Widest at the top predators", "Equal width at every level", "Inverted, with the most energy at the top"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.ecosystems.energy.energy-pyramid",
+                    "emoji": "\ud83d\udd3a",
+                    "shortLabel": "Ten Percent",
+                    "longLabel": "Energy Pyramid",
+                    "flavor": "You explain the wide base and narrow top with one rule: only a tenth of the energy moves up.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.ecosystems.energy.food-webs"],
+                  "difficulty": "core",
+                  "tags": ["ecosystems", "energy-pyramid", "trophic", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.4.1. Maps to released items #16 (pyramid shape) and #34 (more producers than top consumers). Debug-the-claim targets the 'top predators have the most energy' trap (released #15 distractor). Deeper than biochem.ecology.energy-pyramid; no biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.ecosystems.cycles",
+              "slug": "cycles",
+              "title": "Cycles & Populations",
+              "emoji": "\u267b\ufe0f",
+              "children": [
+                {
+                  "id": "bio.eoc.ecosystems.cycles.matter-cycles",
+                  "slug": "matter-cycles",
+                  "title": "Carbon & Nitrogen Cycles",
+                  "emoji": "\u267b\ufe0f",
+                  "shortLabel": "Cycles",
+                  "longLabel": "Carbon & Nitrogen Cycles",
+                  "description": "Why matter is reused while energy is lost \u2014 and how carbon and nitrogen move.",
+                  "teach": {
+                    "headline": "Matter Cycles, Energy Flows Through",
+                    "body": "Energy flows one way and is lost as heat, but **matter is recycled**. In the **carbon cycle**, photosynthesis pulls CO\u2082 from the air into glucose; respiration, decomposition, and burning fuels return it.\n\nIn the **nitrogen cycle**, bacteria convert nitrogen gas into forms plants can use, and decomposers return it to the soil and air. The same atoms get reused again and again.",
+                    "mnemonic": "MATTER LOOPS, ENERGY LEAVES. Carbon and nitrogen ATOMS get reused; energy escapes as heat.",
+                    "poweredIdea": "Matter (carbon, nitrogen) cycles and is reused, while energy flows one way and is lost as heat."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.ecosystems.cycles.matter-cycles.photosynthesis",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "Carbon dioxide is removed from the air by plants during the process of _____.",
+                        "acceptable": ["photosynthesis"],
+                        "hint": "Plants pull CO2 into glucose"
+                      }
+                    },
+                    {
+                      "kind": "concept-map-builder",
+                      "id": "quiz.bio.eoc.ecosystems.cycles.matter-cycles.carbon-map",
+                      "data": {
+                        "focalConcept": "The Carbon Cycle",
+                        "nodes": [
+                          { "id": "co2", "label": "CO2 in air", "icon": "\ud83c\udf2b\ufe0f" },
+                          { "id": "plants", "label": "Plants", "icon": "\ud83c\udf3f" },
+                          { "id": "animals", "label": "Animals", "icon": "\ud83e\udd8c" },
+                          { "id": "decomposers", "label": "Decomposers", "icon": "\ud83c\udf44" }
+                        ],
+                        "canonicalEdges": [
+                          { "from": "plants", "to": "co2", "label": "absorbs", "importance": "critical", "reasonIfMissing": "Plants absorb CO2 from the air during photosynthesis." },
+                          { "from": "animals", "to": "plants", "label": "eats", "importance": "critical", "reasonIfMissing": "Animals gain carbon by eating plants." },
+                          { "from": "decomposers", "to": "animals", "label": "decomposes", "importance": "critical", "reasonIfMissing": "Decomposers break down dead animals." },
+                          { "from": "decomposers", "to": "co2", "label": "releases", "importance": "critical", "reasonIfMissing": "Decomposition returns CO2 to the air." }
+                        ],
+                        "allowedLabels": ["absorbs", "eats", "decomposes", "releases"],
+                        "poweredIdea": "Carbon atoms move from air to plants to animals to decomposers and back to the air \u2014 a loop."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.ecosystems.cycles.matter-cycles.energy-vs-matter",
+                      "data": {
+                        "story": "A student asks whether the energy in an ecosystem is recycled the same way carbon atoms are.",
+                        "question": "Which statement is correct?",
+                        "answer": "Matter cycles and is reused, but energy flows one way and is eventually lost as heat.",
+                        "options": [
+                          "Matter cycles and is reused, but energy flows one way and is eventually lost as heat.",
+                          "Both matter and energy are fully recycled forever.",
+                          "Energy is recycled, but matter flows one way and is lost.",
+                          "Neither matter nor energy moves through an ecosystem."
+                        ],
+                        "explanation": "Atoms are reused in cycles, but usable energy is steadily lost as heat, so it must keep entering from the Sun."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.ecosystems.cycles.matter-cycles.nitrogen",
+                      "data": {
+                        "term": "Nitrogen-fixing bacteria",
+                        "correct": "Convert nitrogen gas into forms plants can use",
+                        "distractors": ["Convert CO2 into glucose", "Release energy from glucose", "Pollinate flowering plants"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.ecosystems.cycles.matter-cycles",
+                    "emoji": "\u267b\ufe0f",
+                    "shortLabel": "Recycler",
+                    "longLabel": "Matter Cycles",
+                    "flavor": "You loop carbon and nitrogen atoms back around while energy keeps leaking out as heat.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["ecosystems", "carbon-cycle", "nitrogen-cycle", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.4.2 (biogeochemical cycles). Concept-map-builder for the carbon cycle per source. Contrasts cycling matter with one-way energy flow. Deeper than biochem.ecology.cycles; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.ecosystems.cycles.population-growth",
+                  "slug": "population-growth",
+                  "title": "Carrying Capacity & Limits",
+                  "emoji": "\ud83d\udcc8",
+                  "shortLabel": "Populations",
+                  "longLabel": "Carrying Capacity & Limits",
+                  "description": "Why fast-growing populations eventually level off.",
+                  "teach": {
+                    "headline": "Populations Level Off at Capacity",
+                    "body": "A population can grow quickly when resources are plentiful, but **limiting factors** \u2014 food, space, water, disease, predators \u2014 slow it down.\n\nThe **carrying capacity** is the maximum population an environment can support over the long term. Growth typically levels off into an S-shaped curve as the population nears carrying capacity.",
+                    "mnemonic": "RESOURCES RUN SHORT \u2192 GROWTH SLOWS. Carrying capacity = the CEILING the environment can support.",
+                    "poweredIdea": "Limiting factors cap a population at its carrying capacity, where growth levels off."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.ecosystems.cycles.population-growth.capacity",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The maximum population size an environment can support over time is its _____.",
+                        "acceptable": ["carrying capacity"],
+                        "hint": "The population 'ceiling' of an environment"
+                      }
+                    },
+                    {
+                      "kind": "microworld-sandbox",
+                      "id": "quiz.bio.eoc.ecosystems.cycles.population-growth.logistic",
+                      "data": {
+                        "modelId": "logistic",
+                        "parameters": [
+                          { "key": "r", "label": "Growth rate", "min": 0.1, "max": 1.2, "default": 0.3, "step": 0.05 },
+                          { "key": "K", "label": "Carrying capacity", "min": 100, "max": 400, "default": 150, "step": 10 },
+                          { "key": "N0", "label": "Starting population", "min": 10, "max": 80, "default": 25, "step": 5 }
+                        ],
+                        "goal": { "kind": "reachValue", "signal": "finalPopulation", "min": 180, "max": 220 },
+                        "generations": 40,
+                        "reveal": "Raise the carrying capacity and growth rate until the population settles near 200 and holds steady.",
+                        "poweredIdea": "Logistic growth slows and levels off as a population approaches its carrying capacity."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.ecosystems.cycles.population-growth.limiting",
+                      "data": {
+                        "term": "Limiting factor",
+                        "correct": "A resource or condition that slows population growth",
+                        "distractors": ["A factor that has no effect on a population", "Something that always increases a population", "A type of producer"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.ecosystems.cycles.population-growth.deer",
+                      "data": {
+                        "story": "A deer population in a forest grows quickly, then levels off and holds steady at about 500 for years.",
+                        "question": "What does the value of about 500 represent?",
+                        "answer": "The carrying capacity of the forest for deer",
+                        "options": [
+                          "The carrying capacity of the forest for deer",
+                          "The starting population of the deer",
+                          "The number of predators in the forest",
+                          "The maximum possible growth rate"
+                        ],
+                        "explanation": "When growth levels off and holds steady, the population has reached the environment's carrying capacity."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.ecosystems.cycles.population-growth",
+                    "emoji": "\ud83d\udcc8",
+                    "shortLabel": "At the Cap",
+                    "longLabel": "Carrying Capacity",
+                    "flavor": "You watch a booming population brake to a halt as limiting factors enforce the carrying capacity.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["ecosystems", "population", "carrying-capacity", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.5.1 (population growth and limiting factors). Microworld-sandbox models logistic growth toward K. Deeper than biochem.ecology.population; no biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.ecosystems.interactions",
+              "slug": "interactions",
+              "title": "Interactions & Stability",
+              "emoji": "\ud83c\udf0e",
+              "children": [
+                {
+                  "id": "bio.eoc.ecosystems.interactions.community",
+                  "slug": "community",
+                  "title": "Predators, Competition, Invaders",
+                  "emoji": "\ud83e\udd8c",
+                  "shortLabel": "Interactions",
+                  "longLabel": "Predators, Competition, Invaders",
+                  "description": "How species interactions push populations up, down, and out of balance.",
+                  "teach": {
+                    "headline": "Species Push and Pull on Each Other",
+                    "body": "Species interactions shape populations. In **predator\u2013prey** relationships, predator and prey numbers rise and fall in linked cycles. In **competition**, organisms fight over limited resources.\n\nAn **invasive species** introduced to a new area often has no natural predators there, so it spreads and increases competition with native species \u2014 sometimes destabilizing the whole ecosystem.",
+                    "mnemonic": "PREDATORS CYCLE WITH PREY. INVADERS arrive WITHOUT PREDATORS \u2192 spread and outcompete natives.",
+                    "poweredIdea": "Predation, competition, and invasive species shape which populations rise, fall, or destabilize."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.community.invasive",
+                      "preferred": true,
+                      "data": {
+                        "scenario": "A new insect species with no natural predators in the area is accidentally introduced into a North Carolina ecosystem.",
+                        "predictPrompt": "What is the most likely effect on the ecosystem?",
+                        "predictOptions": [
+                          "It will quietly maintain the area's existing stability",
+                          "It will spread and increase competition with native species for resources",
+                          "Native predators will immediately wipe it out",
+                          "It will have lower reproductive success than native insects"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "With no natural predators to keep it in check, the new insect reproduces freely and competes with native species for food and space. Native populations can decline, destabilizing the ecosystem.",
+                        "truthSummary": "Invasive species often surge because nothing local controls them, raising competition and disrupting balance.",
+                        "bugCandidates": [
+                          {
+                            "label": "I assumed native predators would quickly control the newcomer",
+                            "isTheBug": true,
+                            "explanation": "An invasive species usually has no established local predators, which is exactly why it can spread unchecked."
+                          },
+                          {
+                            "label": "I forgot that resources in the ecosystem are limited",
+                            "isTheBug": false,
+                            "explanation": "True, but the headline error is expecting predators to control it."
+                          },
+                          {
+                            "label": "I assumed the new species would just fit in harmlessly",
+                            "isTheBug": false,
+                            "explanation": "Possible in rare cases, but the typical EOC answer is increased competition and disruption."
+                          }
+                        ],
+                        "poweredIdea": "An invasive species with no local predators tends to spread and outcompete native species."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.community.invasive-term",
+                      "data": {
+                        "prompt": "A species introduced to a new area where it has no natural predators is called an _____ species.",
+                        "acceptable": ["invasive", "non-native", "introduced"],
+                        "hint": "It invades and spreads in the new area"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.community.predator-prey",
+                      "data": {
+                        "term": "Predator\u2013prey relationship",
+                        "correct": "Linked rise and fall of two populations over time",
+                        "distractors": ["Two species that both make their own food", "An interaction with no effect on either species", "A producer feeding on sunlight"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.community.cycle",
+                      "data": {
+                        "story": "In a forest, the rabbit (prey) population grows unusually large one spring.",
+                        "question": "What is the most likely effect on the fox (predator) population that follows?",
+                        "answer": "Foxes increase, because there is more prey to eat.",
+                        "options": [
+                          "Foxes increase, because there is more prey to eat.",
+                          "Foxes decrease, because there is more prey to eat.",
+                          "Foxes are unaffected by the rabbit population.",
+                          "Foxes turn into producers."
+                        ],
+                        "explanation": "More prey supports more predators, so the fox population tends to rise after the rabbit population does."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.ecosystems.interactions.community",
+                    "emoji": "\ud83e\udd8c",
+                    "shortLabel": "Tug of War",
+                    "longLabel": "Community Interactions",
+                    "flavor": "You read predator-prey cycles and see why an unchecked invader can tip an ecosystem over.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.ecosystems.cycles.population-growth"],
+                  "difficulty": "core",
+                  "tags": ["ecosystems", "interactions", "invasive-species", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.5.2 (community interactions and stability). Maps to released item #17 (invasive insect increases competition). Predict-run-reflect targets the 'predators will control the invader' trap. Deeper than biochem.ecology.behavior-conservation; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.ecosystems.interactions.stability",
+                  "slug": "stability",
+                  "title": "Disturbance & Human Impact",
+                  "emoji": "\ud83c\udf0e",
+                  "shortLabel": "Stability",
+                  "longLabel": "Disturbance & Human Impact",
+                  "description": "What disturbs ecosystems, and what protects their stability.",
+                  "teach": {
+                    "headline": "When the Environment Shifts",
+                    "body": "Ecosystems stay stable through **biodiversity** and balanced cycles, but **disturbances** can disrupt them. A long drought leaves species that depend on specific food struggling \u2014 only those that can adapt survive.\n\n**Climate change**, driven by rising CO\u2082, melts polar ice and shrinks habitat for animals like polar bears. The most direct way to slow it is shifting to **carbon-free energy**. Conservation protects biodiversity and stability.",
+                    "mnemonic": "SHIFT THE ENVIRONMENT, SHIFT THE SURVIVORS. Adapt or decline. Carbon-free energy slows the warming.",
+                    "poweredIdea": "Disturbances like drought and climate change stress ecosystems; biodiversity and conservation buffer them."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.stability.carbon-free",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The human action that most directly reduces climate change is shifting to _____ energy.",
+                        "acceptable": ["carbon-free", "carbon free", "renewable", "clean"],
+                        "hint": "Energy that does not release carbon"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.stability.drought",
+                      "data": {
+                        "story": "Hummingbirds in an ecosystem feed mainly on nectar from flowering plants. A three-year drought is expected.",
+                        "question": "How will the drought most likely affect the hummingbird population?",
+                        "answer": "They will struggle to find food, and only those that can adapt to new food sources will survive.",
+                        "options": [
+                          "They will struggle to find food, and only those that can adapt to new food sources will survive.",
+                          "They will instantly adapt to new foods, and the whole population will thrive.",
+                          "They will raise their reproductive rate to guarantee survival.",
+                          "They will lower their reproductive rate to reduce genetic diversity."
+                        ],
+                        "explanation": "Drought cuts their nectar supply; survival favors individuals able to use other food sources."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.stability.polar",
+                      "data": {
+                        "story": "Rising temperatures melt the polar ice caps in the Arctic.",
+                        "question": "How will this most likely affect polar bears?",
+                        "answer": "They will find it more difficult to find food and habitat.",
+                        "options": [
+                          "They will find it more difficult to find food and habitat.",
+                          "They will find it easier to find food and habitat.",
+                          "They will gain more drinking water and thrive.",
+                          "They will have far more available oxygen."
+                        ],
+                        "explanation": "Polar bears hunt from sea ice; losing that ice shrinks their habitat and makes finding food much harder."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.stability.biodiversity",
+                      "data": {
+                        "term": "High biodiversity in an ecosystem",
+                        "correct": "Tends to increase ecosystem stability",
+                        "distractors": ["Always causes mass extinction", "Has no effect on stability", "Stops all energy from flowing"]
+                      }
+                    },
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.ecosystems.interactions.stability.limiting-resource",
+                      "data": {
+                        "scenario": "A lake trout population depends on a single type of zooplankton. A warm summer causes the zooplankton population to crash.",
+                        "predictPrompt": "What will most likely happen to the trout population?",
+                        "predictOptions": [
+                          "It will decline because a limiting food resource was removed",
+                          "It will double because competition decreased",
+                          "It will stay the same — trout do not depend on food supply",
+                          "It will increase because fewer zooplankton means less disease"
+                        ],
+                        "correctPredictionIndex": 0,
+                        "runNarrative": "Without their main food source, trout struggle to survive and reproduce. The population drops as environmental pressure removes a limiting resource.",
+                        "truthSummary": "Environmental change that removes a limiting resource typically reduces population size.",
+                        "bugCandidates": [
+                          {
+                            "label": "I assumed fewer prey always helps predators thrive",
+                            "isTheBug": true,
+                            "explanation": "Predators depend on prey; losing a limiting food resource stresses the population downward."
+                          },
+                          {
+                            "label": "I thought populations are unaffected by food availability",
+                            "isTheBug": false,
+                            "explanation": "Food is a limiting factor — removing it directly affects population size."
+                          },
+                          {
+                            "label": "I assumed the trout would instantly adapt to a new food",
+                            "isTheBug": false,
+                            "explanation": "Adaptation takes time; a sudden resource crash causes immediate population decline."
+                          }
+                        ],
+                        "poweredIdea": "Environmental pressure that removes a limiting resource drives population decline."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.ecosystems.interactions.stability",
+                    "emoji": "\ud83c\udf0e",
+                    "shortLabel": "Tipping Point",
+                    "longLabel": "Disturbance & Impact",
+                    "flavor": "You connect droughts, melting ice, and carbon emissions to which species hold on and which fade.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.ecosystems.interactions.community"],
+                  "difficulty": "core",
+                  "tags": ["ecosystems", "human-impact", "climate-change", "conservation", "eoc", "LS.Bio.5.2", "LS.Bio.10.1"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.5.2 (community interactions and stability) and LS.Bio.10.1 (environmental change affecting populations). Maps to released items #3 (drought/hummingbirds), #22 (polar ice/polar bears), and #18 (carbon-free energy). Predict-run-reflect on limiting-resource removal frames 10.1. Reworded, not reproduced. No biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

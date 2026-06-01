@@ -1,0 +1,92 @@
+{
+  "bio_eoc_plant_animal_cells": {
+    "title": "Plant and animal cell cross-sections",
+    "author": "EvoQuest contributors (adapted from biochemistry figure p04)",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "bio_eoc_enzyme_substrate": {
+    "title": "Enzyme-substrate complex",
+    "author": "EvoQuest contributors (adapted from biochemistry figure p02)",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "bio_eoc_dna_structure": {
+    "title": "DNA double helix with labeled backbone",
+    "author": "EvoQuest contributors (adapted from biochemistry figure p07)",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "bio_eoc_cladogram": {
+    "title": "Mammal cladogram showing shared ancestry",
+    "author": "EvoQuest contributors (adapted from biochemistry figure p13)",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "bio_eoc_gel_electrophoresis": {
+    "title": "DNA gel electrophoresis — fragment size vs distance migrated",
+    "author": "Mckenziel",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gel_Electrophoresis.svg",
+    "license": "CC BY-SA 4.0"
+  },
+  "bio_eoc_chloroplast": {
+    "title": "Chloroplast structure diagram",
+    "author": "Smartse (vectorised from Chloroplast-new.jpg)",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chloroplast_diagram.svg",
+    "license": "Public domain"
+  },
+  "bio_eoc_food_web": {
+    "title": "Pond food web with producers, consumers, and decomposers",
+    "author": "EvoQuest contributors (adapted from biochemistry figure p15)",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "bio_eoc_energy_pyramid": {
+    "title": "Ecological energy pyramid with 10% transfer between trophic levels",
+    "author": "Swiggity.Swag.YOLO.Bro",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ecological_Pyramid.svg",
+    "license": "CC BY-SA 4.0"
+  },
+  "bio_eoc_cell_cycle": {
+    "title": "Phases of the cell cycle",
+    "author": "Kelvinsong (Cell_Cycle_2.svg)",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cell_Cycle_2.svg",
+    "license": "CC BY-SA 3.0"
+  },
+  "bio_eoc_crossing_over": {
+    "title": "Chromosomal crossover during meiosis",
+    "author": "Kelvinsong",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chromosomal_Crossover.svg",
+    "license": "CC BY-SA 3.0"
+  },
+  "bio_eoc_pedigree": {
+    "title": "Autosomal recessive pedigree chart",
+    "author": "SpacemanSpiff",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Autosomal_Recessive_Pedigree_Chart.svg",
+    "license": "CC BY 2.5"
+  },
+  "bio_eoc_punnett_blood_types": {
+    "title": "Punnett square for ABO blood type inheritance",
+    "author": "Genetics WikiProject contributors",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Punnett_square_blood_types.svg",
+    "license": "CC BY-SA 4.0"
+  },
+  "bio_eoc_polygenic_curve": {
+    "title": "Normal distribution bell curve",
+    "author": "Maschen",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Normal_Distribution_PDF.svg",
+    "license": "Public domain"
+  },
+  "bio_eoc_karyotype": {
+    "title": "Human karyotype showing trisomy 21",
+    "author": "EvoQuest contributors (adapted from biochemistry figure p10)",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  },
+  "bio_eoc_dichotomous_finches": {
+    "title": "Galapagos finch beak shapes for dichotomous key",
+    "author": "EvoQuest contributors (adapted from biochemistry figure p13)",
+    "sourceUrl": "https://github.com/ken/EvoQuest",
+    "license": "MIT (project)"
+  }
+}

@@ -3,12 +3,14 @@
 import { useEffect } from 'react';
 import '@/engine/templates';
 import { preloadPocketTts } from '@/audio/pocket-tts-engine';
+import { useValidateStoredPocketTtsVoice } from '@/hooks/use-pocket-tts-voices';
 import { AppHeader } from '@/components/common/AppHeader';
 import { DevPageLabelProvider } from '@/components/dev/DevPageLabel';
 import { GlobalReadAloudBar } from '@/components/audio/GlobalReadAloudBar';
 import { PageReadAloudProvider } from '@/components/audio/page-read-aloud-context';
-import { attachPersistHooks, useAppStore } from '@/store/app-store';
-import { applyBodyFont } from '@/lib/google-fonts';
+import { ensureFlushHooks } from '@/storage';
+import { useAppStore } from '@/store/app-store';
+import { applyBodyFont, applyHeadlineFont } from '@/lib/google-fonts';
 
 export function AppHydrator({ children }: { children: React.ReactNode }) {
   const hydrated = useAppStore((s) => s.hydrated);
@@ -17,7 +19,7 @@ export function AppHydrator({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     loadFromStorage();
-    return attachPersistHooks();
+    ensureFlushHooks();
   }, [loadFromStorage]);
 
   useEffect(() => {
@@ -29,12 +31,15 @@ export function AppHydrator({ children }: { children: React.ReactNode }) {
       String(settings.appearance.bodyFont === 'opendyslexic'),
     );
     applyBodyFont(settings.appearance.bodyFont);
+    applyHeadlineFont(settings.appearance.headlineFont);
     if (settings.motion !== 'full') {
       root.setAttribute('data-motion', settings.motion);
     } else {
       root.removeAttribute('data-motion');
     }
   }, [settings]);
+
+  useValidateStoredPocketTtsVoice(settings.reading.enabled);
 
   // Warm the ONNX bundle cache as soon as the shell mounts (during "Loading…").
   useEffect(() => {

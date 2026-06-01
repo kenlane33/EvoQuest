@@ -1,0 +1,545 @@
+{
+  "id": "mod.bio-eoc.user",
+  "title": "Biology EOC Review",
+  "description": "Complete NC Biology End-of-Course review aligned to 2023 NCSCOS and the 2025 released form. All four strands: molecules to organisms, ecosystems, heredity, evolution.",
+  "authorRef": "ken",
+  "schemaVersion": 1,
+  "appVersionAtAuthoring": "0.1.0",
+  "source": "user-import",
+  "createdAt": 1780315939078,
+  "tree": [
+    {
+      "id": "bio.eoc",
+      "slug": "bio-eoc",
+      "title": "Biology EOC Review",
+      "emoji": "\ud83e\uddec",
+      "description": "Concept review for the NC Biology End-of-Course exam, organized by standard.",
+      "children": [
+        {
+          "id": "bio.eoc.cell-structure",
+          "slug": "cell-structure",
+          "title": "Cell Structure & Transport",
+          "emoji": "\ud83e\udda0",
+          "description": "Organelle jobs, prokaryote vs eukaryote, plant vs animal cells, and how materials cross the membrane by diffusion, osmosis, and active transport.",
+          "children": [
+            {
+              "id": "bio.eoc.cell-structure.cells",
+              "slug": "cells",
+              "title": "Organelles & Cell Types",
+              "emoji": "\ud83e\uddeb",
+              "children": [
+                {
+                  "id": "bio.eoc.cell-structure.cells.organelle-functions",
+                  "slug": "organelle-functions",
+                  "title": "Organelle Functions",
+                  "emoji": "\ud83e\uddeb",
+                  "shortLabel": "Organelles",
+                  "longLabel": "Organelle Functions",
+                  "description": "Each organelle's structure fits the job it does for the cell.",
+                  "teach": {
+                    "headline": "Each Organelle Has a Job",
+                    "body": "A cell is a division of labor. The **nucleus** stores DNA and directs the cell. **Ribosomes** build proteins by translating mRNA into amino acids. **Mitochondria** release energy as ATP through cellular respiration. **Chloroplasts** capture sunlight for photosynthesis (in plants). The **vacuole** stores water and materials.\n\nStructure fits function: lose an organelle and the cell loses its matching ability \u2014 no ribosomes means no new proteins.",
+                    "etymology": {
+                      "termId": "term.chloroplast",
+                      "term": "chloroplast",
+                      "morphemes": [
+                        { "morphemeId": "morph.chloro", "asUsed": "chloro" },
+                        { "morphemeId": "morph.plast", "asUsed": "plast" }
+                      ],
+                      "rootSummary": "Greek: chloros (green) + plastos (formed)"
+                    },
+                    "mnemonic": "RIBOSOME = PROTEIN PRINTER. MITOCHONDRION = POWER PLANT. CHLOROPLAST = SOLAR PANEL.",
+                    "poweredIdea": "An organelle's structure fits its job: ribosomes build proteins, mitochondria release energy."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.cell-structure.cells.organelle-functions.ribosome",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "mRNA is translated into amino acids to build proteins at the _____.",
+                        "acceptable": ["ribosome", "ribosomes"],
+                        "hint": "The protein-building organelle"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.cell-structure.cells.organelle-functions.no-ribosomes",
+                      "data": {
+                        "story": "A mutation leaves a plant cell with no functioning ribosomes, though every other organelle is normal.",
+                        "question": "What can this cell no longer do?",
+                        "answer": "Translate mRNA into amino acids to make proteins",
+                        "options": [
+                          "Translate mRNA into amino acids to make proteins",
+                          "Store its DNA in the nucleus",
+                          "Capture sunlight in the chloroplast",
+                          "Hold water in the vacuole"
+                        ],
+                        "explanation": "Ribosomes are the site of translation. Without them the cell cannot assemble proteins, even if its DNA and other organelles are intact."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.cell-structure.cells.organelle-functions.vacuole",
+                      "data": {
+                        "story": "In a plant cell, the vacuole stores the water used during photosynthesis. A mutation makes the vacuole much smaller.",
+                        "question": "What is the most likely effect on photosynthesis?",
+                        "answer": "Less water can be stored, so the rate of photosynthesis decreases.",
+                        "options": [
+                          "Less water can be stored, so the rate of photosynthesis decreases.",
+                          "More water can be stored, so photosynthesis speeds up.",
+                          "The cell releases more water, so photosynthesis speeds up.",
+                          "Photosynthesis is unaffected because the vacuole is not involved."
+                        ],
+                        "explanation": "A smaller vacuole holds less of the water photosynthesis depends on, lowering the reaction rate."
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.cell-structure.cells.organelle-functions.mito",
+                      "data": {
+                        "term": "Mitochondrion",
+                        "correct": "Releases energy (ATP) through respiration",
+                        "distractors": ["Captures sunlight for photosynthesis", "Stores the cell's DNA", "Builds the rigid cell wall"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.cell-structure.cells.organelle-functions",
+                    "emoji": "\ud83e\uddeb",
+                    "shortLabel": "Parts List",
+                    "longLabel": "Organelle Functions",
+                    "flavor": "You match each organelle to its job and predict what breaks when one goes missing.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "intro",
+                  "tags": ["cell-structure", "organelles", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.3 (organelle structure/function and interactions). Maps to released items #31 (ribosome/translation) and #10 (vacuole/photosynthesis). Reworded, not reproduced. Goes deeper than biochem.cells.organelles; no biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.cell-structure.cells.prokaryote-eukaryote",
+                  "slug": "prokaryote-eukaryote",
+                  "title": "Prokaryote vs Eukaryote",
+                  "emoji": "\ud83e\udda0",
+                  "shortLabel": "Pro vs Euk",
+                  "longLabel": "Prokaryote vs Eukaryote",
+                  "description": "What distinguishes simple cells without a nucleus from complex cells with membrane-bound organelles.",
+                  "teach": {
+                    "headline": "Eukaryotes Box Up Their Parts",
+                    "body": "**Prokaryotes** (bacteria) are small and simple. Their DNA floats free in the cytoplasm \u2014 there is no nucleus \u2014 and they have no membrane-bound organelles. But they still have **ribosomes**, a cell membrane, and (usually) a cell wall, so they make proteins and stay alive.\n\n**Eukaryotes** (plants, animals, fungi, protists) are larger and complex: their DNA is packed inside a membrane-bound **nucleus**, and they have organelles like mitochondria.",
+                    "etymology": {
+                      "termId": "term.prokaryote",
+                      "term": "prokaryote",
+                      "morphemes": [
+                        { "morphemeId": "morph.pro", "asUsed": "pro" },
+                        { "morphemeId": "morph.karyon", "asUsed": "karyote" }
+                      ],
+                      "rootSummary": "Greek: pro (before) + karyon (kernel, nucleus)"
+                    },
+                    "mnemonic": "PRO = BEFORE the nucleus. EU = TRUE nucleus. KARYON = NUT. Bacteria carry DNA with no nucleus box.",
+                    "poweredIdea": "Prokaryotes lack a nucleus and membrane-bound organelles; eukaryotes have both."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.cell-structure.cells.prokaryote-eukaryote.define",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "A cell with no nucleus and no membrane-bound organelles is a _____ cell.",
+                        "acceptable": ["prokaryotic", "prokaryote", "prokaryotic cell"],
+                        "hint": "Bacteria are this type"
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.cell-structure.cells.prokaryote-eukaryote.chart",
+                      "data": {
+                        "story": "Under a microscope, a cell shows a cell wall and ribosomes but no nucleus, no mitochondria, and no chloroplasts.",
+                        "question": "Which type of cell is this most likely to be?",
+                        "answer": "A prokaryotic cell",
+                        "options": [
+                          "A prokaryotic cell",
+                          "A plant cell",
+                          "An animal cell",
+                          "A fungal cell"
+                        ],
+                        "explanation": "Lacking a nucleus and all membrane-bound organelles, while still having ribosomes and a wall, is the signature of a prokaryote."
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.cell-structure.cells.prokaryote-eukaryote.no-dna",
+                      "data": {
+                        "paragraph": "Because prokaryotes have no nucleus, they have no DNA at all, so they cannot make proteins or reproduce.",
+                        "bugPhrase": "they have no DNA at all, so they cannot make proteins or reproduce",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "A nucleus is a container for DNA \u2014 is it the only place DNA can be?",
+                        "canonicalFix": "Prokaryotes do have DNA; it simply floats free in the cytoplasm instead of inside a nucleus. They have ribosomes, make proteins, and reproduce by binary fission.",
+                        "poweredIdea": "No nucleus does not mean no DNA \u2014 prokaryotic DNA just isn't membrane-bound."
+                      }
+                    },
+                    {
+                      "kind": "speed-reveal-mnemonic",
+                      "id": "quiz.bio.eoc.cell-structure.cells.prokaryote-eukaryote.euk-root",
+                      "data": {
+                        "termId": "term.eukaryote",
+                        "root": "Greek: eu (true) + karyon (kernel, nucleus)",
+                        "mnemonic": "EU = TRUE. KARYON = NUCLEUS. A EUkaryote has a TRUE, membrane-bound nucleus.",
+                        "question": {
+                          "kind": "multiple-choice",
+                          "prompt": "Which structure do eukaryotes have that prokaryotes lack?",
+                          "options": ["Ribosomes", "A membrane-bound nucleus", "A cell membrane", "Cytoplasm"],
+                          "correctIndex": 1
+                        }
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.cell-structure.cells.prokaryote-eukaryote",
+                    "emoji": "\ud83e\udda0",
+                    "shortLabel": "No Nucleus",
+                    "longLabel": "Prokaryote vs Eukaryote",
+                    "flavor": "You spot a prokaryote by its missing nucleus and organelles \u2014 without claiming it has no DNA.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["cell-structure", "prokaryote", "eukaryote", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.4 (compare prokaryotic and eukaryotic cells). Maps to released item #4 (identify the prokaryote from an organelle chart). Debug-the-claim targets the 'no nucleus = no DNA' trap. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.cell-structure.cells.plant-vs-animal",
+                  "slug": "plant-vs-animal",
+                  "title": "Plant vs Animal Cells",
+                  "emoji": "\ud83c\udf3f",
+                  "shortLabel": "Plant/Animal",
+                  "longLabel": "Plant vs Animal Cells",
+                  "description": "The three structures plant cells add to the shared eukaryotic toolkit.",
+                  "teach": {
+                    "headline": "Plant Cells Add Three Parts",
+                    "body": "Plant and animal cells are both **eukaryotic**, so both have a nucleus, mitochondria, ribosomes, and a cell membrane.\n\nPlant cells add three structures animal cells do not have: a rigid **cell wall** for support, **chloroplasts** for photosynthesis, and a large **central vacuole** that stores water and keeps the cell firm.\n\n![Cross-sections of plant and animal cells with labeled organelles](/content/bio-eoc/figures/bio_eoc_plant_animal_cells.svg)",
+                    "figures": [
+                      {
+                        "id": "bio_eoc_plant_animal_cells",
+                        "alt": "Labeled cross-sections of plant and animal cells showing cell wall, chloroplasts, and central vacuole in the plant cell",
+                        "caption": "Plant cells add a cell wall, chloroplasts, and a large central vacuole."
+                      }
+                    ],
+                    "mnemonic": "PLANTS GET WALL + CHLOROPLAST + BIG VACUOLE. Animals travel light \u2014 no wall, no chloroplast.",
+                    "poweredIdea": "Plant cells add a cell wall, chloroplasts, and a large central vacuole that animal cells lack."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.cell-structure.cells.plant-vs-animal.chloroplast",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The organelle that lets plant cells capture light for photosynthesis is the _____.",
+                        "acceptable": ["chloroplast", "chloroplasts"],
+                        "hint": "Green, found only in plant cells"
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.cell-structure.cells.plant-vs-animal.diagram-chloroplast",
+                      "data": {
+                        "prompt": "In the diagram, photosynthesis occurs in the _____.",
+                        "acceptable": ["chloroplast", "chloroplasts"],
+                        "hint": "Green organelle in the plant cell only"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.cell-structure.cells.plant-vs-animal.wall",
+                      "data": {
+                        "term": "Chloroplast",
+                        "correct": "Found in plant cells but not animal cells",
+                        "distractors": ["Found in animal cells but not plant cells", "Found in every cell type", "Found only in bacteria"]
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.cell-structure.cells.plant-vs-animal.identify",
+                      "data": {
+                        "story": "A student examines a cell with a rigid outer cell wall, several chloroplasts, and one large central vacuole.",
+                        "question": "What kind of cell is it?",
+                        "answer": "A plant cell",
+                        "options": ["A plant cell", "An animal cell", "A prokaryotic cell", "A virus"],
+                        "explanation": "A cell wall, chloroplasts, and a large central vacuole together point to a plant cell."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.cell-structure.cells.plant-vs-animal",
+                    "emoji": "\ud83c\udf3f",
+                    "shortLabel": "Plant Parts",
+                    "longLabel": "Plant vs Animal",
+                    "flavor": "You name the wall, chloroplast, and central vacuole as the parts that mark a plant cell.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.cell-structure.cells.prokaryote-eukaryote"],
+                  "difficulty": "intro",
+                  "tags": ["cell-structure", "plant-cell", "animal-cell", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.3, 1.4. Reinforces the plant-cell diagram items on the released form. Original content; goes deeper than biochem.cells.compare. No biochem.* id reuse."
+                }
+              ]
+            },
+            {
+              "id": "bio.eoc.cell-structure.transport",
+              "slug": "transport",
+              "title": "Membrane Transport",
+              "emoji": "\ud83d\udeaa",
+              "children": [
+                {
+                  "id": "bio.eoc.cell-structure.transport.passive-active",
+                  "slug": "passive-active",
+                  "title": "Passive vs Active Transport",
+                  "emoji": "\ud83d\udeaa",
+                  "shortLabel": "Transport",
+                  "longLabel": "Passive vs Active Transport",
+                  "description": "When the membrane moves materials for free and when it has to spend ATP.",
+                  "teach": {
+                    "headline": "Going With or Against the Gradient",
+                    "body": "The cell membrane is **selectively permeable** \u2014 it controls what enters and exits to maintain homeostasis.\n\n**Passive transport** (diffusion, osmosis, facilitated diffusion) moves substances from **high to low** concentration and costs no energy. **Active transport** moves substances from **low to high** \u2014 against the gradient \u2014 and requires **ATP**, usually through protein pumps.",
+                    "mnemonic": "DOWNHILL = FREE (passive). UPHILL = PAY ATP (active). High-to-low needs no energy.",
+                    "poweredIdea": "Passive transport flows high-to-low with no energy; active transport pumps low-to-high using ATP."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.cell-structure.transport.passive-active.diffusion",
+                      "preferred": true,
+                      "data": {
+                        "prompt": "The movement of molecules from high to low concentration without using energy is _____.",
+                        "acceptable": ["diffusion", "passive transport"],
+                        "hint": "A type of passive transport"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.cell-structure.transport.passive-active.active",
+                      "data": {
+                        "term": "Active transport",
+                        "correct": "Moves low to high and requires ATP",
+                        "distractors": ["Moves high to low and uses no energy", "Never involves membrane proteins", "Is just another name for diffusion"]
+                      }
+                    },
+                    {
+                      "kind": "debug-the-claim",
+                      "id": "quiz.bio.eoc.cell-structure.transport.passive-active.diffusion-atp",
+                      "data": {
+                        "paragraph": "Diffusion uses the cell's ATP to push molecules from where they are scarce to where they are already crowded.",
+                        "bugPhrase": "uses the cell's ATP to push molecules from where they are scarce to where they are already crowded",
+                        "bugClass": "confused-vocabulary",
+                        "hint": "Which direction does diffusion go, and does it cost energy?",
+                        "canonicalFix": "Diffusion is passive: it uses no ATP and moves molecules from crowded (high concentration) toward scarce (low concentration). Active transport is the one that spends ATP to go the other way.",
+                        "poweredIdea": "Diffusion is free and goes high-to-low; spending ATP to go low-to-high is active transport."
+                      }
+                    },
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.cell-structure.transport.passive-active.oxygen",
+                      "data": {
+                        "story": "Oxygen is concentrated in the blood and scarce inside a nearby body cell. Oxygen drifts from the blood into the cell, and the cell spends no energy doing it.",
+                        "question": "What type of transport is this?",
+                        "answer": "Passive transport (diffusion)",
+                        "options": [
+                          "Passive transport (diffusion)",
+                          "Active transport",
+                          "A reaction that requires ATP",
+                          "Endocytosis"
+                        ],
+                        "explanation": "Movement from high to low concentration with no energy cost is passive transport \u2014 here, diffusion."
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.cell-structure.transport.passive-active",
+                    "emoji": "\ud83d\udeaa",
+                    "shortLabel": "Gradient",
+                    "longLabel": "Passive vs Active",
+                    "flavor": "You decide whether the membrane moves a molecule for free or has to burn ATP to push it uphill.",
+                    "wingId": "bio.eoc"
+                  },
+                  "difficulty": "core",
+                  "tags": ["cell-structure", "transport", "diffusion", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.3 (membrane structure/function in transport). Debug-the-claim targets the 'diffusion needs energy / goes low-to-high' trap. Deeper than biochem.transport.types. No biochem.* id reuse."
+                },
+                {
+                  "id": "bio.eoc.cell-structure.transport.tonicity-osmosis",
+                  "slug": "tonicity-osmosis",
+                  "title": "Osmosis & Tonicity",
+                  "emoji": "\ud83d\udca7",
+                  "shortLabel": "Osmosis",
+                  "longLabel": "Osmosis & Tonicity",
+                  "description": "Which way water crosses a membrane and what it does to plant and animal cells.",
+                  "teach": {
+                    "headline": "Water Chases Solute Across Membranes",
+                    "body": "**Osmosis** is the diffusion of water across a membrane. Water moves toward the side with **more solute** (and therefore less water).\n\nIn a **hypertonic** surrounding (more solute outside), water leaves the cell \u2014 animal cells shrivel and plant cells lose turgor and wilt. In a **hypotonic** surrounding (less solute outside), water enters \u2014 animal cells may burst, while plant cells gain firm **turgor pressure**. **Isotonic** means no net movement.",
+                    "etymology": {
+                      "termId": "term.hypertonic",
+                      "term": "hypertonic",
+                      "morphemes": [
+                        { "morphemeId": "morph.hyper", "asUsed": "hyper" },
+                        { "morphemeId": "morph.tonos", "asUsed": "tonic" }
+                      ],
+                      "rootSummary": "Greek: hyper (over) + tonos (tension)"
+                    },
+                    "mnemonic": "HYPER = MORE SALT OUTSIDE \u2192 water OUT, cell shrinks. HYPO = less salt out \u2192 water IN, cell swells.",
+                    "poweredIdea": "In osmosis, water moves across a membrane toward the higher solute concentration."
+                  },
+                  "quizzes": [
+                    {
+                      "kind": "scenario",
+                      "id": "quiz.bio.eoc.cell-structure.transport.tonicity-osmosis.houseplant",
+                      "preferred": true,
+                      "data": {
+                        "story": "A gardener accidentally waters a wilting houseplant with very salty water, and the plant wilts even more.",
+                        "question": "Why did the salty water make the wilting worse?",
+                        "answer": "The salty water is hypertonic, so water moved out of the cells and they lost turgor pressure.",
+                        "options": [
+                          "The salty water is hypertonic, so water moved out of the cells and they lost turgor pressure.",
+                          "The salty water is hypotonic, so water rushed into the cells and burst them.",
+                          "The salt entered the cells and replaced the water, firming them up.",
+                          "Salt blocks photosynthesis, which is the only cause of wilting."
+                        ],
+                        "explanation": "More solute outside than inside pulls water out of the cells. Plant cells lose turgor pressure and droop."
+                      }
+                    },
+                    {
+                      "kind": "predict-run-reflect",
+                      "id": "quiz.bio.eoc.cell-structure.transport.tonicity-osmosis.salt-cell",
+                      "data": {
+                        "scenario": "A plant cell is placed in a strong salt solution and watched under a microscope.",
+                        "predictPrompt": "What will happen to the plant cell?",
+                        "predictOptions": [
+                          "Water rushes into the cell and it swells",
+                          "Water leaves the cell; it loses turgor and the membrane pulls away from the wall",
+                          "Salt moves into the cell until inside and outside match",
+                          "Nothing happens because the cell wall blocks all movement"
+                        ],
+                        "correctPredictionIndex": 1,
+                        "runNarrative": "The salt solution is hypertonic. Water diffuses out of the cell toward the higher solute outside. The cell loses turgor pressure and its membrane pulls inward away from the wall \u2014 plasmolysis.",
+                        "truthSummary": "In osmosis it is water that crosses the membrane, moving toward the saltier side. The solute itself is not what moves here.",
+                        "bugCandidates": [
+                          {
+                            "label": "I said the salt moved into the cell to balance the concentrations",
+                            "isTheBug": true,
+                            "explanation": "Osmosis moves water, not salt. Water exits toward the saltier outside; the salt does not flood in."
+                          },
+                          {
+                            "label": "I forgot that water moves toward the higher solute concentration",
+                            "isTheBug": false,
+                            "explanation": "Important rule, but the headline error here is treating the salt as the thing that moves."
+                          },
+                          {
+                            "label": "I assumed the cell wall stops all water movement",
+                            "isTheBug": false,
+                            "explanation": "The wall is rigid but porous to water; the membrane controls movement, not the wall."
+                          }
+                        ],
+                        "poweredIdea": "In a hypertonic solution, water leaves the cell \u2014 the water moves, not the salt."
+                      }
+                    },
+                    {
+                      "kind": "fill",
+                      "id": "quiz.bio.eoc.cell-structure.transport.tonicity-osmosis.hypertonic",
+                      "data": {
+                        "prompt": "A solution with a higher solute concentration than the cell is described as _____.",
+                        "acceptable": ["hypertonic", "hypertonic solution"],
+                        "hint": "Hyper = more solute outside"
+                      }
+                    },
+                    {
+                      "kind": "match",
+                      "id": "quiz.bio.eoc.cell-structure.transport.tonicity-osmosis.hypotonic",
+                      "data": {
+                        "term": "Hypotonic solution (less solute outside the cell)",
+                        "correct": "Water moves into the cell",
+                        "distractors": ["Water moves out of the cell", "There is no net movement of water", "Salt moves into the cell"]
+                      }
+                    }
+                  ],
+                  "achievement": {
+                    "id": "ach.bio.eoc.cell-structure.transport.tonicity-osmosis",
+                    "emoji": "\ud83d\udca7",
+                    "shortLabel": "Osmosis",
+                    "longLabel": "Osmosis & Tonicity",
+                    "flavor": "You predict which way water crosses a membrane and why a salted plant cell wilts.",
+                    "wingId": "bio.eoc"
+                  },
+                  "prerequisites": ["bio.eoc.cell-structure.transport.passive-active"],
+                  "difficulty": "core",
+                  "tags": ["cell-structure", "osmosis", "tonicity", "eoc"],
+                  "enabled": true,
+                  "authorNotes": "NC LS.Bio.1.3 (transport and homeostasis). Connects to the released osmosis/cell-membrane items (e.g. the gill-cell salinity set). Predict-run-reflect targets the 'salt moves in' osmosis trap. Deeper than biochem.transport.osmosis. No biochem.* id reuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "etymologyContributions": [
+    {
+      "id": "morph.chloro",
+      "morpheme": "chloro-",
+      "language": "Greek",
+      "meaning": "green",
+      "cousins": ["chlorophyll", "chlorine", "chloroplast"],
+      "appearsIn": ["term.chloroplast"]
+    },
+    {
+      "id": "morph.plast",
+      "morpheme": "-plast",
+      "language": "Greek",
+      "meaning": "formed, molded",
+      "cousins": ["chloroplast", "plastic", "cytoplast"],
+      "appearsIn": ["term.chloroplast"]
+    },
+    {
+      "id": "morph.pro",
+      "morpheme": "pro-",
+      "language": "Greek",
+      "meaning": "before",
+      "cousins": ["prokaryote", "prophase", "prologue"],
+      "appearsIn": ["term.prokaryote"]
+    },
+    {
+      "id": "morph.eu",
+      "morpheme": "eu-",
+      "language": "Greek",
+      "meaning": "true, good",
+      "cousins": ["eukaryote", "euphoria", "eulogy"],
+      "appearsIn": ["term.eukaryote"]
+    },
+    {
+      "id": "morph.karyon",
+      "morpheme": "karyon",
+      "language": "Greek",
+      "meaning": "kernel, nucleus",
+      "cousins": ["prokaryote", "eukaryote", "karyotype"],
+      "appearsIn": ["term.prokaryote", "term.eukaryote"]
+    },
+    {
+      "id": "morph.hyper",
+      "morpheme": "hyper-",
+      "language": "Greek",
+      "meaning": "over, above",
+      "cousins": ["hypertonic", "hyperactive", "hyperbole"],
+      "appearsIn": ["term.hypertonic"]
+    },
+    {
+      "id": "morph.tonos",
+      "morpheme": "-tonic",
+      "language": "Greek",
+      "meaning": "tension, stretch",
+      "cousins": ["hypertonic", "isotonic", "tone"],
+      "appearsIn": ["term.hypertonic"]
+    }
+  ]
+}

@@ -3,6 +3,8 @@
  * Applied automatically in the Pocket TTS engine before synthesis.
  */
 
+import { replaceEmojisForSpeech } from '@/audio/speech-emoji-substitutions';
+
 const SUBSCRIPT_CHARS: Record<string, string> = {
   '₀': '0',
   '₁': '1',
@@ -98,7 +100,7 @@ export const SPEECH_SUBSTITUTIONS: ReadonlyArray<readonly [RegExp, string]> = [
 
   // Punctuation that TTS reads awkwardly
   [/&/g, ' and '],
-  [/\s*—\s*/g, ', '],
+  [/\s*\u2014\s*/g, ' - '],
   [/\s*–\s*/g, ' to '],
 ];
 
@@ -118,6 +120,7 @@ export function prepareTextForSpeech(text: string): string {
   if (!trimmed) return trimmed;
 
   let out = expandUnicodeScript(trimmed);
+  out = replaceEmojisForSpeech(out);
   for (const [pattern, replacement] of SPEECH_SUBSTITUTIONS) {
     out = out.replace(pattern, replacement);
   }

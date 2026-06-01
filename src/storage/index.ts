@@ -20,6 +20,7 @@ import {
 } from '@/types/schemas';
 import {
   APP_VERSION,
+  cancelPending,
   flushNow,
   scheduleWrite,
   writeBlob,
@@ -39,6 +40,12 @@ function assertClient(): void {
 export function saveState(key: StorageKey, payload: unknown): void {
   assertClient();
   scheduleWrite(key, payload, LATEST_VERSIONS[key]);
+}
+
+export function removeState(key: StorageKey): void {
+  assertClient();
+  cancelPending(key);
+  localStorage.removeItem(key);
 }
 
 export function loadState<T>(key: StorageKey): LoadResult<T> {
@@ -190,4 +197,4 @@ export function importAll(data: unknown): ImportResult {
   };
 }
 
-export { flushNow } from '@/storage/writer';
+export { ensureFlushHooks, flushNow } from '@/storage/writer';

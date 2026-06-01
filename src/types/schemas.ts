@@ -50,6 +50,8 @@ export const TeachBlockSchema = z.object({
   etymology: EtymologySchema.optional(),
   mnemonic: z.string().max(140).optional(),
   poweredIdea: z.string().max(120),
+  /** Subtle "why this matters" — one curiosity sentence, not marketing copy. */
+  hook: z.string().max(180).optional(),
   imageUrl: z.string().optional(),
   figures: z.array(TeachFigureSchema).optional(),
   cite: z.array(z.string()).optional(),
@@ -702,6 +704,7 @@ export const SelectionDescriptorSchema = z.discriminatedUnion('kind', [
     kind: z.literal('journey-replay'),
     sourceJourneyId: z.string(),
   }),
+  z.object({ kind: z.literal('revisit'), length: z.number().int().positive() }),
 ]);
 
 export const JourneySchema = z.object({
@@ -758,6 +761,7 @@ export const UnitProgressSchema = z.object({
   lastSeenAt: z.number(),
   lastFiveOutcomes: z.array(OutcomeRecordSchema),
   templatesEncountered: z.array(z.string()),
+  quizAttemptCounts: z.record(z.number().int().min(0)),
   tier: z.enum(['locked', 'unlocked', 'bronze', 'silver', 'gold']),
   unlockedAt: z.number().optional(),
   achievementEarned: z.boolean(),
@@ -815,6 +819,20 @@ export const SettingsSchema = z.object({
       'crimson-pro',
       'opendyslexic',
     ]),
+    headlineFont: z.enum([
+      'syne',
+      'space-grotesk',
+      'outfit',
+      'bricolage-grotesque',
+      'fraunces',
+      'playfair-display',
+      'libre-baskerville',
+      'bungee',
+      'bangers',
+      'righteous',
+      'fredoka',
+      'permanent-marker',
+    ]),
     /** @deprecated Use bodyFont: 'opendyslexic' instead. Kept for migration only. */
     dyslexiaFont: z.boolean().optional(),
     colorBlindSafe: z.boolean(),
@@ -852,6 +870,7 @@ export const SettingsSchema = z.object({
       z.literal(15),
       z.literal(20),
     ]),
+    revisitLength: z.number().int().min(5).max(30),
   }),
   privacy: z.object({
     anonymousCrashReports: z.boolean(),
@@ -883,6 +902,18 @@ export const PowerUpInventorySchema = z.object({
   ]),
   earned: z.number().int().min(0),
   spent: z.number().int().min(0),
+  firstUseShown: z.array(z.string()).default([]),
+});
+
+export const DailyStreakSchema = z.object({
+  count: z.number().int().min(0),
+  lastDayKey: z.string(),
+});
+
+export const AchievementStateSchema = z.object({
+  earned: z.record(z.number()),
+  dailyStreak: DailyStreakSchema,
+  firstClearedWingIds: z.array(z.string()),
 });
 
 export const CalibrationRecordSchema = z.object({
@@ -993,6 +1024,8 @@ export type Settings = z.infer<typeof SettingsSchema>;
 export type LabArtifact = z.infer<typeof LabArtifactSchema>;
 export type PowerUpInstance = z.infer<typeof PowerUpInstanceSchema>;
 export type PowerUpInventory = z.infer<typeof PowerUpInventorySchema>;
+export type DailyStreak = z.infer<typeof DailyStreakSchema>;
+export type AchievementState = z.infer<typeof AchievementStateSchema>;
 export type CalibrationRecord = z.infer<typeof CalibrationRecordSchema>;
 export type ModulesState = z.infer<typeof ModulesStateSchema>;
 export type FirstRunState = z.infer<typeof FirstRunStateSchema>;

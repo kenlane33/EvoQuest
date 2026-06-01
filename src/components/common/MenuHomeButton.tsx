@@ -1,6 +1,7 @@
 'use client';
 
 import { Link } from '@tanstack/react-router';
+import { Home } from 'lucide-react';
 import { buttonPressClasses } from '@/components/common/Button';
 import { cn } from '@/lib/cn';
 import { devMark } from '@/lib/dev-mark';
@@ -18,13 +19,14 @@ export function MenuHomeButton({ devId, size = 'default', className }: MenuHomeB
       {...devMark(devId)}
       className={cn(
         'flex shrink-0 items-center justify-center rounded-full border border-(--border-light) bg-(--bg-card) text-(--text-secondary) no-underline transition-colors hover:border-(--border-medium) hover:text-(--text-primary)',
-        size === 'compact' ? 'h-9 w-9 text-lg' : 'h-10 w-10 text-xl',
+        size === 'compact' ? 'h-9 w-9' : 'h-10 w-10',
         buttonPressClasses,
         className,
       )}
-      aria-label="Menu"
+      aria-label="Home"
+      title="Home"
     >
-      <span aria-hidden>🧬</span>
+      <Home size={size === 'compact' ? 16 : 18} aria-hidden />
     </Link>
   );
 }

@@ -1,0 +1,33 @@
+<svg viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <title>Galapagos finch beak shapes W X Y Z</title>
+  <text x="260" y="18" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Finch Beaks  Dichotomous Key (W, X, Y, Z)</text>
+  <!-- Bird W - slender beak Certhidea -->
+  <g transform="translate(30,35)">
+    <ellipse cx="40" cy="55" rx="25" ry="18" fill="#8D6E63"/>
+    <line x1="60" y1="55" x2="95" y2="55" stroke="#333" stroke-width="2"/>
+    <text x="55" y="100" text-anchor="middle" font-size="11" font-weight="bold">W</text>
+    <text x="55" y="115" text-anchor="middle" font-size="9" fill="#555">Certhidea</text>
+  </g>
+  <!-- Bird X - stout Geospiza -->
+  <g transform="translate(140,35)">
+    <ellipse cx="40" cy="55" rx="25" ry="18" fill="#6D4C41"/>
+    <rect x="58" y="48" width="30" height="14" rx="4" fill="#333"/>
+    <text x="55" y="100" text-anchor="middle" font-size="11" font-weight="bold">X</text>
+    <text x="55" y="115" text-anchor="middle" font-size="9" fill="#555">Geospiza</text>
+  </g>
+  <!-- Bird Y - curved lower Camarhynchus -->
+  <g transform="translate(250,35)">
+    <ellipse cx="40" cy="55" rx="25" ry="18" fill="#5D4037"/>
+    <path d="M 58 52 Q 85 58 88 48" fill="none" stroke="#333" stroke-width="3"/>
+    <text x="55" y="100" text-anchor="middle" font-size="11" font-weight="bold">Y</text>
+    <text x="55" y="115" text-anchor="middle" font-size="9" fill="#555">Camarhynchus</text>
+  </g>
+  <!-- Bird Z - flat lower Platyspiza -->
+  <g transform="translate(360,35)">
+    <ellipse cx="40" cy="55" rx="25" ry="18" fill="#4E342E"/>
+    <line x1="58" y1="52" x2="88" y2="52" stroke="#333" stroke-width="3"/>
+    <line x1="58" y1="58" x2="85" y2="62" stroke="#333" stroke-width="2"/>
+    <text x="55" y="100" text-anchor="middle" font-size="11" font-weight="bold">Z</text>
+    <text x="55" y="115" text-anchor="middle" font-size="9" fill="#555">Platyspiza</text>
+  </g>
+</svg>

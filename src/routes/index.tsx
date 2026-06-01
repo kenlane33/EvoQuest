@@ -1,12 +1,18 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
 import { AchievementGrid } from '@/components/achievements/AchievementGrid';
 import { Button } from '@/components/common/Button';
+import { MasteryOverview } from '@/components/home/MasteryOverview';
 import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
-import { BIOLOGY_EOC_SELECTION, sectionStudySelection } from '@/content/catalog';
+import {
+  BIOLOGY_EOC_SELECTION,
+  revisitSelection,
+  sectionStudySelection,
+} from '@/content/catalog';
 import type { WingSubgroup } from '@/content/catalog';
+import { computeMasteryOverview } from '@/engine/progress/coverage';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';
 
@@ -17,10 +23,18 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   const navigate = useNavigate();
   const hydrated = useAppStore((s) => s.hydrated);
+  const settings = useAppStore((s) => s.settings);
+  const setSettings = useAppStore((s) => s.setSettings);
   const unitProgress = useAppStore((s) => s.unitProgress);
+  const achievementState = useAppStore((s) => s.achievementState);
   const sessionState = useAppStore((s) => s.sessionState);
   const firstRunCompleted = useAppStore((s) => s.firstRunCompleted);
   const embarkNewQuest = useAppStore((s) => s.embarkNewQuest);
+
+  const overview = useMemo(
+    () => (hydrated ? computeMasteryOverview(unitProgress) : null),
+    [hydrated, unitProgress],
+  );
 
   useEffect(() => {
     if (hydrated && !firstRunCompleted) {
@@ -48,6 +62,12 @@ function HomePage() {
     navigate({ to: '/play/$sessionId', params: { sessionId } });
   }
 
+  function handleRevisit() {
+    const length = settings.practice.revisitLength;
+    const { sessionId } = embarkNewQuest(revisitSelection(length));
+    navigate({ to: '/play/$sessionId', params: { sessionId } });
+  }
+
   function handleEocReview() {
     const { sessionId } = embarkNewQuest(BIOLOGY_EOC_SELECTION);
     navigate({ to: '/play/$sessionId', params: { sessionId } });
@@ -63,21 +83,33 @@ function HomePage() {
     navigate({ to: '/play/$sessionId', params: { sessionId } });
   }
 
+  const lapSummary = overview
+    ? `${overview.laps} full ${overview.laps === 1 ? 'lap' : 'laps'} through everything. Next lap ${overview.nextLapPct} percent.`
+    : '';
+
   const readText = resumeSession
-    ? 'Home. Tap Study on a section or a topic tile to review. Progress shows on each tile. Continue your quest if one is in progress.'
-    : 'Home. Tap Study on a section for that portion of the workbook, or tap a topic tile to drill one unit. Each tile shows your question progress.';
+    ? `Home. ${lapSummary} Continue your next lap to advance coverage, or continue an in-progress session. Study bars and topic tiles drill one section or unit.`
+    : `Home. ${lapSummary} Continue your next lap to work toward the next full pass. Study bars and topic tiles drill one section or unit.`;
 
   usePageReadAloud(readText);
 
   return (
     <main className="page-wrap flex h-[calc(100dvh-var(--app-header-h))] max-h-[calc(100dvh-var(--app-header-h))] flex-col px-4 pt-4">
       <section
-        {...devMark('grid')}
+        {...devMark('scroll')}
         className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain pb-4 [-webkit-overflow-scrolling:touch]"
-        aria-label="Achievements"
+        aria-label="Study overview"
       >
         {hydrated ? (
           <>
+            <MasteryOverview
+              unitProgress={unitProgress}
+              achievementState={achievementState}
+              settings={settings}
+              onRevisitLengthChange={(revisitLength) =>
+                setSettings({ practice: { ...settings.practice, revisitLength } })
+              }
+            />
             <p className="mb-4 text-meta leading-relaxed text-(--text-dim)">
               Use the wide <span className="font-bold text-(--text-secondary)">Study</span> bar
               on each section, or tap a topic tile. Tiles show how many questions you&apos;ve done
@@ -85,18 +117,23 @@ function HomePage() {
             </p>
             <AchievementGrid
               unitProgress={unitProgress}
+              achievementState={achievementState}
               onTileSelect={(tile) => handleTileEmbark(tile.unitId)}
+              onEmbarkUnit={handleTileEmbark}
               onSubgroupStudy={handleSectionStudy}
             />
           </>
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-2.5">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="min-h-[6.5rem] min-w-[8rem] animate-pulse rounded-(--r-lg) bg-(--bg-card)"
-              />
-            ))}
+          <div className="space-y-4">
+            <div className="h-40 animate-pulse rounded-(--r-lg) bg-(--bg-card)" />
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-2.5">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="min-h-[6.5rem] min-w-[8rem] animate-pulse rounded-(--r-lg) bg-(--bg-card)"
+                />
+              ))}
+            </div>
           </div>
         )}
       </section>
@@ -108,29 +145,70 @@ function HomePage() {
         <section className="mx-auto flex max-w-(--w-narrow) flex-row flex-wrap gap-2">
           {resumeSession ? (
             <>
-              <Button variant="secondary" className="min-w-[9rem] flex-1" {...devMark('new')} onClick={handleNewQuest}>
-                NEW QUEST
+              <Button
+                variant="primary"
+                className="min-w-[9rem] flex-1"
+                {...devMark('revisit')}
+                onClick={handleRevisit}
+              >
+                NEXT LAP
               </Button>
-              <Button variant="primary" className="min-w-[9rem] flex-1" {...devMark('cont')} onClick={handleContinue}>
+              <Button
+                variant="secondary"
+                className="min-w-[9rem] flex-1"
+                {...devMark('cont')}
+                onClick={handleContinue}
+              >
                 CONTINUE
               </Button>
-              <Button variant="secondary" className="min-w-[9rem] flex-1" {...devMark('eoc')} onClick={handleEocReview}>
+              <Button
+                variant="secondary"
+                className="min-w-[9rem] flex-1"
+                {...devMark('new')}
+                onClick={handleNewQuest}
+              >
+                NEW QUEST
+              </Button>
+              <Button
+                variant="secondary"
+                className="min-w-[9rem] flex-1"
+                {...devMark('eoc')}
+                onClick={handleEocReview}
+              >
                 FULL EOC REVIEW
               </Button>
             </>
           ) : (
             <>
-              <Button variant="primary" className="min-w-[9rem] flex-1" {...devMark('new')} onClick={handleNewQuest}>
+              <Button
+                variant="primary"
+                className="min-w-[9rem] flex-1"
+                {...devMark('revisit')}
+                onClick={handleRevisit}
+              >
+                NEXT LAP
+              </Button>
+              <Button
+                variant="secondary"
+                className="min-w-[9rem] flex-1"
+                {...devMark('new')}
+                onClick={handleNewQuest}
+              >
                 NEW QUEST
               </Button>
-              <Button variant="secondary" className="min-w-[9rem] flex-1" {...devMark('eoc')} onClick={handleEocReview}>
+              <Button
+                variant="secondary"
+                className="min-w-[9rem] flex-1"
+                {...devMark('eoc')}
+                onClick={handleEocReview}
+              >
                 FULL EOC REVIEW
               </Button>
             </>
           )}
         </section>
 
-        <footer {...devMark('nav')} className="mt-4 space-y-4 text-center sm:mt-6 sm:space-y-6">
+        <footer {...devMark('nav')} className="mt-4 text-center sm:mt-6">
           <nav className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-meta uppercase tracking-[0.1em] sm:gap-x-4">
             <Link to="/journeys" className="text-(--text-dim) no-underline hover:text-(--text-secondary)">
               Journeys
@@ -144,14 +222,14 @@ function HomePage() {
             <Link to="/garden" className="text-(--text-dim) no-underline hover:text-(--text-secondary)">
               Garden
             </Link>
+            <Link
+              to="/about"
+              {...devMark('aboutlnk')}
+              className="text-(--text-dim) no-underline hover:text-(--text-secondary)"
+            >
+              About
+            </Link>
           </nav>
-          <Link
-            to="/about"
-            {...devMark('aboutlnk')}
-            className="block text-meta uppercase tracking-[0.12em] text-(--text-dim) no-underline hover:text-(--text-secondary)"
-          >
-            What is this?
-          </Link>
         </footer>
       </div>
     </main>
