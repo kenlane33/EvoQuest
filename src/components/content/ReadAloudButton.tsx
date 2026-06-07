@@ -12,6 +12,8 @@ type ReadAloudButtonProps = {
   onToggle: () => void;
   className?: string;
   label?: string;
+  /** When true, control is inactive (e.g. voice model still loading). */
+  disabled?: boolean;
 };
 
 export function ReadAloudButton({
@@ -21,10 +23,11 @@ export function ReadAloudButton({
   onToggle,
   className,
   label = 'Read it',
+  disabled: disabledExternal = false,
 }: ReadAloudButtonProps) {
   const busy = status === 'loading';
   const playing = status === 'playing';
-  const disabled = !text.trim();
+  const disabled = disabledExternal || !text.trim();
 
   return (
     <div className={cn('flex flex-col items-start gap-1 h-9', className)}>

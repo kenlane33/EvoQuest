@@ -72,4 +72,10 @@ describe('prepareTextForSpeech', () => {
       expect(sample).not.toMatch(/,\s/);
     }
   });
+
+  it('respells job as jahb (role sense, not biblical Johb)', () => {
+    expect(prepareTextForSpeech('Each organelle has a job.')).toBe('Each organelle has a jahb.');
+    expect(prepareTextForSpeech('Each Organelle Has a Job')).toBe('Each Organelle Has a Jahb');
+    expect(prepareTextForSpeech('reshaped for new jobs')).toBe('reshaped for new jahbs');
+  });
 });

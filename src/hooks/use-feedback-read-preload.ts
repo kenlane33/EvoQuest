@@ -1,20 +1,21 @@
 'use client';
 
 import { useEffect } from 'react';
-import { feedbackHeadlineForAttempt } from '@/audio/feedback-phrases';
+import { immediateFeedbackSpeakText } from '@/audio/feedback-answer-speak';
 import {
   buildFeedbackReadBundle,
   feedbackDescReadText,
 } from '@/audio/feedback-read-text';
-import { preloadPocketTtsText } from '@/audio/pocket-tts-engine';
+import { preloadReadAloudText } from '@/audio/read-aloud-engine';
 import { useAppStore } from '@/store/app-store';
-import type { KnowledgeUnit } from '@/types';
+import type { KnowledgeUnit, QuizTemplate } from '@/types';
 
 type PreloadTarget = {
   journeyId: string;
   questionIndex: number;
   currentStreak: number;
   unit: KnowledgeUnit;
+  quiz: QuizTemplate;
   playCtx: { root: string; mnemonic?: string } | null;
 } | null;
 
@@ -32,25 +33,27 @@ export function useFeedbackReadPreload(target: PreloadTarget, delayMs = 600) {
     const bodyBundle = buildFeedbackReadBundle('', explanation, target.unit.teach, target.playCtx);
     const desc = feedbackDescReadText(bodyBundle);
 
-    const correct = feedbackHeadlineForAttempt(
-      target.journeyId,
-      target.questionIndex,
-      target.currentStreak,
-      true,
-      false,
-    );
-    const wrong = feedbackHeadlineForAttempt(
-      target.journeyId,
-      target.questionIndex,
-      target.currentStreak,
-      false,
-      false,
-    );
+    const correct = immediateFeedbackSpeakText({
+      journeyId: target.journeyId,
+      questionIndex: target.questionIndex,
+      currentStreak: target.currentStreak,
+      correct: true,
+      streakIncludesAnswer: false,
+      quiz: target.quiz,
+    });
+    const wrong = immediateFeedbackSpeakText({
+      journeyId: target.journeyId,
+      questionIndex: target.questionIndex,
+      currentStreak: target.currentStreak,
+      correct: false,
+      streakIncludesAnswer: false,
+      quiz: target.quiz,
+    });
 
     const run = () => {
-      preloadPocketTtsText(correct, voice);
-      preloadPocketTtsText(wrong, voice);
-      preloadPocketTtsText(desc, voice);
+      preloadReadAloudText(correct, voice);
+      preloadReadAloudText(wrong, voice);
+      preloadReadAloudText(desc, voice);
     };
 
     const timer = window.setTimeout(run, delayMs);
@@ -60,6 +63,8 @@ export function useFeedbackReadPreload(target: PreloadTarget, delayMs = 600) {
     target?.questionIndex,
     target?.currentStreak,
     target?.unit.id,
+    target?.quiz.id,
+    target?.quiz.kind,
     target?.playCtx?.root,
     target?.playCtx?.mnemonic,
     delayMs,

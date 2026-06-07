@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { Loader2, Square, Volume2 } from 'lucide-react';
 import type { QuestionSpeakSlot } from '@/components/audio/question-speak-context';
 import { useQuestionSpeakOptional } from '@/components/audio/question-speak-context';
-import { getPocketTtsEngine, stopPocketTtsEngine } from '@/audio/pocket-tts-engine';
+import { speakReadAloud, stopReadAloud } from '@/audio/read-aloud-engine';
 import { cn } from '@/lib/cn';
 import { useAppStore } from '@/store/app-store';
 
@@ -18,10 +19,14 @@ type SpeakButtonProps = {
 };
 
 /** Compact play/stop control for optional read-aloud on a text snippet. */
-export function SpeakButton({ text, slot, label = 'Read aloud', className }: SpeakButtonProps) {
-  const enabled = useAppStore((s) => s.settings.reading.enabled);
-  const voice = useAppStore((s) => s.settings.reading.voice);
-  const volume = useAppStore((s) => s.settings.audio.volume);
+function SpeakButtonInner({ text, slot, label = 'Read aloud', className }: SpeakButtonProps) {
+  const { enabled, voice, volume } = useAppStore(
+    useShallow((s) => ({
+      enabled: s.settings.reading.enabled,
+      voice: s.settings.reading.voice,
+      volume: s.settings.audio.volume,
+    })),
+  );
   const questionSpeak = useQuestionSpeakOptional();
 
   const trimmed = text.trim();
@@ -52,7 +57,7 @@ export function SpeakButton({ text, slot, label = 'Read aloud', className }: Spe
       if (soloActive) {
         soloAbort.current?.abort();
         soloAbort.current = null;
-        stopPocketTtsEngine();
+        stopReadAloud();
         setSoloActive(false);
         return;
       }
@@ -63,7 +68,7 @@ export function SpeakButton({ text, slot, label = 'Read aloud', className }: Spe
       setSoloActive(true);
 
       try {
-        await getPocketTtsEngine().speak(trimmed, { voice, volume, signal: abort.signal });
+        await speakReadAloud(trimmed, { voice, volume, signal: abort.signal });
       } catch {
         /* surfaced via global bar on demand */
       } finally {
@@ -107,3 +112,5 @@ export function SpeakButton({ text, slot, label = 'Read aloud', className }: Spe
     </button>
   );
 }
+
+export const SpeakButton = memo(SpeakButtonInner);

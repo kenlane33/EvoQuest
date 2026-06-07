@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import '@/engine/templates';
-import { preloadPocketTts } from '@/audio/pocket-tts-engine';
+import { preloadReadAloud } from '@/audio/read-aloud-engine';
+import { primeWebSpeechVoices } from '@/audio/web-speech-engine';
 import { useValidateStoredPocketTtsVoice } from '@/hooks/use-pocket-tts-voices';
 import { AppHeader } from '@/components/common/AppHeader';
 import { VersionBadge } from '@/components/common/VersionBadge';
@@ -42,10 +43,14 @@ export function AppHydrator({ children }: { children: React.ReactNode }) {
 
   useValidateStoredPocketTtsVoice(settings.reading.enabled);
 
+  useEffect(() => {
+    primeWebSpeechVoices();
+  }, []);
+
   // Warm the ONNX bundle cache as soon as the shell mounts (during "Loading…").
   useEffect(() => {
     if (settings.reading.enabled) {
-      preloadPocketTts(settings.reading.voice);
+      preloadReadAloud(settings.reading.voice);
     }
   }, [settings.reading.enabled, settings.reading.voice]);
 

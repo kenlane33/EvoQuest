@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react';
 import { POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
 import { getPocketTtsEngine } from '@/audio/pocket-tts-engine';
+import {
+  getPocketTtsFallbackReason,
+  subscribeReadAloudBootstrap,
+} from '@/audio/read-aloud-bootstrap';
+import { isPocketTtsAvailable } from '@/audio/read-aloud';
+import { primeWebSpeechVoices } from '@/audio/web-speech-engine';
 import { useAppStore } from '@/store/app-store';
 
 export type PocketTtsVoicesStatus = 'idle' | 'loading' | 'ready' | 'error';
@@ -31,8 +37,25 @@ export function usePocketTtsVoices({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!enabled || typeof window === 'undefined' || !window.crossOriginIsolated) {
+    if (!enabled || typeof window === 'undefined') {
       setStatus('idle');
+      setError(null);
+      return;
+    }
+
+    if (!isPocketTtsAvailable()) {
+      primeWebSpeechVoices();
+      setVoices([]);
+      setStatus('ready');
+      setError(null);
+      return;
+    }
+
+    const pocketFallback = getPocketTtsFallbackReason();
+    if (pocketFallback) {
+      primeWebSpeechVoices();
+      setVoices([]);
+      setStatus('ready');
       setError(null);
       return;
     }
@@ -42,13 +65,30 @@ export function usePocketTtsVoices({
       setVoices([...engine.getAvailableVoices()]);
     };
 
+    const applyFallback = () => {
+      if (!getPocketTtsFallbackReason()) return false;
+      primeWebSpeechVoices();
+      setVoices([]);
+      setStatus('ready');
+      setError(null);
+      return true;
+    };
+
+    if (applyFallback()) return;
+
     const unsub = engine.subscribeVoices(sync);
+    const unsubBootstrap = subscribeReadAloudBootstrap(() => {
+      applyFallback();
+    });
     sync();
 
     if (engine.getAvailableVoices().length > 0) {
       setStatus('ready');
       setError(null);
-      return unsub;
+      return () => {
+        unsub();
+        unsubBootstrap();
+      };
     }
 
     setStatus('loading');
@@ -57,15 +97,23 @@ export function usePocketTtsVoices({
     void engine
       .ensureReady(voice)
       .then(() => {
+        if (applyFallback()) return;
         sync();
         setStatus('ready');
       })
       .catch((err) => {
+        if (getPocketTtsFallbackReason()) {
+          applyFallback();
+          return;
+        }
         setStatus('error');
         setError(err instanceof Error ? err.message : 'Failed to load voices');
       });
 
-    return unsub;
+    return () => {
+      unsub();
+      unsubBootstrap();
+    };
   }, [enabled, voice]);
 
   return { voices, status, error };

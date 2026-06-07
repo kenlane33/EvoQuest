@@ -11,10 +11,11 @@ import {
   type ReactNode,
 } from 'react';
 import {
-  getPocketTtsEngine,
-  stopPocketTtsEngine,
-  waitForPocketTtsIdle,
-} from '@/audio/pocket-tts-engine';
+  prepareReadAloud,
+  speakReadAloud,
+  stopReadAloud,
+  waitForReadAloudIdle,
+} from '@/audio/read-aloud-engine';
 import { canAutoReadAloud } from '@/audio/read-aloud';
 import { useAppStore } from '@/store/app-store';
 
@@ -77,7 +78,7 @@ export function QuestionSpeakProvider({
     requestId.current += 1;
     abortRef.current?.abort();
     abortRef.current = null;
-    stopPocketTtsEngine();
+    stopReadAloud();
   }, []);
 
   const stop = useCallback(() => {
@@ -99,7 +100,7 @@ export function QuestionSpeakProvider({
       setStatus('loading');
 
       try {
-        await getPocketTtsEngine().speak(text, { voice, volume, signal: abort.signal });
+        await speakReadAloud(text, { voice, volume, signal: abort.signal });
         if (requestId.current === id) {
           setStatus('idle');
           setActiveSlot(null);
@@ -148,8 +149,11 @@ export function QuestionSpeakProvider({
     abortRef.current = abort;
 
     const runSequence = async () => {
+      await prepareReadAloud(voice);
+      if (abort.signal.aborted || requestId.current !== id) return;
+
       if (autoWaitForIdle) {
-        await waitForPocketTtsIdle();
+        await waitForReadAloudIdle();
         if (abort.signal.aborted || requestId.current !== id) return;
       }
 
@@ -162,7 +166,7 @@ export function QuestionSpeakProvider({
         setStatus('loading');
 
         try {
-          await getPocketTtsEngine().speak(text, { voice, volume, signal: abort.signal });
+          await speakReadAloud(text, { voice, volume, signal: abort.signal });
         } catch {
           if (abort.signal.aborted || requestId.current !== id) return;
           if (requestId.current === id) {

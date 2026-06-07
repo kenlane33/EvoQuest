@@ -6,7 +6,7 @@ import {
   type FeedbackReadBundle,
 } from '@/audio/feedback-read-text';
 import { canAutoReadAloud } from '@/audio/read-aloud';
-import { getPocketTtsEngine, waitForPocketTtsIdle } from '@/audio/pocket-tts-engine';
+import { speakReadAloud, waitForReadAloudIdle } from '@/audio/read-aloud-engine';
 import { useAppStore } from '@/store/app-store';
 
 /**
@@ -38,11 +38,11 @@ export function useFeedbackAutoRead(
     const abort = new AbortController();
 
     const run = async () => {
-      await waitForPocketTtsIdle();
+      await waitForReadAloudIdle();
       if (abort.signal.aborted || runId.current !== id) return;
 
       try {
-        await getPocketTtsEngine().speak(descText, {
+        await speakReadAloud(descText, {
           voice,
           volume,
           signal: abort.signal,

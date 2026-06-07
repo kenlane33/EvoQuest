@@ -4,11 +4,29 @@ import { EventEmitter, CustomEvent } from './EventEmitter.js';
  * PCMPlayerWorklet - Drop-in replacement for PCMPlayer using AudioWorklet
  * Uses dynamic buffer management with backpressure for smooth playback
  */
+/** Resample PCM when the AudioContext rate differs from synthesis (common on iOS). */
+function resampleLinear(input, fromRate, toRate) {
+  if (fromRate === toRate || input.length === 0) return input;
+  const outLen = Math.max(1, Math.round((input.length * toRate) / fromRate));
+  const output = new Float32Array(outLen);
+  const ratio = fromRate / toRate;
+  for (let i = 0; i < outLen; i++) {
+    const srcIdx = i * ratio;
+    const idx = Math.floor(srcIdx);
+    const frac = srcIdx - idx;
+    const a = input[idx] ?? 0;
+    const b = input[idx + 1] ?? a;
+    output[i] = a + (b - a) * frac;
+  }
+  return output;
+}
+
 export class PCMPlayerWorklet extends EventEmitter {
   constructor(audioContext, options = {}) {
     super();
     this.audioContext = audioContext;
     this.options = options;
+    this.sourceSampleRate = options.sourceSampleRate ?? audioContext.sampleRate;
     this.workletNode = null;
     this.isInitialized = false;
     this.playbackTime = 0; // For API compatibility
@@ -429,9 +447,17 @@ export class PCMPlayerWorklet extends EventEmitter {
     }
 
     // Convert to Float32Array if needed
-    const float32Array = data instanceof Int16Array
+    let float32Array = data instanceof Int16Array
       ? this.pcm16ToFloat32(data)
       : data;
+
+    if (this.sourceSampleRate !== this.audioContext.sampleRate) {
+      float32Array = resampleLinear(
+        float32Array,
+        this.sourceSampleRate,
+        this.audioContext.sampleRate,
+      );
+    }
 
     // Add to pending queue
     this.pendingChunks.push(float32Array);

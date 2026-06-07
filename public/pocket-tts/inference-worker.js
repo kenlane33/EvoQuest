@@ -65,6 +65,16 @@ function bundlePath(language, filename) {
     return `${bundleDir(language)}/${filename}`;
 }
 
+/** Avoid `fromCharCode(...largeArray)` — spreads blow the stack on Safari/iOS. */
+function uint8ArrayToBase64(bytes) {
+    let binary = "";
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+    }
+    return btoa(binary);
+}
+
 function ttsWorkerMark(label, detail = {}) {
     if (!timelineEnabled) {
         return;
@@ -598,21 +608,31 @@ function precomputeFlowBuffers() {
     }
 }
 
+async function configureOrt(simd) {
+    const version = "1.20.0";
+    const cdnBase = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${version}/dist/`;
+    const ortModule = await import(`https://cdn.jsdelivr.net/npm/onnxruntime-web@${version}/dist/ort.min.mjs`);
+    const instance = ortModule.default || ortModule;
+    instance.env.wasm.wasmPaths = cdnBase;
+    instance.env.wasm.simd = simd;
+    instance.env.wasm.numThreads = self.crossOriginIsolated
+        ? Math.min(navigator.hardwareConcurrency || 4, 8)
+        : 1;
+    return instance;
+}
+
 async function loadOrt() {
     if (ort) {
         return;
     }
 
     postMessage({ type: "status", status: "Loading ONNX Runtime...", state: "loading" });
-    const version = "1.20.0";
-    const cdnBase = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${version}/dist/`;
-    const ortModule = await import(`https://cdn.jsdelivr.net/npm/onnxruntime-web@${version}/dist/ort.min.mjs`);
-    ort = ortModule.default || ortModule;
-    ort.env.wasm.wasmPaths = cdnBase;
-    ort.env.wasm.simd = true;
-    ort.env.wasm.numThreads = self.crossOriginIsolated
-        ? Math.min(navigator.hardwareConcurrency || 4, 8)
-        : 1;
+    try {
+        ort = await configureOrt(true);
+    } catch (err) {
+        console.warn("ONNX Runtime SIMD load failed, retrying without SIMD:", err);
+        ort = await configureOrt(false);
+    }
     precomputeFlowBuffers();
     ttsWorkerMark("ort-loaded");
 }
@@ -686,7 +706,7 @@ async function loadBundle(language, { initialLoad = false } = {}) {
         throw new Error(`Failed to load tokenizer for ${language}`);
     }
     const tokenizerBuffer = await tokenizerResponse.arrayBuffer();
-    tokenizerModelB64 = btoa(String.fromCharCode(...new Uint8Array(tokenizerBuffer)));
+    tokenizerModelB64 = uint8ArrayToBase64(new Uint8Array(tokenizerBuffer));
     const spModule = await import("./sentencepiece.js?v=3");
     tokenizerProcessor = new spModule.SentencePieceProcessor();
     await tokenizerProcessor.loadFromB64StringModel(tokenizerModelB64);

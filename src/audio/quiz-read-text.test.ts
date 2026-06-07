@@ -57,4 +57,39 @@ describe('getQuizReadText', () => {
       'A hospital uses the same antibiotic for ten years. Bacteria in patients increasingly resist it. Why do resistant bacteria become more common over time?',
     );
   });
+
+  it('reads debug-the-claim instructions and paragraph', () => {
+    const quiz: QuizTemplate = {
+      id: 'q3',
+      kind: 'debug-the-claim',
+      data: {
+        paragraph: 'Giraffes stretched their necks and passed the change to offspring.',
+        bugPhrase: 'stretched their necks',
+        bugClass: 'lamarckian-sneak',
+        hint: 'Hint',
+        canonicalFix: 'Fix',
+        poweredIdea: 'Idea',
+      },
+    };
+    expect(getQuizReadText(quiz)).toBe(
+      'Read the paragraph. Click the conceptual bug, then name what kind of mistake it is. Giraffes stretched their necks and passed the change to offspring.',
+    );
+  });
+
+  it('reads food-web-builder ecosystem and instructions', () => {
+    const quiz: QuizTemplate = {
+      id: 'q4',
+      kind: 'food-web-builder',
+      data: {
+        ecosystem: 'Pond food web',
+        nodes: [],
+        requiredEdges: [],
+        perturbation: { removeNodeId: 'a', description: 'Remove algae' },
+        predictNodes: [],
+        poweredIdea: 'Cascade',
+      },
+    };
+    expect(getQuizReadText(quiz)).toContain('Pond food web');
+    expect(getQuizReadText(quiz)).toContain('Tap prey');
+  });
 });

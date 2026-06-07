@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { achievementSpeakText } from '@/audio/achievement-read-text';
 import { canAutoReadAloud } from '@/audio/read-aloud';
-import { getPocketTtsEngine, stopPocketTtsEngine } from '@/audio/pocket-tts-engine';
+import { prepareReadAloud, speakReadAloud, stopReadAloud } from '@/audio/read-aloud-engine';
 import type { EarnedAchievement } from '@/engine/achievements/detect';
 import { useAppStore } from '@/store/app-store';
 
@@ -20,7 +20,7 @@ export function useAchievementMomentSpeak(achievement: EarnedAchievement | null)
     speakGen.current += 1;
     abortRef.current?.abort();
     abortRef.current = null;
-    stopPocketTtsEngine();
+    stopReadAloud();
   }, []);
 
   useEffect(() => {
@@ -44,16 +44,19 @@ export function useAchievementMomentSpeak(achievement: EarnedAchievement | null)
     const abort = new AbortController();
     abortRef.current = abort;
 
-    void getPocketTtsEngine()
-      .speak(text, { voice, volume, signal: abort.signal })
-      .catch(() => {
+    void (async () => {
+      try {
+        await prepareReadAloud(voice);
+        if (abort.signal.aborted || speakGen.current !== gen) return;
+        await speakReadAloud(text, { voice, volume, signal: abort.signal });
+      } catch {
         /* no audio */
-      })
-      .finally(() => {
+      } finally {
         if (abortRef.current === abort) {
           abortRef.current = null;
         }
-      });
+      }
+    })();
 
     return () => {
       if (speakGen.current === gen) {

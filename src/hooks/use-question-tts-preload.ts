@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { getQuizReadText } from '@/audio/quiz-read-text';
-import { preloadPocketTtsText } from '@/audio/pocket-tts-engine';
+import { preloadReadAloudText } from '@/audio/read-aloud-engine';
+import { isTextEntryFocused } from '@/lib/text-entry-focus';
 import { useAppStore } from '@/store/app-store';
 import type { KnowledgeUnit, QuizTemplate } from '@/types';
 
@@ -33,15 +34,18 @@ export function useQuestionTtsPreload({ bundle, delayMs = 1200 }: PreloadSource)
     if (!reading.enabled || !bundle?.question.trim()) return;
 
     const run = () => {
-      preloadPocketTtsText(bundle.question, voice);
+      if (isTextEntryFocused()) return;
+
+      preloadReadAloudText(bundle.question, voice);
 
       const secondary = [bundle.label, bundle.root];
       if (bundle.mnemonic) secondary.push(mnemonicReadText(bundle.mnemonic));
       if (bundle.hint) secondary.push(bundle.hint);
 
       const scheduleSecondary = () => {
+        if (isTextEntryFocused()) return;
         for (const text of secondary) {
-          preloadPocketTtsText(text, voice);
+          preloadReadAloudText(text, voice);
         }
       };
 

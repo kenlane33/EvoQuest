@@ -5,11 +5,11 @@ import {
   canAutoReadAloud,
   REACTION_SPEAK_TIMEOUT_MS,
 } from '@/audio/read-aloud';
-import { getPocketTtsEngine } from '@/audio/pocket-tts-engine';
+import { prepareReadAloud, speakReadAloud } from '@/audio/read-aloud-engine';
 import { useAppStore } from '@/store/app-store';
 
-/** Speak the feedback title as soon as the player answers (uses pre-cached audio when ready). */
-export function useImmediateFeedbackSpeak(headline: string | null): boolean {
+/** Speak reaction + answer reveal as soon as the player answers (pre-cached when ready). */
+export function useImmediateFeedbackSpeak(speakText: string | null): boolean {
   const reading = useAppStore((s) => s.settings.reading);
   const voice = reading.voice;
   const volume = useAppStore((s) => s.settings.audio.volume);
@@ -26,7 +26,7 @@ export function useImmediateFeedbackSpeak(headline: string | null): boolean {
   }, []);
 
   useEffect(() => {
-    const trimmed = headline?.trim();
+    const trimmed = speakText?.trim();
     if (!trimmed) {
       setReactionReady(true);
       return;
@@ -51,18 +51,21 @@ export function useImmediateFeedbackSpeak(headline: string | null): boolean {
       setReactionReady(true);
     }, REACTION_SPEAK_TIMEOUT_MS);
 
-    void getPocketTtsEngine()
-      .speak(trimmed, { voice, volume, signal: abort.signal })
-      .catch(() => {
+    void (async () => {
+      try {
+        await prepareReadAloud(voice);
+        if (abort.signal.aborted || speakGen.current !== gen) return;
+        await speakReadAloud(trimmed, { voice, volume, signal: abort.signal });
+      } catch {
         /* no audio — unblock continue; feedback page reads the body */
-      })
-      .finally(() => {
+      } finally {
         window.clearTimeout(timeoutId);
         if (abortRef.current === abort) {
           abortRef.current = null;
         }
         setReactionReady(true);
-      });
+      }
+    })();
 
     return () => {
       if (speakGen.current !== gen) {
@@ -72,7 +75,7 @@ export function useImmediateFeedbackSpeak(headline: string | null): boolean {
         abortRef.current = null;
       }
     };
-  }, [headline, reading.enabled, reading.autoRead, voice, volume]);
+  }, [speakText, reading.enabled, reading.autoRead, voice, volume]);
 
   return reactionReady;
 }

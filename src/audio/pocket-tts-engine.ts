@@ -7,8 +7,12 @@ import { POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
 import {
   POCKET_TTS_BUNDLE_BASE,
   POCKET_TTS_MODEL_CACHE_NAME,
-  prefetchPocketTtsBundle,
 } from '@/audio/pocket-tts-model-cache';
+import {
+  progressForWorkerStatus,
+  setReadAloudBootstrapProgress,
+  startReadAloudBootstrap,
+} from '@/audio/read-aloud-bootstrap';
 import { prepareTextForSpeech } from '@/audio/speech-substitutions';
 import {
   ttsLogReadySummary,
@@ -33,6 +37,7 @@ export type PocketTtsEngineStatus =
 type WorkerMessage = {
   type: string;
   error?: string;
+  status?: string;
   data?: Float32Array;
   voices?: string[];
   defaultVoice?: string | null;
@@ -96,6 +101,8 @@ export class PocketTtsEngine {
   private worker: Worker | null = null;
   private player: PCMPlayer | null = null;
   private audioContext: AudioContext | null = null;
+  /** Deferred until first playback — avoids iOS AudioWorklet failures during background bootstrap. */
+  private audioInitPromise: Promise<void> | null = null;
   private activeVoice = POCKET_TTS_DEFAULT_VOICE;
   private pendingSpeak: PendingSpeak | null = null;
   private pendingCollect: PendingCollect | null = null;
@@ -191,37 +198,58 @@ export class PocketTtsEngine {
     ttsLogReadySummary();
   }
 
+  private async ensureAudioPlayer(): Promise<void> {
+    if (this.player) return;
+    if (this.audioInitPromise) {
+      await this.audioInitPromise;
+      return;
+    }
+    this.audioInitPromise = this.initAudio();
+    try {
+      await this.audioInitPromise;
+    } catch (err) {
+      this.audioInitPromise = null;
+      throw err;
+    }
+  }
+
+  private async initAudio(): Promise<void> {
+    this.audioContext = new AudioContext({
+      sampleRate: SAMPLE_RATE,
+      latencyHint: 'interactive',
+    });
+    ttsMark('audio-context', { state: this.audioContext.state });
+    this.player = new PCMPlayerWorklet(this.audioContext, {
+      sourceSampleRate: SAMPLE_RATE,
+    });
+    this.player.addEventListener('firstPlayback', (event: { detail?: { bufferedSamples?: number } }) => {
+      ttsMark('playback-started', {
+        audioContextTime: this.audioContext?.currentTime,
+        bufferedSamples: event.detail?.bufferedSamples,
+      });
+      ttsMeasure(
+        'speak-request',
+        'playback-started',
+        'speak latency (request → first sound)',
+      );
+      ttsMeasure('speak-cached', 'playback-started', 'cached speak latency');
+    });
+    this.player.addEventListener('audioEnded', () => {
+      ttsMark('playback-ended');
+    });
+    await this.player.initPromise;
+    ttsMark('pcm-worklet-ready');
+  }
+
   private async init(): Promise<void> {
     this.status = 'loading';
     this.statusError = null;
 
     try {
-      this.audioContext = new AudioContext({
-        sampleRate: SAMPLE_RATE,
-        latencyHint: 'interactive',
-      });
-      ttsMark('audio-context', { state: this.audioContext.state });
-      this.player = new PCMPlayerWorklet(this.audioContext);
-      this.player.addEventListener('firstPlayback', (event: { detail?: { bufferedSamples?: number } }) => {
-        ttsMark('playback-started', {
-          audioContextTime: this.audioContext?.currentTime,
-          bufferedSamples: event.detail?.bufferedSamples,
-        });
-        ttsMeasure(
-          'speak-request',
-          'playback-started',
-          'speak latency (request → first sound)',
-        );
-        ttsMeasure('speak-cached', 'playback-started', 'cached speak latency');
-      });
-      this.player.addEventListener('audioEnded', () => {
-        ttsMark('playback-ended');
-      });
-      await this.player.initPromise;
-      ttsMark('pcm-worklet-ready');
-
+      setReadAloudBootstrapProgress(0.38);
       this.worker = new Worker(WORKER_URL, { type: 'module' });
       ttsMark('worker-spawn');
+      setReadAloudBootstrapProgress(0.42);
       this.worker.onmessage = (event: MessageEvent<WorkerMessage>) => {
         this.handleWorkerMessage(event.data);
       };
@@ -292,6 +320,10 @@ export class PocketTtsEngine {
     text: string,
     options?: PocketTtsSpeakOptions,
   ): Promise<void> {
+    if (this.pendingSpeak || this.status === 'speaking') {
+      this.stop();
+    }
+
     const waitFor = this.speakChain;
     let advance!: () => void;
     this.speakChain = new Promise<void>((resolve) => {
@@ -352,6 +384,7 @@ export class PocketTtsEngine {
     if (cached) {
       ttsMark('speak-cached', { chars: trimmed.length, voice });
       this.markedFirstChunkThisSpeak = false;
+      await this.ensureAudioPlayer();
       await this.playCached(cached, options);
       return;
     }
@@ -359,6 +392,7 @@ export class PocketTtsEngine {
     ttsMark('speak-request', { chars: trimmed.length, voice });
     this.markedFirstChunkThisSpeak = false;
 
+    await this.ensureAudioPlayer();
     this.status = 'speaking';
     this.player?.reset();
     if (this.player && options?.volume != null) {
@@ -484,6 +518,12 @@ export class PocketTtsEngine {
     }
   }
 
+  /** Drop synthesized utterance buffers (model bundle cache is separate). */
+  clearSpeechCache(): void {
+    this.audioCache.clear();
+    this.preloadTasks.clear();
+  }
+
   private rejectPending(err?: Error): void {
     const pending = this.pendingSpeak;
     if (!pending) return;
@@ -531,6 +571,15 @@ export class PocketTtsEngine {
     const { type, error, data } = msg;
 
     switch (type) {
+      case 'status': {
+        if (msg.status) {
+          const workerProgress = progressForWorkerStatus(msg.status);
+          if (workerProgress != null) {
+            setReadAloudBootstrapProgress(workerProgress);
+          }
+        }
+        break;
+      }
       case 'timeline':
         if (msg.label != null && msg.sinceOrigin != null && msg.sincePrev != null) {
           ttsWorkerMark(msg.label, msg.sinceOrigin, msg.sincePrev, msg.detail);
@@ -614,15 +663,8 @@ export async function waitForPocketTtsIdle(maxMs = 15000): Promise<void> {
 }
 
 export function preloadPocketTts(voice = POCKET_TTS_DEFAULT_VOICE): void {
-  if (typeof window === 'undefined' || !window.crossOriginIsolated) return;
-  void prefetchPocketTtsBundle().catch(() => {
-    /* optional optimization */
-  });
-  void getPocketTtsEngine()
-    .ensureReady(voice)
-    .catch(() => {
-      /* surfaced when user taps Read it */
-    });
+  if (typeof window === 'undefined') return;
+  void startReadAloudBootstrap(voice);
 }
 
 /** Preload spoken text when the engine is idle (e.g. next question). */

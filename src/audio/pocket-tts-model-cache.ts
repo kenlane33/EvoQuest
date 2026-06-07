@@ -89,8 +89,10 @@ export async function cachePocketTtsAsset(url: string): Promise<void> {
  * Prefetch the English ONNX bundle into the Cache API.
  * Safe to call from the app shell before the inference worker starts.
  */
+/** Prefetch progress callback receives 0–1 as assets are cached. */
 export async function prefetchPocketTtsBundle(
   language = POCKET_TTS_DEFAULT_LANGUAGE,
+  onAssetProgress?: (ratio: number) => void,
 ): Promise<void> {
   if (typeof window === 'undefined' || !window.crossOriginIsolated) return;
 
@@ -105,7 +107,25 @@ export async function prefetchPocketTtsBundle(
 
   const metadata = (await metadataResponse.json()) as BundleMetadata;
   const urls = pocketTtsBundleAssetUrls(language, metadata);
+  const total = urls.length;
+  let done = 0;
 
-  await Promise.all(urls.map((url) => cachePocketTtsAsset(url)));
+  await Promise.all(
+    urls.map(async (url) => {
+      await cachePocketTtsAsset(url);
+      done += 1;
+      onAssetProgress?.(done / total);
+    }),
+  );
   ttsMark('prefetch-done', { language, assets: urls.length });
+}
+
+/** Remove cached ONNX bundle assets (re-downloaded on next prefetch). */
+export async function clearPocketTtsModelCache(): Promise<boolean> {
+  if (typeof caches === 'undefined') return false;
+  try {
+    return await caches.delete(POCKET_TTS_MODEL_CACHE_NAME);
+  } catch {
+    return false;
+  }
 }

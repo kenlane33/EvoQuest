@@ -1,13 +1,13 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
-import { getPocketTtsEngine, stopPocketTtsEngine } from '@/audio/pocket-tts-engine';
+import { prepareReadAloud, speakReadAloud, stopReadAloud } from '@/audio/read-aloud-engine';
 import { POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
 
 export type PocketTtsStatus = 'idle' | 'loading' | 'playing' | 'error';
 
 export function stopPocketTts() {
-  stopPocketTtsEngine();
+  stopReadAloud();
 }
 
 export type UsePocketTtsOptions = {
@@ -37,11 +37,10 @@ export function usePocketTts({
       setError(null);
 
       try {
-        const engine = getPocketTtsEngine();
-        await engine.ensureReady(voice);
+        await prepareReadAloud(voice);
         if (requestId.current !== id) return;
         setStatus('playing');
-        await engine.speak(trimmed, {
+        await speakReadAloud(trimmed, {
           voice,
           volume,
           signal: abort.signal,

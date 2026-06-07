@@ -114,6 +114,9 @@ export const SPEECH_SUBSTITUTIONS: ReadonlyArray<readonly [RegExp, string]> = [
 const PRONUNCIATION_HINTS: ReadonlyArray<readonly [RegExp, (match: string, ...groups: string[]) => string]> = [
   [/\bribosom(\w*)\b/gi, (_match, suffix) => respellToken(_match, `rybosom${suffix}`)],
   [/\bmitochondri(\w*)\b/gi, (_match, suffix) => respellToken(_match, `mydoughchondri${suffix}`)],
+  // role/function sense (jahb) — Pocket TTS often reads job like biblical Job (Johb)
+  [/\bjobs\b/gi, (match) => respellToken(match, 'jahbs')],
+  [/\bjob\b/gi, (match) => respellToken(match, 'jahb')],
 ];
 
 function respellToken(original: string, spoken: string): string {
