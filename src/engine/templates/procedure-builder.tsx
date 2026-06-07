@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';
-import { getPocketTtsEngine } from '@/audio/pocket-tts-engine';
+import { speakReadAloud } from '@/audio/read-aloud-engine';
 import { orderMatchesProcedure } from '@/engine/procedure/scoring';
 import type { TemplateRegistration } from '@/engine/templates/registry';
 import { cn } from '@/lib/cn';
@@ -97,7 +97,7 @@ function ProcedureBuilderRenderer({
       setRunLog((log) => [...log, block.label]);
       if (reading.enabled && block.narration.trim()) {
         try {
-          await getPocketTtsEngine().speak(block.narration, { voice, volume });
+          await speakReadAloud(block.narration, { voice, volume });
         } catch {
           /* aborted or unavailable */
         }

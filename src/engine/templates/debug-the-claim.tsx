@@ -81,13 +81,12 @@ function DebugTheClaimRenderer({
   }
 
   function onClassify(choice: BugClass) {
+    if (finishedRef.current) return;
     setPickedClass(choice);
     const correct = choice === data.bugClass;
-    if (correct && !finishedRef.current) {
-      finishedRef.current = true;
-      setPhase('done');
-      onResult({ correct: true, ms: Date.now() - startMs.current });
-    }
+    finishedRef.current = true;
+    if (correct) setPhase('done');
+    onResult({ correct, ms: Date.now() - startMs.current });
   }
 
   const offeredClasses = useMemo(() => {

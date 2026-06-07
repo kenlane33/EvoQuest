@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as T2RouteImport } from './routes/t2'
+import { Route as T1RouteImport } from './routes/t1'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NotebookRouteImport } from './routes/notebook'
 import { Route as GardenRouteImport } from './routes/garden'
@@ -28,6 +30,16 @@ import { Route as ContentFormatRouteImport } from './routes/content/format'
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const T2Route = T2RouteImport.update({
+  id: '/t2',
+  path: '/t2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const T1Route = T1RouteImport.update({
+  id: '/t1',
+  path: '/t1',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -107,6 +119,8 @@ export interface FileRoutesByFullPath {
   '/garden': typeof GardenRoute
   '/notebook': typeof NotebookRoute
   '/settings': typeof SettingsRoute
+  '/t1': typeof T1Route
+  '/t2': typeof T2Route
   '/welcome': typeof WelcomeRoute
   '/content/format': typeof ContentFormatRoute
   '/content/import': typeof ContentImportRoute
@@ -124,6 +138,8 @@ export interface FileRoutesByTo {
   '/garden': typeof GardenRoute
   '/notebook': typeof NotebookRoute
   '/settings': typeof SettingsRoute
+  '/t1': typeof T1Route
+  '/t2': typeof T2Route
   '/welcome': typeof WelcomeRoute
   '/content/format': typeof ContentFormatRoute
   '/content/import': typeof ContentImportRoute
@@ -142,6 +158,8 @@ export interface FileRoutesById {
   '/garden': typeof GardenRoute
   '/notebook': typeof NotebookRoute
   '/settings': typeof SettingsRoute
+  '/t1': typeof T1Route
+  '/t2': typeof T2Route
   '/welcome': typeof WelcomeRoute
   '/content/format': typeof ContentFormatRoute
   '/content/import': typeof ContentImportRoute
@@ -161,6 +179,8 @@ export interface FileRouteTypes {
     | '/garden'
     | '/notebook'
     | '/settings'
+    | '/t1'
+    | '/t2'
     | '/welcome'
     | '/content/format'
     | '/content/import'
@@ -178,6 +198,8 @@ export interface FileRouteTypes {
     | '/garden'
     | '/notebook'
     | '/settings'
+    | '/t1'
+    | '/t2'
     | '/welcome'
     | '/content/format'
     | '/content/import'
@@ -195,6 +217,8 @@ export interface FileRouteTypes {
     | '/garden'
     | '/notebook'
     | '/settings'
+    | '/t1'
+    | '/t2'
     | '/welcome'
     | '/content/format'
     | '/content/import'
@@ -213,6 +237,8 @@ export interface RootRouteChildren {
   GardenRoute: typeof GardenRoute
   NotebookRoute: typeof NotebookRoute
   SettingsRoute: typeof SettingsRoute
+  T1Route: typeof T1Route
+  T2Route: typeof T2Route
   WelcomeRoute: typeof WelcomeRoute
   ContentFormatRoute: typeof ContentFormatRoute
   ContentImportRoute: typeof ContentImportRoute
@@ -232,6 +258,20 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/t2': {
+      id: '/t2'
+      path: '/t2'
+      fullPath: '/t2'
+      preLoaderRoute: typeof T2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/t1': {
+      id: '/t1'
+      path: '/t1'
+      fullPath: '/t1'
+      preLoaderRoute: typeof T1RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -341,6 +381,8 @@ const rootRouteChildren: RootRouteChildren = {
   GardenRoute: GardenRoute,
   NotebookRoute: NotebookRoute,
   SettingsRoute: SettingsRoute,
+  T1Route: T1Route,
+  T2Route: T2Route,
   WelcomeRoute: WelcomeRoute,
   ContentFormatRoute: ContentFormatRoute,
   ContentImportRoute: ContentImportRoute,

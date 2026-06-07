@@ -1,7 +1,8 @@
 import { CONTENT_MODULES } from '@/content';
+import { BIO_EOC_FIG } from '@/content/bio-eoc/figures';
 import { FIG } from '@/content/biochemistry/quiz-helpers';
 import { flattenUnits } from '@/engine/world';
-import { getQuizPlayFigures } from '@/lib/quiz-figures';
+import { getQuizPlayFigures, teachFigureSrcFromBody } from '@/lib/quiz-figures';
 import type { InnerQuestion, QuizTemplate } from '@/types';
 
 export type PreviewItemStatus = 'shipped' | 'proposed';
@@ -41,9 +42,19 @@ const FIGURE_EXT: Record<string, 'svg' | 'png'> = {
   p07_dna_hierarchy: 'png',
 };
 
-function figureSrc(figureId: string): string {
+function defaultFigureSrc(figureId: string): string {
   const ext = FIGURE_EXT[figureId] ?? 'svg';
-  return `${FIG}/${figureId}.${ext}`;
+  const base = figureId.startsWith('bio_eoc_') ? BIO_EOC_FIG : FIG;
+  return `${base}/${figureId}.${ext}`;
+}
+
+function resolvePreviewFigureSrc(
+  unit: { teach: { body: string } },
+  figureId: string,
+  playSrc?: string,
+): string {
+  if (playSrc) return playSrc;
+  return teachFigureSrcFromBody(unit.teach.body, figureId) ?? defaultFigureSrc(figureId);
 }
 
 function summarizeQuiz(quiz: QuizTemplate): { prompt: string; answers: string[] } {
@@ -133,7 +144,7 @@ function shippedItemsFromContent(): PreviewItem[] {
         unitTitle: unit.title,
         sectionTitle: sectionTitleForUnit(unit.id),
         figureId: primary.id,
-        figureSrc: playFigures[0]?.src ?? figureSrc(primary.id),
+        figureSrc: resolvePreviewFigureSrc(unit, primary.id, playFigures[0]?.src),
         figureAlt: primary.alt,
         templateKind: quiz.kind,
         prompt,
@@ -155,7 +166,7 @@ export const PROPOSED_DIAGRAM_ITEMS: ProposedSeed[] = [
     unitTitle: 'DNA Structure',
     sectionTitle: 'Protein Synthesis',
     figureId: 'p07_dna_hierarchy',
-    figureSrc: figureSrc('p07_dna_hierarchy'),
+    figureSrc: defaultFigureSrc('p07_dna_hierarchy'),
     figureAlt: 'DNA hierarchy from cell to base pairs',
     templateKind: 'fill',
     prompt: 'The rungs of the DNA ladder in the hierarchy diagram are _____ pairs.',
@@ -168,7 +179,7 @@ export const PROPOSED_DIAGRAM_ITEMS: ProposedSeed[] = [
     unitTitle: 'Dichotomous Keys',
     sectionTitle: 'Evolution',
     figureId: 'p13_birds_dichotomous',
-    figureSrc: figureSrc('p13_birds_dichotomous'),
+    figureSrc: defaultFigureSrc('p13_birds_dichotomous'),
     figureAlt: 'Four finch beak shapes labeled W, X, Y, and Z',
     templateKind: 'fill',
     prompt: 'Using the key and beak diagram, bird W is _____.',
@@ -182,7 +193,7 @@ export const PROPOSED_DIAGRAM_ITEMS: ProposedSeed[] = [
     unitTitle: 'Dichotomous Keys',
     sectionTitle: 'Evolution',
     figureId: 'p13_birds_dichotomous',
-    figureSrc: figureSrc('p13_birds_dichotomous'),
+    figureSrc: defaultFigureSrc('p13_birds_dichotomous'),
     figureAlt: 'Four finch beak shapes labeled W, X, Y, and Z',
     templateKind: 'fill',
     prompt: 'Using the key and beak diagram, bird X is _____.',
@@ -195,7 +206,7 @@ export const PROPOSED_DIAGRAM_ITEMS: ProposedSeed[] = [
     unitTitle: 'Food Webs & Chains',
     sectionTitle: 'Ecology',
     figureId: 'p15_food_web',
-    figureSrc: figureSrc('p15_food_web'),
+    figureSrc: defaultFigureSrc('p15_food_web'),
     figureAlt: 'Food web with producers, consumers, and decomposers',
     templateKind: 'fill',
     prompt: 'In the food web diagram, hawks eat snails and _____.',
@@ -208,7 +219,7 @@ export const PROPOSED_DIAGRAM_ITEMS: ProposedSeed[] = [
     unitTitle: 'DNA Fingerprinting',
     sectionTitle: 'Heredity',
     figureId: 'p09_dna_fingerprint',
-    figureSrc: figureSrc('p09_dna_fingerprint'),
+    figureSrc: defaultFigureSrc('p09_dna_fingerprint'),
     figureAlt: 'DNA fingerprint lanes comparing suspects and crime scene',
     templateKind: 'speed-reveal-mnemonic',
     prompt: 'Whose DNA fingerprint matches the crime scene blood stain in the diagram?',

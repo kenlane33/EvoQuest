@@ -37,6 +37,8 @@ function FoodWebBuilderRenderer({
   const [linkFrom, setLinkFrom] = useState<string | null>(null);
   const [predictions, setPredictions] = useState<Record<string, string>>({});
   const [revealed, setRevealed] = useState(false);
+  const [buildHelpUsed, setBuildHelpUsed] = useState(false);
+  const [predictHelpUsed, setPredictHelpUsed] = useState(false);
   const finishedRef = useRef(false);
 
   const required = useMemo(
@@ -61,6 +63,34 @@ function FoodWebBuilderRenderer({
     setLinkFrom(null);
   }
 
+  function missingEdgeKeys() {
+    return data.requiredEdges
+      .map((e) => edgeKey(e.preyId, e.predatorId))
+      .filter((k) => !edgeSet.has(k));
+  }
+
+  function edgeLabel(key: string) {
+    const [preyId, predatorId] = key.split('→');
+    const prey = nodeMap.get(preyId);
+    const predator = nodeMap.get(predatorId);
+    return `${prey?.name ?? preyId} → ${predator?.name ?? predatorId}`;
+  }
+
+  function fillMissingEdges() {
+    const missing = missingEdgeKeys();
+    if (missing.length === 0) return;
+    setBuildHelpUsed(true);
+    setEdges((prev) => [...prev, ...missing]);
+    setLinkFrom(null);
+  }
+
+  function skipBuild() {
+    if (finishedRef.current) return;
+    setEdges(data.requiredEdges.map((e) => edgeKey(e.preyId, e.predatorId)));
+    setLinkFrom(null);
+    setPhase('predict');
+  }
+
   function startPredict() {
     if (!webComplete) return;
     setPhase('predict');
@@ -70,14 +100,45 @@ function FoodWebBuilderRenderer({
     setPredictions((prev) => ({ ...prev, [nodeId]: outcome }));
   }
 
-  function runCascade() {
-    const allPicked = data.predictNodes.every((p) => predictions[p.nodeId]);
-    if (!allPicked || finishedRef.current) return;
+  function fillPredictions() {
+    setPredictHelpUsed(true);
+    setPredictions((prev) => {
+      const next = { ...prev };
+      for (const item of data.predictNodes) {
+        if (!next[item.nodeId]) next[item.nodeId] = item.expected;
+      }
+      return next;
+    });
+  }
+
+  function finishCascade(
+    predictionMap: Record<string, string>,
+    opts: { skip?: boolean; helpUsed?: boolean } = {},
+  ) {
+    if (finishedRef.current) return;
     finishedRef.current = true;
     setPhase('reveal');
     setRevealed(true);
-    const correct = data.predictNodes.every((p) => predictions[p.nodeId] === p.expected);
+    const predictionsCorrect = data.predictNodes.every(
+      (p) => predictionMap[p.nodeId] === p.expected,
+    );
+    const correct = !opts.skip && !opts.helpUsed && predictionsCorrect;
     onResult({ correct, ms: Date.now() - startMs.current });
+  }
+
+  function runCascade() {
+    const allPicked = data.predictNodes.every((p) => predictions[p.nodeId]);
+    if (!allPicked || finishedRef.current) return;
+    finishCascade(predictions, { helpUsed: predictHelpUsed });
+  }
+
+  function skipPredict() {
+    if (finishedRef.current) return;
+    const filled = Object.fromEntries(
+      data.predictNodes.map((p) => [p.nodeId, p.expected]),
+    );
+    setPredictions(filled);
+    finishCascade(filled, { skip: true });
   }
 
   return (
@@ -140,9 +201,26 @@ function FoodWebBuilderRenderer({
       </div>
 
       {phase === 'build' ? (
-        <Button variant="primary" disabled={!webComplete} onClick={startPredict}>
-          Web complete — predict cascade
-        </Button>
+        <div className="space-y-3">
+          <Button variant="primary" disabled={!webComplete} onClick={startPredict}>
+            Web complete — predict cascade
+          </Button>
+          {!webComplete ? (
+            <div className="flex flex-wrap items-center gap-3">
+              <Button variant="text" onClick={fillMissingEdges} className="text-(--accent-amber)">
+                Get Help!
+              </Button>
+              <Button variant="text" onClick={skipBuild} className="text-(--text-dim)">
+                Skip ahead →
+              </Button>
+            </div>
+          ) : null}
+          {buildHelpUsed && !webComplete ? (
+            <p className="text-meta text-(--accent-amber)">
+              Still missing: {missingEdgeKeys().map(edgeLabel).join(', ')}
+            </p>
+          ) : null}
+        </div>
       ) : null}
 
       {phase === 'predict' || phase === 'reveal' ? (
@@ -187,14 +265,25 @@ function FoodWebBuilderRenderer({
             })}
           </div>
           {phase === 'predict' ? (
-            <Button
-              variant="primary"
-              className="mt-4"
-              disabled={!data.predictNodes.every((p) => predictions[p.nodeId])}
-              onClick={runCascade}
-            >
-              Run cascade
-            </Button>
+            <div className="mt-4 space-y-3">
+              <Button
+                variant="primary"
+                disabled={!data.predictNodes.every((p) => predictions[p.nodeId])}
+                onClick={runCascade}
+              >
+                Run cascade
+              </Button>
+              {!data.predictNodes.every((p) => predictions[p.nodeId]) ? (
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button variant="text" onClick={fillPredictions} className="text-(--accent-amber)">
+                    Get Help!
+                  </Button>
+                  <Button variant="text" onClick={skipPredict} className="text-(--text-dim)">
+                    Skip ahead →
+                  </Button>
+                </div>
+              ) : null}
+            </div>
           ) : (
             <p className="mt-4 text-body font-semibold text-(--accent-cyan)">{data.poweredIdea}</p>
           )}

@@ -1,0 +1,38 @@
+Table 1. EOC biology subject breakdown.
+
+# From Molecules to Organisms - Structures and Processes
+Bio.1.1
+Bio.1.2
+Bio.1.3
+Bio.1.4
+Bio.1.5
+Bio.2.1
+Bio.2.2
+Bio.3.1
+Bio.3.2
+Bio.3.3
+
+
+# Ecosystems - Interactions, Energy, and Dynamics
+Bio.4.1
+Bio.4.2
+Bio.5.1
+Bio.5.2
+
+
+# Heredity - Inheritance and Variation of Traits
+Bio.6.1
+Bio.6.2
+Bio.7.1
+Bio.7.2
+Bio.7.3
+Bio.8.1
+Bio.8.2
+
+# Biological Evolution - Unity and Diversity
+Bio.9.1
+Bio.9.2
+Bio.9.3
+Bio.9.4
+Bio.10.1
+Bio.10.2

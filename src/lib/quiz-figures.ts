@@ -35,7 +35,8 @@ function quizReferencesFigure(prompt: string, hint: string): boolean {
   return false;
 }
 
-function figureSrcFromTeachBody(body: string, figureId: string): string | undefined {
+/** Resolve a figure's public URL from markdown in the unit teach body. */
+export function teachFigureSrcFromBody(body: string, figureId: string): string | undefined {
   const escaped = figureId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const match = body.match(new RegExp(`!\\[[^\\]]*\\]\\(([^)]*${escaped}[^)]*)\\)`, 'i'));
   return match?.[1];
@@ -97,7 +98,7 @@ export function getQuizPlayFigures(
 
   return pickFigures(figures, prompt)
     .map((figure) => {
-      const src = figureSrcFromTeachBody(unit.teach.body, figure.id);
+      const src = teachFigureSrcFromBody(unit.teach.body, figure.id);
       if (!src) return null;
       return { ...figure, src };
     })

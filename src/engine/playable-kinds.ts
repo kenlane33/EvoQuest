@@ -19,3 +19,9 @@ export function isPlayableQuizKind(kind: string): boolean {
 export function listRegistryKinds(): string[] {
   return Object.keys(REGISTRY).sort();
 }
+
+/** Every shipped quiz template kind (basic + registry). */
+export const ALL_QUIZ_TEMPLATE_KINDS = [
+  ...BASIC_QUIZ_KINDS,
+  ...listRegistryKinds(),
+] as const;

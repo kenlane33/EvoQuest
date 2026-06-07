@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useDeferredValue, useEffect, useRef, useState } from 'react';
+import { usePowerUpEffects } from '@/components/play/PowerUpEffectContext';
 import type { InnerQuestion, SpeedRevealData } from '@/types';
 import { SpeedRevealDataSchema } from '@/types';
 import { Button } from '@/components/common/Button';
@@ -42,14 +43,25 @@ function MnemonicRevealer({
   countdownMs?: number;
   revealMs?: number;
 }) {
-  const [countdown, setCountdown] = useState(Math.ceil(countdownMs / 1000));
+  const powerUpFx = usePowerUpEffects();
+  const totalCountdownMs = countdownMs + powerUpFx.extraTimeMs;
+  const revealNow = powerUpFx.effects.some((e) => e.kind === 'reveal-mnemonic-now');
+  const [countdown, setCountdown] = useState(Math.ceil(totalCountdownMs / 1000));
   const [revealedSet, setRevealedSet] = useState<Set<number>>(new Set());
   const [phase, setPhase] = useState<'waiting' | 'revealing' | 'done'>('waiting');
   const orderRef = useRef<number[]>([]);
 
   useEffect(() => {
     orderRef.current = shuffleIndices(mnemonic.length);
-  }, [mnemonic]);
+    setCountdown(Math.ceil(totalCountdownMs / 1000));
+    setRevealedSet(new Set());
+    setPhase('waiting');
+  }, [mnemonic, totalCountdownMs]);
+
+  useEffect(() => {
+    if (!revealNow || answered || phase !== 'waiting') return;
+    setPhase('revealing');
+  }, [revealNow, answered, phase]);
 
   useEffect(() => {
     if (phase !== 'waiting' || answered) return;
@@ -114,7 +126,8 @@ function MnemonicRevealer({
     }
   }, [answered, mnemonic.length]);
 
-  const pctBar = phase === 'waiting' ? (countdown / Math.ceil(countdownMs / 1000)) * 100 : 0;
+  const pctBar =
+    phase === 'waiting' ? (countdown / Math.ceil(totalCountdownMs / 1000)) * 100 : 0;
 
   return (
     <div className="mt-5 rounded-2xl border border-violet-500/15 bg-violet-500/5 p-4 transition-opacity">
@@ -179,6 +192,7 @@ function FillQuestion({
   onAnswer: (correct: boolean, explanation: string) => void;
 }) {
   const [val, setVal] = useState('');
+  const displayVal = useDeferredValue(val);
   const [done, setDone] = useState(false);
   const [hint, setHint] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -219,7 +233,7 @@ function FillQuestion({
                     : 'border-cyan-400 text-cyan-300'
                 }`}
               >
-                {val || '?????'}
+                {displayVal || '?????'}
               </span>
               {parts[1]}
             </>
@@ -282,10 +296,29 @@ function MultipleChoiceQuestion({
   answered: boolean;
   onAnswer: (correct: boolean, explanation: string) => void;
 }) {
+  const powerUpFx = usePowerUpEffects();
   const [pick, setPick] = useState<string | null>(null);
+  const [dimmedIndex, setDimmedIndex] = useState<number | undefined>();
+
+  useEffect(() => {
+    const hasReveal = powerUpFx.effects.some((e) => e.kind === 'reveal-option');
+    if (!hasReveal) {
+      setDimmedIndex(undefined);
+      return;
+    }
+    const wrongIndices = question.options
+      .map((_, i) => i)
+      .filter((i) => i !== question.correctIndex);
+    if (!wrongIndices.length) return;
+    const fixed =
+      powerUpFx.revealWrongIndex !== undefined && powerUpFx.revealWrongIndex >= 0
+        ? powerUpFx.revealWrongIndex
+        : wrongIndices[Math.floor(Math.random() * wrongIndices.length)];
+    if (wrongIndices.includes(fixed)) setDimmedIndex(fixed);
+  }, [powerUpFx.effects, powerUpFx.revealWrongIndex, question]);
 
   function tap(option: string, index: number) {
-    if (pick || answered) return;
+    if (pick || answered || dimmedIndex === index) return;
     setPick(option);
     const ok = index === question.correctIndex;
     const explanation = ok
@@ -301,6 +334,7 @@ function MultipleChoiceQuestion({
         {question.options.map((option, i) => {
           const isRight = pick !== null && i === question.correctIndex;
           const isWrong = pick === option && i !== question.correctIndex;
+          const dimmed = dimmedIndex === i && pick === null;
           const faded = pick !== null && !isRight && !isWrong;
           return (
             <Button
@@ -308,9 +342,10 @@ function MultipleChoiceQuestion({
               variant="ghost"
               fullWidth
               onClick={() => tap(option, i)}
-              disabled={!!pick || answered}
+              disabled={!!pick || answered || dimmed}
               className={cn(
                 'justify-start rounded-xl border px-4 py-3 text-left text-sm font-semibold hover:bg-transparent',
+                dimmed && 'pointer-events-none border-white/4 bg-white/[0.02] opacity-20',
                 isRight
                   ? 'border-emerald-400/30 bg-emerald-400/15 text-emerald-300'
                   : isWrong

@@ -21,6 +21,29 @@ function phenotypeForGenotype(data: PunnettBuilderData, genotype: string): strin
   return direct?.label ?? genotype;
 }
 
+/** Exported for tests. Validates live tallies against expectedRatio. */
+export function punnettRatioMatches(
+  data: Pick<PunnettBuilderData, 'dominantPhenotype' | 'expectedRatio' | 'phenotypeMap'>,
+  tallies: Record<string, number>,
+): boolean {
+  const parts = data.expectedRatio.split(':').map((n) => parseInt(n, 10));
+  const labelList = [...new Set(Object.values(data.phenotypeMap).map((m) => m.label))];
+
+  if (parts.length === 2 && labelList.length === 2) {
+    const recessiveLabel = labelList.find((l) => l !== data.dominantPhenotype);
+    return (
+      (tallies[data.dominantPhenotype] ?? 0) === parts[0] &&
+      (recessiveLabel ? (tallies[recessiveLabel] ?? 0) === parts[1] : false)
+    );
+  }
+
+  if (parts.length > 2 && parts.every((p) => p === parts[0])) {
+    return labelList.every((label) => (tallies[label] ?? 0) === parts[0]);
+  }
+
+  return false;
+}
+
 function PunnettBuilderRenderer({
   data,
   onResult,
@@ -36,6 +59,8 @@ function PunnettBuilderRenderer({
   );
   const [dragging, setDragging] = useState<{ allele: string; parent: 0 | 1 } | null>(null);
   const [selected, setSelected] = useState<{ allele: string; parent: 0 | 1 } | null>(null);
+  const dragRef = useRef<{ allele: string; parent: 0 | 1 } | null>(null);
+  const selectedRef = useRef<{ allele: string; parent: 0 | 1 } | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const finishedRef = useRef(false);
 
@@ -70,7 +95,7 @@ function PunnettBuilderRenderer({
     setCells((prev) =>
       prev.map((cell, i) => ({
         genotype: combos[i],
-        phenotype: cell.phenotype,
+        phenotype: phenotypeForGenotype(data, combos[i]),
       })),
     );
   }
@@ -87,14 +112,25 @@ function PunnettBuilderRenderer({
       setColAlleles(next);
       fillGrid(rowAlleles, next);
     }
+    dragRef.current = null;
+    selectedRef.current = null;
     setDragging(null);
     setSelected(null);
   }
 
   function onHeaderDrop(parentIndex: 0 | 1, slot: 0 | 1) {
-    const source = dragging ?? selected;
+    const source = dragRef.current ?? selectedRef.current;
     if (!source || source.parent !== parentIndex) return;
     assignHeader(parentIndex, slot, source.allele);
+  }
+
+  function selectAllele(allele: string, parentIndex: 0 | 1) {
+    const next =
+      selectedRef.current?.allele === allele && selectedRef.current.parent === parentIndex
+        ? null
+        : { allele, parent: parentIndex };
+    selectedRef.current = next;
+    setSelected(next);
   }
 
   function setPhenotype(index: number, phenotype: string) {
@@ -115,14 +151,7 @@ function PunnettBuilderRenderer({
 
   function submit() {
     if (!gridReady || finishedRef.current) return;
-    const parts = data.expectedRatio.split(':').map((n) => parseInt(n, 10));
-    const dominantCount = tallies[data.dominantPhenotype] ?? 0;
-    const recessiveLabel = labels.find((l) => l !== data.dominantPhenotype);
-    const recessiveCount = recessiveLabel ? (tallies[recessiveLabel] ?? 0) : 0;
-    const correct =
-      parts.length === 2 &&
-      dominantCount === parts[0] &&
-      recessiveCount === parts[1];
+    const correct = punnettRatioMatches(data, tallies);
     finishedRef.current = true;
     setSubmitted(true);
     onResult({ correct, ms: Date.now() - startMs.current });
@@ -132,7 +161,7 @@ function PunnettBuilderRenderer({
     <div className="space-y-5">
       <p className="text-body-lg text-(--text-secondary)">{data.scenario}</p>
       <p className="text-meta text-(--text-dim)">
-        Drag alleles into headers, label each cell&apos;s phenotype, then commit.
+        Tap an allele, then tap a matching header (♂ parent 1, ♀ parent 2). Commit when all four cells are filled.
       </p>
 
       <div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
@@ -146,9 +175,17 @@ function PunnettBuilderRenderer({
               e.preventDefault();
               onHeaderDrop(1, slot as 0 | 1);
             }}
-            onClick={() => selected?.parent === 1 && assignHeader(1, slot as 0 | 1, selected.allele)}
+            role="button"
+            tabIndex={0}
+            onClick={() => onHeaderDrop(1, slot as 0 | 1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onHeaderDrop(1, slot as 0 | 1);
+              }
+            }}
             className={cn(
-              'flex min-h-10 items-center justify-center rounded border border-dashed px-2 font-bold',
+              'flex min-h-10 cursor-pointer items-center justify-center rounded border border-dashed px-2 font-bold',
               colAlleles[slot]
                 ? 'border-(--accent-violet) bg-[color-mix(in_oklab,var(--accent-violet)_10%,transparent)]'
                 : 'border-(--border-light) bg-(--bg-card)',
@@ -166,9 +203,17 @@ function PunnettBuilderRenderer({
                 e.preventDefault();
                 onHeaderDrop(0, row as 0 | 1);
               }}
-              onClick={() => selected?.parent === 0 && assignHeader(0, row as 0 | 1, selected.allele)}
+              role="button"
+              tabIndex={0}
+              onClick={() => onHeaderDrop(0, row as 0 | 1)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onHeaderDrop(0, row as 0 | 1);
+                }
+              }}
               className={cn(
-                'flex min-h-10 items-center justify-center rounded border border-dashed px-2 font-bold',
+                'flex min-h-10 cursor-pointer items-center justify-center rounded border border-dashed px-2 font-bold',
                 rowAlleles[row]
                   ? 'border-(--accent-cyan) bg-[color-mix(in_oklab,var(--accent-cyan)_10%,transparent)]'
                   : 'border-(--border-light) bg-(--bg-card)',
@@ -231,15 +276,16 @@ function PunnettBuilderRenderer({
                   key={`${parentIndex}-${allele}`}
                   type="button"
                   draggable
-                  onDragStart={() => setDragging({ allele, parent: parentIndex as 0 | 1 })}
-                  onDragEnd={() => setDragging(null)}
-                  onClick={() =>
-                    setSelected((prev) =>
-                      prev?.allele === allele && prev.parent === parentIndex
-                        ? null
-                        : { allele, parent: parentIndex as 0 | 1 },
-                    )
-                  }
+                  onDragStart={() => {
+                    const payload = { allele, parent: parentIndex as 0 | 1 };
+                    dragRef.current = payload;
+                    setDragging(payload);
+                  }}
+                  onDragEnd={() => {
+                    dragRef.current = null;
+                    setDragging(null);
+                  }}
+                  onClick={() => selectAllele(allele, parentIndex as 0 | 1)}
                   className={cn(
                     'cursor-grab rounded-(--r-lg) border px-3 py-2 font-bold active:cursor-grabbing',
                     selected?.allele === allele && selected.parent === parentIndex
@@ -279,9 +325,9 @@ function PunnettBuilderRenderer({
           Commit ratio
         </Button>
       ) : (
-        <Card variant={(tallies[data.dominantPhenotype] ?? 0) > 0 ? 'correct' : 'wrong'}>
+        <Card variant={punnettRatioMatches(data, tallies) ? 'correct' : 'wrong'}>
           <p className="text-body text-(--text-secondary)">
-            Expected ratio for {data.dominantPhenotype}: {data.expectedRatio.replace(':', ' purple : ')} white
+            Expected phenotype ratio: {data.expectedRatio}
           </p>
           {data.notes ? <p className="mt-2 text-meta text-(--text-dim)">{data.notes}</p> : null}
         </Card>

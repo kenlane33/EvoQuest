@@ -1,0 +1,873 @@
+{
+  "source": {
+    "title": "2025 NC Biology End-of-Course Released Form",
+    "publisher": "NCDPI",
+    "year": 2025,
+    "totalQuestions": 50,
+    "answerKeyStartsOnPdfPage": 49
+  },
+  "questionTypes": {
+    "MC": "multiple choice",
+    "IC": "inline choice (dropdown)",
+    "MS": "multiselect",
+    "DD": "drag and drop"
+  },
+  "itemSets": [
+    {
+      "id": "brackish-life",
+      "questions": [11, 12, 13, 14, 15],
+      "title": "The Brackish Life",
+      "passage": "Finger mullets are small fish that play a critical role in North Carolina's estuary ecosystems. Estuaries are ecosystems of change, and life is not always easy for finger mullets there. An estuary is a brackish water environment. Salinity changes in response to tidal changes. At high tide, the estuary is filled with more ocean water, and the salinity increases. The salinity decreases at low tide, when the ocean waters recede and fresh water from the mouth of the river is allowed in. Organisms that live in this environment are specially adapted for constantly changing salinity levels. When the salinity of the water changes, the cells of the organisms that live there must adjust by either taking in water or releasing it.",
+      "figures": [
+        {
+          "id": "figure-1",
+          "label": "Figure 1",
+          "title": "Diagram of a Gill Tissue Cell",
+          "description": "A finger mullet gill tissue cell in high-salinity brackish water. The cell has a labeled cellular membrane and nucleus. Salt particles (small dots) are densely packed outside the cell in the brackish water and sparsely distributed inside the cell, showing higher external salt concentration."
+        },
+        {
+          "id": "figure-2",
+          "label": "Figure 2",
+          "title": "Estuary Food Web",
+          "description": "Food web with finger mullet at the center. Arrows point from prey to predator. Algae and phytoplankton are eaten by zooplankton. Phytoplankton is also eaten by snail. Seagrass is eaten by snail. Zooplankton is eaten by finger mullet. Snail is eaten by crab. Crab is eaten by heron. Finger mullet is eaten by red drum, bluefish, heron, and bull shark. Red drum and bluefish are eaten by bull shark."
+        }
+      ]
+    },
+    {
+      "id": "basketball-height",
+      "questions": [36, 37, 38, 39, 40],
+      "title": "Do You Play Basketball?",
+      "passage": "Judd gets asked at least once a day whether he plays basketball. At 6'7\" he is very tall. Judd's dad is tall (6'3\"), and Judd's mom is above average height for women (5'9\"). How can it be that Judd is taller than both of his parents? Human height is controlled by at least three genes, each with two alleles: dominant (T) and recessive (t), where T is expressed as tall height.",
+      "figures": [
+        {
+          "id": "figure-1",
+          "label": "Figure 1",
+          "title": "Combination of Genes through Fertilization",
+          "description": "Sperm nucleus contains two T and one t allele. Egg nucleus contains two T and one t allele. Fertilization produces a fertilized egg with four T and two t alleles. After division, the embryo consists of five cells, each with four T and two t alleles."
+        },
+        {
+          "id": "figure-2",
+          "label": "Figure 2",
+          "title": "Range of Phenotypes for Human Height in Males",
+          "description": "Bell-shaped histogram. Y-axis: Percentage of Males (0-12%). X-axis: Phenotype height in inches (50-85). Peak at approximately 67-68 inches (12%). Distribution is symmetrical; most males fall between 60 and 75 inches. Heights of 50-55 inches and 75-80 inches are in the low-frequency tails."
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "number": 1,
+      "type": "MC",
+      "stem": "How is a DNA molecule arranged?",
+      "choices": {
+        "A": "double-stranded with alternating deoxyribose and phosphate groups on the sides with adenine, guanine, cytosine, and thymine in the middle",
+        "B": "double-stranded with alternating deoxyribose and phosphate groups on the sides with adenine, guanine, cytosine, and uracil in the middle",
+        "C": "double-stranded with alternating ribose and phosphate groups on the sides with adenine, guanine, cytosine, and thymine in the middle",
+        "D": "double-stranded with alternating ribose and phosphate groups on the sides with adenine, guanine, cytosine, and uracil in the middle"
+      },
+      "images": [],
+      "answerKey": { "key": "A", "objective": "LS.Bio.1.1", "sep": "None" }
+    },
+    {
+      "number": 2,
+      "type": "MC",
+      "stem": "Enzyme X is needed for a reaction to occur. What is the most likely result when additional Enzyme X is added to the reaction?",
+      "choices": {
+        "A": "an increase in the reaction rate",
+        "B": "a decrease in the reaction rate",
+        "C": "a decrease in the product concentration",
+        "D": "an increase in the substrate concentration"
+      },
+      "images": [],
+      "answerKey": { "key": "A", "objective": "LS.Bio.1.2", "sep": "None" }
+    },
+    {
+      "number": 3,
+      "type": "MC",
+      "stem": "Hummingbirds thrive in warm, moist climates, and their primary source of food is nectar from flowering plants. A three-year drought is expected in an ecosystem. How will this most likely affect the hummingbird population in that ecosystem?",
+      "choices": {
+        "A": "The hummingbirds will increase their reproductive rate in order to ensure enough individuals survive.",
+        "B": "The hummingbirds will decrease their reproductive rate in order to decrease genetic diversity within the population.",
+        "C": "The hummingbirds will immediately adapt to eat new food sources, increasing the overall survival rate of the population.",
+        "D": "The hummingbirds will struggle to find food, and only those that can adapt to new food sources will survive."
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.10.1", "sep": "None" }
+    },
+    {
+      "number": 4,
+      "type": "MC",
+      "stem": "This chart shows characteristics of four different cells observed under a microscope. Which is most likely a prokaryotic cell?",
+      "choices": {
+        "A": "Cell 1",
+        "B": "Cell 2",
+        "C": "Cell 3",
+        "D": "Cell 4"
+      },
+      "images": [
+        {
+          "type": "table",
+          "description": "Table with columns Cell, Cell Wall, Chloroplast, Mitochondria, Ribosome. Check marks indicate presence. Cell 1: no cell wall, no chloroplast, has mitochondria and ribosomes. Cell 2: has all four. Cell 3: has cell wall and ribosomes only. Cell 4: has cell wall, mitochondria, and ribosomes."
+        }
+      ],
+      "answerKey": { "key": "C", "objective": "LS.Bio.1.4", "sep": "Analyze and Interpret Data" }
+    },
+    {
+      "number": 5,
+      "type": "MC",
+      "stem": "What is the significance of three consecutive nucleotides in DNA?",
+      "choices": {
+        "A": "They code for one amino acid.",
+        "B": "They code for three amino acids.",
+        "C": "They code for one complete protein.",
+        "D": "They code for three complete proteins."
+      },
+      "images": [],
+      "answerKey": { "key": "A", "objective": "LS.Bio.1.5", "sep": "None" }
+    },
+    {
+      "number": 6,
+      "type": "MC",
+      "stem": "A cell experiences an error during the cell cycle, causing it to go through cytokinesis before mitosis. Which statement best describes the new cells?",
+      "choices": {
+        "A": "The new cells will be double the size of the original cell.",
+        "B": "The new cells will have twice as much DNA as the original cell.",
+        "C": "The new cells will have no DNA or organelles but will continue progressing through the cell cycle.",
+        "D": "The new cells will have an incorrect amount of DNA and organelles, and will likely experience cell death."
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.2.1", "sep": "None" }
+    },
+    {
+      "number": 7,
+      "type": "MC",
+      "stem": "Among birds, some skin cells grow feathers when they mature, while other skin cells grow scales at maturity. Which statement best explains this difference?",
+      "choices": {
+        "A": "Skin cells exposed to colder environments grow feathers, while skin cells exposed to wet environments grow scales.",
+        "B": "While all cells have the same DNA, specialized cells express certain traits that produce feathers or scales.",
+        "C": "Skin cells that have feathers are diploid, while skin cells that make scales are haploid.",
+        "D": "Some skin cells have different DNA to build structures like feathers and scales."
+      },
+      "images": [],
+      "answerKey": { "key": "B", "objective": "LS.Bio.2.2", "sep": "Construct an Explanation" }
+    },
+    {
+      "number": 8,
+      "type": "MC",
+      "stem": "The table below describes several different types of energy transfer processes. Which transfer represents photosynthesis?",
+      "choices": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "4"
+      },
+      "images": [
+        {
+          "type": "table",
+          "title": "Energy Transfer in Organisms",
+          "description": "Transfer 1: solar to chemical. Transfer 2: chemical to heat. Transfer 3: chemical to ATP. Transfer 4: solar to ATP."
+        }
+      ],
+      "answerKey": { "key": "A", "objective": "LS.Bio.3.2", "sep": "Use Models" }
+    },
+    {
+      "number": 9,
+      "type": "MC",
+      "stem": "A group of students completed two experiments. Their notes are below:\nExperiment 1: Hydrogen peroxide was poured on a slice of raw potato. The peroxide bubbled vigorously. The peroxide was broken down into water and oxygen.\nExperiment 2: A slice of raw potato was heated and then hydrogen peroxide was poured on it. There was no visible reaction.\nWhich statement explains the results of these experiments?",
+      "choices": {
+        "A": "Heating the potato had no effect on the potato enzymes.",
+        "B": "Heating the potato caused the hydrogen peroxide to evaporate, so the reaction did not occur.",
+        "C": "Heating the potato caused the potato enzymes to release the water and oxygen from the hydrogen peroxide.",
+        "D": "Heating the potato caused a shape change in the potato enzymes, so they could no longer function properly."
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.1.2", "sep": "Carry Out Investigations" }
+    },
+    {
+      "number": 10,
+      "type": "MC",
+      "stem": "The diagram below shows a plant cell. The vacuole allows the plant cell to store water for later use in photosynthesis. A mutation occurs and the size of the vacuole decreases. What effect will this have on the rate of photosynthesis in the cell?",
+      "choices": {
+        "A": "The vacuole will be less able to hold water, decreasing the rate of photosynthesis.",
+        "B": "The vacuole will be more able to hold water, increasing the rate of photosynthesis.",
+        "C": "The cell will be able to take in more water, decreasing the rate of photosynthesis.",
+        "D": "The cell will be able to release more water, increasing the rate of photosynthesis."
+      },
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Cross-section of a plant cell with labeled cell wall, large central vacuole occupying most of the cell volume, nucleus pushed to the edge, and several oval organelles (chloroplasts/mitochondria) in the cytoplasm."
+        }
+      ],
+      "answerKey": { "key": "A", "objective": "LS.Bio.1.3", "sep": "Use Models" }
+    },
+    {
+      "number": 11,
+      "type": "MC",
+      "itemSet": "brackish-life",
+      "stem": "How does the cellular membrane of the finger mullet's cell contribute to homeostasis within the cell?",
+      "choices": {
+        "A": "It serves as a solid membrane, allowing no materials to pass into and out of the cell.",
+        "B": "It serves as an impermeable membrane, allowing only water to move into and out of the cell.",
+        "C": "It serves as a selectively permeable membrane, allowing water and other materials to move into and out of the cell as needed.",
+        "D": "It serves as a permeable membrane, allowing any material to easily pass into and out of the cell, whether needed or not."
+      },
+      "images": [{ "ref": "brackish-life.figure-1" }],
+      "answerKey": { "key": "C", "objective": "LS.Bio.1.3", "sep": "Use Models" }
+    },
+    {
+      "number": 12,
+      "type": "IC",
+      "itemSet": "brackish-life",
+      "stem": "Use the drop-down menus below to complete the statement, explaining how the cellular membrane shown in Figure 1 helps support the finger mullet in a high-salinity environment.",
+      "template": "The cell membrane {dropdown1} by allowing water {dropdown2}",
+      "dropdowns": [
+        {
+          "id": "dropdown1",
+          "options": ["maintains homeostasis", "disrupts homeostasis"]
+        },
+        {
+          "id": "dropdown2",
+          "options": ["to enter the cell.", "to exit the cell."]
+        }
+      ],
+      "images": [{ "ref": "brackish-life.figure-1" }],
+      "answerKey": {
+        "key": { "dropdown1": "maintains homeostasis", "dropdown2": "to exit the cell." },
+        "objective": "LS.Bio.3.1",
+        "sep": "Use Models"
+      }
+    },
+    {
+      "number": 13,
+      "type": "MC",
+      "itemSet": "brackish-life",
+      "stem": "A researcher hypothesizes that water will move out of the cell more quickly when the concentration of salt in the water outside the cell is greater. Which experiment would best test this hypothesis?",
+      "choices": {
+        "A": "A researcher places three cells of the same type in varying concentrations of salt water. Then the researcher measures the size of each cell every minute during a 5-minute period of time.",
+        "B": "A researcher places three cells of the same type in the same concentration of salt water. Then the researcher measures the size of each cell every minute during a 5-minute period of time.",
+        "C": "A researcher places cells from three different fish in varying concentrations of salt water. Then the researcher measures the size of each cell at the end of a 5-minute period of time.",
+        "D": "A researcher places cells from three different fish in the same concentration of salt water. Then the researcher measures the size of each cell at the end of a 5-minute period of time."
+      },
+      "images": [{ "ref": "brackish-life.figure-1" }],
+      "answerKey": { "key": "A", "objective": "LS.Bio.3.1", "sep": "Carry Out Investigations" }
+    },
+    {
+      "number": 14,
+      "type": "MC",
+      "itemSet": "brackish-life",
+      "stem": "Based on the food web (Figure 2), what effect will a decrease in the algae population have on the finger mullet population in the estuary?",
+      "choices": {
+        "A": "The finger mullet population will increase because the zooplankton population will decrease.",
+        "B": "The finger mullet population will decrease because the zooplankton population will increase.",
+        "C": "The finger mullet population will decrease because the zooplankton population will decrease.",
+        "D": "The finger mullet population will stay the same because algae is not a direct food source for the mullets."
+      },
+      "images": [{ "ref": "brackish-life.figure-2" }],
+      "answerKey": { "key": "C", "objective": "LS.Bio.4.2", "sep": "Use Models" }
+    },
+    {
+      "number": 15,
+      "type": "MS",
+      "itemSet": "brackish-life",
+      "stem": "Based on the food web (Figure 2), which statements are true? Select three true statements.",
+      "choices": [
+        "The red drum only receives energy by consuming finger mullets.",
+        "The seagrass obtains its energy from the phytoplankton and algae.",
+        "The phytoplankton produce oxygen and glucose the heron needs to survive.",
+        "The phytoplankton produce carbon dioxide and glucose the algae need to survive.",
+        "The bull shark and heron populations have the most energy available because they are at the top of the food chain.",
+        "The phytoplankton population has the most energy available because it is at the bottom of the food chain."
+      ],
+      "images": [{ "ref": "brackish-life.figure-2" }],
+      "answerKey": {
+        "key": [0, 2, 5],
+        "keyText": [
+          "The red drum only receives energy by consuming finger mullets.",
+          "The phytoplankton produce oxygen and glucose the heron needs to survive.",
+          "The phytoplankton population has the most energy available because it is at the bottom of the food chain."
+        ],
+        "objective": "LS.Bio.4.2",
+        "sep": "Use Models"
+      }
+    },
+    {
+      "number": 16,
+      "type": "MC",
+      "stem": "Which model represents energy transfer within a food web in a stable ecosystem?",
+      "choices": {
+        "A": "Four equal-width stacked rectangles labeled producers, primary consumers, secondary consumers, tertiary consumers (bottom to top).",
+        "B": "Upright triangle divided into three tiers narrowing toward the top: producers (widest base), primary consumers, secondary consumers (narrow peak).",
+        "C": "Inverted triangle divided into three tiers narrowing toward the bottom: producers (narrow bottom point), primary consumers, secondary consumers (widest top).",
+        "D": "Diamond shape divided into four horizontal sections: producers (narrow bottom), primary consumers (wide), secondary consumers (wide), tertiary consumers (narrow top)."
+      },
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Four trophic-level models labeled A through D as described in the answer choices."
+        }
+      ],
+      "answerKey": { "key": "B", "objective": "LS.Bio.4.2", "sep": "Use Models" }
+    },
+    {
+      "number": 17,
+      "type": "MC",
+      "stem": "What would most likely occur if a new insect species were introduced into North Carolina's ecosystems?",
+      "choices": {
+        "A": "The new insect species would maintain the stability of the area.",
+        "B": "The new insect species would have less reproductive success.",
+        "C": "The new insect species would be eaten by natural predators.",
+        "D": "The new insect species would increase competition for food resources."
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.5.1", "sep": "None" }
+    },
+    {
+      "number": 18,
+      "type": "MC",
+      "stem": "Which human action could best reduce global climate change?",
+      "choices": {
+        "A": "increasing the ozone layer",
+        "B": "converting to carbon-free energy",
+        "C": "monitoring smog levels in urban areas",
+        "D": "protecting fresh water against pollution"
+      },
+      "images": [],
+      "answerKey": { "key": "B", "objective": "LS.Bio.5.2", "sep": "None" }
+    },
+    {
+      "number": 19,
+      "type": "MC",
+      "stem": "These diagrams illustrate two reproductive processes. Which statement best explains the processes?",
+      "choices": {
+        "A": "Process X results in cells that have more genetic variation than those produced through Process Z.",
+        "B": "Process X results in cells that have less genetic variation than those produced through Process Z.",
+        "C": "Process X results in 1 cell that has the exact same DNA as the parent cells, and Process Z results in 2 cells that have the exact same DNA as the parent cell.",
+        "D": "Process X results in 1 cell that has the exact same DNA as the parent cells, while Process Z results in 2 cells that have different DNA from the parent cell."
+      },
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Process X: two 1n (haploid) cells combine into one 2n (diploid) cell (fertilization). Process Z: one 2n cell divides into two 2n cells (mitosis)."
+        }
+      ],
+      "answerKey": { "key": "A", "objective": "LS.Bio.6.1", "sep": "Use Models" }
+    },
+    {
+      "number": 20,
+      "type": "MC",
+      "stem": "This diagram shows homologous chromosomes. Which choice best describes the source of genetic variation?",
+      "choices": {
+        "A": "crossing-over",
+        "B": "gene mutation",
+        "C": "nondisjunction",
+        "D": "independent assortment"
+      },
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Two homologous X-shaped chromosomes side by side (one outlined, one solid black). After a process shown by an arrow, the chromosomes have exchanged segments at the tips of their lower chromatids."
+        }
+      ],
+      "answerKey": { "key": "A", "objective": "LS.Bio.6.2", "sep": "Use Models" }
+    },
+    {
+      "number": 21,
+      "type": "DD",
+      "stem": "The Punnett square below represents the gametes of a mother and a father for a certain blood type. Fill in all highlighted cells with the appropriate genotype combinations.",
+      "grid": {
+        "motherGametes": ["A", "O"],
+        "fatherGametes": ["B", "O"],
+        "cells": [
+          { "father": "B", "mother": "A", "answer": "AB" },
+          { "father": "B", "mother": "O", "answer": "BO" },
+          { "father": "O", "mother": "A", "prefilled": "AO" },
+          { "father": "O", "mother": "O", "answer": "OO" }
+        ]
+      },
+      "options": ["AA", "AB", "OO", "BO", "BB"],
+      "images": [
+        {
+          "type": "diagram",
+          "description": "2x2 Punnett square. Mother alleles A and O across top; father alleles B and O down left side. Bottom-left cell prefilled AO; other three cells empty (highlighted)."
+        }
+      ],
+      "answerKey": { "key": "AB; BO; OO", "objective": "LS.Bio.7.1", "sep": "Use Models" }
+    },
+    {
+      "number": 22,
+      "type": "MC",
+      "stem": "How will melting of the polar ice caps affect the animal populations in the Arctic region?",
+      "choices": {
+        "A": "Arctic organisms will have more available oxygen.",
+        "B": "Arctic organisms will have more available drinking water.",
+        "C": "Polar bears will find it easier to find food and habitat resources.",
+        "D": "Polar bears will find it more difficult to find food and habitat resources."
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.10.1", "sep": "None" }
+    },
+    {
+      "number": 23,
+      "type": "MC",
+      "stem": "This diagram represents the DNA fingerprint for a man, a woman, and four different babies, one of which is the man and woman's baby. Based on the DNA fingerprints, which is most likely the man and woman's baby?",
+      "choices": {
+        "A": "Baby W",
+        "B": "Baby X",
+        "C": "Baby Y",
+        "D": "Baby Z"
+      },
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Gel electrophoresis columns for Man (6 bands), Woman (6 bands), Baby W, Baby X, Baby Y, Baby Z. Baby Y: every band matches either the man or woman (3 from each). Baby Z: all bands match parents (4 from man, 2 from woman). Baby W and Baby X each have bands that do not match either parent."
+        }
+      ],
+      "answerKey": { "key": "C", "objective": "LS.Bio.8.1", "sep": "Analyze and Interpret Data" }
+    },
+    {
+      "number": 24,
+      "type": "MC",
+      "stem": "A farmer reads this information: A bacterium has a gene that allows it to create pesticide. The gene has been transferred into a corn plant, allowing the corn plant to produce pesticide. Why might a farmer choose to plant genetically engineered corn?",
+      "choices": {
+        "A": "to spread mutations from the corn to other crops",
+        "B": "to reduce chemical use during the growing season",
+        "C": "to allow the fields to be used for more than one season",
+        "D": "to decrease the amount of land needed to grow the corn crop"
+      },
+      "images": [],
+      "answerKey": { "key": "B", "objective": "LS.Bio.8.2", "sep": "None" }
+    },
+    {
+      "number": 25,
+      "type": "MC",
+      "stem": "A patient takes medication to treat strep throat caused by the bacteria Streptococcus pyogenes. Which statement best describes the reproductive success of the bacteria after the patient has taken the medication for a period of time?",
+      "choices": {
+        "A": "The bacteria may develop resistance to the medication and continue to reproduce.",
+        "B": "The patient will require a vaccination to prevent the bacteria from reproducing.",
+        "C": "The patient's immune system will produce antibodies that prevent the bacteria's reproduction.",
+        "D": "The medication may serve as an energy source and cause rapid reproduction of the bacteria."
+      },
+      "images": [],
+      "answerKey": { "key": "A", "objective": "LS.Bio.9.1", "sep": "None" }
+    },
+    {
+      "number": 26,
+      "type": "MC",
+      "stem": "Which information provides the most reliable evidence of common ancestry for four species of mammals?",
+      "choices": {
+        "A": "embryological forms",
+        "B": "nucleotide sequences",
+        "C": "anatomical structures",
+        "D": "homologous structures"
+      },
+      "images": [],
+      "answerKey": { "key": "B", "objective": "LS.Bio.9.2", "sep": "None" }
+    },
+    {
+      "number": 27,
+      "type": "MS",
+      "stem": "A marine biology program has monitored a population of sharks in the southern Atlantic Ocean for over 100 years. The population has been very successful over this period of time. The biologists hypothesize that natural selection has been acting on the population, increasing its ability to thrive. Select the three observations that best support the hypothesis.",
+      "choices": [
+        "The sharks have been able to adapt to changes in their environment.",
+        "The sharks have been unable to adapt to changes in their environment.",
+        "Individuals are very similar to one another as a result of genetic continuity.",
+        "Individuals differ from one another as a result of genetic diversity.",
+        "The average number of births has been less than the average number of deaths in the population.",
+        "The average number of births has been greater than the average number of deaths in the population."
+      ],
+      "images": [],
+      "answerKey": {
+        "key": [0, 3, 5],
+        "keyText": [
+          "The sharks have been able to adapt to changes in their environment.",
+          "Individuals differ from one another as a result of genetic diversity.",
+          "The average number of births has been greater than the average number of deaths in the population."
+        ],
+        "objective": "LS.Bio.9.3",
+        "sep": "Engage in Argument from Evidence"
+      }
+    },
+    {
+      "number": 28,
+      "type": "MC",
+      "stem": "A population of rabbits lives in a forest. Some of the rabbits have a mutation that results in extra-powerful hind legs. What will most likely happen to the population of rabbits if a population of wolves is introduced to the forest?",
+      "choices": {
+        "A": "The number of rabbits with normal legs will increase over time because their DNA is not mutated.",
+        "B": "The number of rabbits with powerful legs will increase over time because they can better escape the wolves.",
+        "C": "The total number of rabbits will decrease over time because all rabbits have an equal chance of getting eaten.",
+        "D": "The total number of rabbits will decrease over time because most rabbits will have induced mutations that reduce their survival rate."
+      },
+      "images": [],
+      "answerKey": { "key": "B", "objective": "LS.Bio.9.4", "sep": "None" }
+    },
+    {
+      "number": 29,
+      "type": "MC",
+      "stem": "An enzyme has an optimal temperature of 25°C. During an experiment, which action would most likely increase the rate of the reaction?",
+      "choices": {
+        "A": "decreasing the light intensity",
+        "B": "increasing the temperature above 25°C",
+        "C": "decreasing the amount of substrate available",
+        "D": "increasing the temperature from 15°C to 25°C"
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.1.2", "sep": "None" }
+    },
+    {
+      "number": 30,
+      "type": "DD",
+      "stem": "Using the dichotomous key and the tree images, place the characteristics of each species in the correct box. Then place the scientific names that identify each species. Fill in all cells.",
+      "dichotomousKey": [
+        { "step": 1, "a": "more than 5 needles in each cluster", "aResult": "Larix laricina", "b": "2-5 needles in each cluster", "bResult": "Go to 2" },
+        { "step": 2, "a": "5 needles in each cluster", "aResult": "Pinus strobus", "b": "2 needles in each cluster", "bResult": "Go to 3" },
+        { "step": 3, "a": "long needles clustered in pairs", "aResult": "Pinus resinosa", "b": "short needles clustered in pairs", "bResult": "Pinus banksiana" }
+      ],
+      "speciesImages": [
+        { "species": 1, "description": "Dense brush-like cluster of many needles (>10) from one point; small rounded pinecone." },
+        { "species": 2, "description": "Cluster of 5 long thin needles from one point; long slender tapered pinecone." },
+        { "species": 3, "description": "Needles in pairs (2 per cluster), relatively long; small egg-shaped pinecone." },
+        { "species": 4, "description": "Needles in pairs (2 per cluster), notably short; small curved/hooked pinecone." }
+      ],
+      "grid": [
+        { "species": 1, "characteristic": "more than 5 needles in each cluster", "scientificName": "Larix laricina" },
+        { "species": 2, "characteristic": "five needles in each cluster", "scientificName": "Pinus strobus" },
+        { "species": 3, "characteristic": "long needles clustered in pairs", "scientificName": "Pinus resinosa" },
+        { "species": 4, "characteristic": "short needles clustered in pairs", "scientificName": "Pinus banksiana" }
+      ],
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Dichotomous key table and four species branch illustrations (Species 1-4) as described above."
+        }
+      ],
+      "answerKey": {
+        "key": [
+          "1: more than 5 needles in each cluster",
+          "2: Pinus strobus",
+          "3: long needles clustered in pairs; Pinus resinosa",
+          "4: short needles clustered in pairs"
+        ],
+        "objective": "LS.Bio.10.2",
+        "sep": "Analyze and Interpret Data"
+      }
+    },
+    {
+      "number": 31,
+      "type": "MC",
+      "stem": "The diagram below shows a normal plant cell. Which plant cell can no longer translate mRNA into amino acids?",
+      "choices": {
+        "A": "Cell A: large vacuole, 7 chloroplasts, 0 mitochondria, cytoplasm with many ribosome dots.",
+        "B": "Cell B: large vacuole, 0 chloroplasts, 3 mitochondria, cytoplasm with many ribosome dots.",
+        "C": "Cell C: large vacuole, 6 chloroplasts, 3 mitochondria, solid grey cytoplasm with no ribosome dots.",
+        "D": "Cell D: smaller vacuole, 6 chloroplasts, 6 mitochondria, cytoplasm with many ribosome dots."
+      },
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Reference diagram of normal plant cell with labeled cell wall, cell membrane, vacuole, nucleus, ribosomes on ER, chloroplasts, mitochondria, and cytoplasm."
+        },
+        {
+          "type": "diagram",
+          "description": "Four answer-choice plant cells (A-D) differing in vacuole size, organelle counts, and presence of ribosome dots as described in choices."
+        }
+      ],
+      "answerKey": { "key": "C", "objective": "LS.Bio.1.3", "sep": "Use Models" }
+    },
+    {
+      "number": 32,
+      "type": "MC",
+      "stem": "This is a phylogenetic tree. Based on the phylogenetic tree, which two organisms share the most recent common ancestor?",
+      "choices": {
+        "A": "drosophila and lancelet",
+        "B": "frog and chicken",
+        "C": "chicken and mouse",
+        "D": "chimpanzee and frog"
+      },
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Rooted cladogram. Tips top to bottom: drosophila, lancelet, zebrafish, frog, chicken, chimpanzee, mouse. Chimpanzee and mouse are sister taxa sharing the rightmost (most recent) internal node."
+        }
+      ],
+      "answerKey": { "key": "C", "objective": "LS.Bio.10.2", "sep": "Use Models" }
+    },
+    {
+      "number": 33,
+      "type": "MC",
+      "stem": "The plants in an ecosystem complete both photosynthesis and cellular respiration. How do the two processes differ from one another in terms of energy?",
+      "choices": {
+        "A": "Photosynthesis stores solar energy in the chemical bonds of carbohydrates, while cellular respiration releases energy from the chemical bonds in carbohydrates to produce ATP molecules.",
+        "B": "Photosynthesis releases energy from the chemical bonds in carbohydrates to produce ATP molecules, while cellular respiration stores solar energy in the chemical bonds of carbohydrates.",
+        "C": "Photosynthesis stores solar energy in ATP molecules for cellular use, while cellular respiration produces ATP by breaking inorganic chemical bonds.",
+        "D": "Photosynthesis stores solar energy in high-energy chemical bonds of inorganic compounds, while cellular respiration releases solar energy to heat cellular structures."
+      },
+      "images": [],
+      "answerKey": { "key": "A", "objective": "LS.Bio.4.1", "sep": "None" }
+    },
+    {
+      "number": 34,
+      "type": "MC",
+      "stem": "A biologist analyzed a sample of pond water and recorded the different organisms in the sample. This table shows the number of each organism in the pond sample. Why does the sample contain more phytoplankton than trout?",
+      "choices": {
+        "A": "A trout requires less energy than a phytoplankton organism.",
+        "B": "Phytoplankton receive energy from the other organisms.",
+        "C": "Insect larvae obtain energy directly from the sun and transfer energy to the other organisms.",
+        "D": "Phytoplankton obtain energy directly from the sun and transfer energy to the other organisms."
+      },
+      "images": [
+        {
+          "type": "table",
+          "description": "Organisms and Number: phytoplankton 50,000-70,000; frogs 50; insect larvae 800-900; trout 3."
+        }
+      ],
+      "answerKey": { "key": "D", "objective": "LS.Bio.4.2", "sep": "Analyze and Interpret Data" }
+    },
+    {
+      "number": 35,
+      "type": "MC",
+      "stem": "How would a longer snow season most likely affect the populations of red and white foxes living in the same forest ecosystem?",
+      "choices": {
+        "A": "Red foxes would have a greater advantage, so their population size would increase, while the white fox population size would decrease.",
+        "B": "White foxes would have a greater advantage, so their population size would increase, while the red fox population size would decrease.",
+        "C": "White foxes would have a lesser advantage, so their population size would increase, while the red fox population size would remain the same.",
+        "D": "Red foxes would have a lesser advantage, so their population size would increase, while the white fox population size would remain the same."
+      },
+      "images": [],
+      "answerKey": { "key": "B", "objective": "LS.Bio.5.1", "sep": "None" }
+    },
+    {
+      "number": 36,
+      "type": "IC",
+      "itemSet": "basketball-height",
+      "stem": "Use the drop-down menus below to complete the statement about the cells of the embryo.",
+      "template": "The cells of the embryo are {dropdown1} because of {dropdown2}",
+      "dropdowns": [
+        {
+          "id": "dropdown1",
+          "options": ["diploid", "haploid"]
+        },
+        {
+          "id": "dropdown2",
+          "options": ["fertilization.", "genetic recombination.", "meiotic division."]
+        }
+      ],
+      "images": [{ "ref": "basketball-height.figure-1" }],
+      "answerKey": {
+        "key": { "dropdown1": "diploid", "dropdown2": "fertilization." },
+        "objective": "LS.Bio.6.1",
+        "sep": "Use Models"
+      }
+    },
+    {
+      "number": 37,
+      "type": "MC",
+      "itemSet": "basketball-height",
+      "stem": "Judd has a 20-year-old sister. Her height is 5'4\". Which statement best explains why his sister is shorter than him and their parents?",
+      "choices": {
+        "A": "She received no genes for height from her mother.",
+        "B": "She received no genes for height from either parent.",
+        "C": "The embryo that became Judd's sister had a higher percentage of recessive alleles than the embryo that became Judd.",
+        "D": "The embryo that became Judd's sister had a higher percentage of dominant alleles than the embryo that became Judd."
+      },
+      "images": [{ "ref": "basketball-height.figure-1" }, { "ref": "basketball-height.figure-2" }],
+      "answerKey": { "key": "C", "objective": "LS.Bio.6.2", "sep": "Construct an Explanation" }
+    },
+    {
+      "number": 38,
+      "type": "IC",
+      "itemSet": "basketball-height",
+      "stem": "Use the drop-down menus below to complete the description of the trait for height, based on the graph (Figure 2).",
+      "template": "Height is controlled by {dropdown1} and results in a {dropdown2} range of phenotypes.",
+      "dropdowns": [
+        {
+          "id": "dropdown1",
+          "options": ["a single gene", "multiple genes"]
+        },
+        {
+          "id": "dropdown2",
+          "options": ["narrow", "wide"]
+        }
+      ],
+      "images": [{ "ref": "basketball-height.figure-2" }],
+      "answerKey": {
+        "key": { "dropdown1": "multiple genes", "dropdown2": "wide" },
+        "objective": "LS.Bio.7.2",
+        "sep": "Use Models"
+      }
+    },
+    {
+      "number": 39,
+      "type": "MC",
+      "itemSet": "basketball-height",
+      "stem": "Some of the phenotypes for male height are identified by two distinct ranges. Range 1: 50-55 inches. Range 2: 75-80 inches. Which choice best describes how these height ranges are represented in Figure 2?",
+      "choices": {
+        "A": "Both Range 1 and Range 2 represent rare phenotypes for male height.",
+        "B": "Both Range 1 and Range 2 represent common phenotypes for male height.",
+        "C": "Range 1 represents a rare phenotype, while Range 2 represents a common phenotype for male height.",
+        "D": "Range 1 represents a common phenotype, while Range 2 represents a rare phenotype for male height."
+      },
+      "images": [{ "ref": "basketball-height.figure-2" }],
+      "answerKey": { "key": "A", "objective": "LS.Bio.7.2", "sep": "Analyze and Interpret Data" }
+    },
+    {
+      "number": 40,
+      "type": "MC",
+      "itemSet": "basketball-height",
+      "stem": "Judd visits an exhibit at a local museum. A display there describes a recent research study where people from several distinct neighborhoods in a large U.S. city were surveyed for height. What can most likely be inferred from the research data?",
+      "choices": {
+        "A": "The trait for height results from mutational changes in a person's DNA sequence.",
+        "B": "The trait for height can be influenced by the environment in which a person lives.",
+        "C": "The trait for height results from genetic diversity in the neighborhood's gene pool.",
+        "D": "The trait for height is influenced by the heights of other people living in the environment."
+      },
+      "images": [
+        {
+          "type": "table",
+          "description": "Neighborhood survey data. Neighborhood 1: 136 people, avg height 5'10\", high socioeconomic status, positive health. Neighborhood 2: 188 people, avg height 5'6\", low socioeconomic status, negative health. Neighborhood 3: 176 people, avg height 5'7\", low socioeconomic status, moderate health. Footnote defines socioeconomic status and health evaluation criteria."
+        }
+      ],
+      "answerKey": { "key": "B", "objective": "LS.Bio.7.3", "sep": "Engage in Argument from Evidence" }
+    },
+    {
+      "number": 41,
+      "type": "MC",
+      "stem": "How might mutations contribute to natural selection?",
+      "choices": {
+        "A": "They occur after a natural disaster has changed a population's environment.",
+        "B": "They result when organisms observe traits of other successful populations.",
+        "C": "They occur in somatic cells and can be passed to offspring.",
+        "D": "They add variations to the gene pool of a population."
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.9.3", "sep": "None" }
+    },
+    {
+      "number": 42,
+      "type": "MC",
+      "stem": "Modern dairy cows are different from their ancestors. They produce larger volumes of milk with higher protein and fat content. Which statement best explains this?",
+      "choices": {
+        "A": "Dairy cows within the species have interbred, resulting in low genetic diversity among offspring.",
+        "B": "Dairy cows within the species have interbred, resulting in high genetic diversity among offspring.",
+        "C": "Humans have used artificial selection to encourage transmission of traits associated with high-quality milk production from parent cows to offspring.",
+        "D": "Humans have used natural selection to encourage transmission of traits associated with high-quality milk production from parent cows to offspring."
+      },
+      "images": [],
+      "answerKey": { "key": "C", "objective": "LS.Bio.8.2", "sep": "None" }
+    },
+    {
+      "number": 43,
+      "type": "MC",
+      "stem": "The graph below represents the size of a bacteria population. A scientist introduces an antibiotic to the population at Generation 40. Which statement best explains the population increase after Generation 70?",
+      "choices": {
+        "A": "Some bacteria adapted by developing resistance to the antibiotic, allowing them to survive and reproduce.",
+        "B": "All bacteria adapted by developing resistance to the antibiotic, preventing them from surviving and reproducing.",
+        "C": "The antibiotic prevented mutations in the DNA of some bacteria, allowing them to survive and reproduce.",
+        "D": "The antibiotic caused a mutation in the DNA of all bacteria, preventing them from surviving and reproducing."
+      },
+      "images": [
+        {
+          "type": "graph",
+          "description": "Line graph. Y-axis Population Size (0-12,500). X-axis Generation (0-100). Population rises from ~500 at Gen 0 to peak ~5,750 at Gen 40, drops to low ~2,100 at Gen 70, then rises to 7,500 at Gen 100."
+        }
+      ],
+      "answerKey": { "key": "A", "objective": "LS.Bio.9.1", "sep": "Construct an Explanation" }
+    },
+    {
+      "number": 44,
+      "type": "MC",
+      "stem": "How could a scientist best determine whether a fungus is a new species?",
+      "choices": {
+        "A": "by comparing the physical appearance of the fungus to a known fungal species",
+        "B": "by comparing the epidermal cells of the fungus to a known fungal species",
+        "C": "by comparing the feeding habits of the fungus to a known fungal species",
+        "D": "by comparing the DNA sequence of the fungus to a known fungal species"
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.9.2", "sep": "Analyze and Interpret Data" }
+    },
+    {
+      "number": 45,
+      "type": "MC",
+      "stem": "The bacterium Yersinia pestis is responsible for causing bubonic plague in the 1300s. Survivors of plague showed an increased frequency of a mutation for a cell receptor protein which prevented infection from the bacterium. Which statement best explains the genetic change in Europe's population after the bubonic plague outbreak?",
+      "choices": {
+        "A": "The number of people with the mutation increased because of the use of a vaccine.",
+        "B": "The number of people with the mutation increased because there was an immediate increase in variation among the population.",
+        "C": "The number of people with the mutation increased because the mutated receptor protein was selected for during the outbreak.",
+        "D": "The number of people with the mutation increased because the mutated receptor protein was selected against during the outbreak."
+      },
+      "images": [],
+      "answerKey": { "key": "C", "objective": "LS.Bio.9.4", "sep": "Construct an Explanation" }
+    },
+    {
+      "number": 46,
+      "type": "MC",
+      "stem": "An animal was cloned in a lab, producing five genetically identical offspring. The offspring were then sent to five different zoos. After five years, scientists collected data on these animals and found a variation in their heights. What is the most likely explanation for the data?",
+      "choices": {
+        "A": "Each clone experienced mutations with no effect on its genes.",
+        "B": "Each clone experienced a different environment with no effect on its genes.",
+        "C": "Each clone experienced the same mutations, which influenced the expression of its genes.",
+        "D": "Each clone experienced a different environment, which influenced the expression of its genes."
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.7.3", "sep": "Construct an Explanation" }
+    },
+    {
+      "number": 47,
+      "type": "MC",
+      "stem": "Which action takes place on a ribosome, resulting in synthesis of a protein?",
+      "choices": {
+        "A": "creation of mRNA from one strand of the DNA double helix",
+        "B": "transformation of single-stranded mRNA into double-stranded tRNA",
+        "C": "breakdown of polypeptide chain into amino acids and nitrogenous bases",
+        "D": "attachment of the mRNA to tRNA molecules which are coupled to specific amino acids"
+      },
+      "images": [],
+      "answerKey": { "key": "D", "objective": "LS.Bio.1.5", "sep": "None" }
+    },
+    {
+      "number": 48,
+      "type": "MC",
+      "stem": "Which statement best explains the relationship between glucose, cellular respiration, and photosynthesis?",
+      "choices": {
+        "A": "Photosynthesis uses the glucose produced by cellular respiration to make energy.",
+        "B": "Photosynthesis and cellular respiration are both used to produce glucose and energy.",
+        "C": "Photosynthesis produces the glucose used in cellular respiration to make energy.",
+        "D": "Photosynthesis and cellular respiration both consume glucose to produce energy."
+      },
+      "images": [],
+      "answerKey": { "key": "C", "objective": "LS.Bio.4.1", "sep": "None" }
+    },
+    {
+      "number": 49,
+      "type": "MC",
+      "stem": "A group of students puts a small aquatic plant in a test tube. The students place a strong light source nearby. One hour later, they observe bubbles in the test tube. Which statement explains what is occurring in the cells of the aquatic plant?",
+      "choices": {
+        "A": "Gas molecules are diffusing through the cellular membranes in order to maintain homeostasis in the cells.",
+        "B": "Gas exchange is increased by the activity of the chloroplasts in order to disrupt homeostasis in the cells.",
+        "C": "Gas exchange is prevented by the cell walls of the plant cells in order to maintain homeostasis in the cells.",
+        "D": "Gas molecules are produced by the cell walls of the plant cells in order to disrupt homeostasis in the cells."
+      },
+      "images": [],
+      "answerKey": { "key": "A", "objective": "LS.Bio.3.1", "sep": "Construct an Explanation" }
+    },
+    {
+      "number": 50,
+      "type": "MC",
+      "stem": "Fossils were discovered by scientists for each of the organisms in this phylogenetic tree. Which organism is most likely the oldest?",
+      "choices": {
+        "A": "organism S",
+        "B": "organism T",
+        "C": "organism W",
+        "D": "organism Y"
+      },
+      "images": [
+        {
+          "type": "diagram",
+          "description": "Phylogenetic tree rooted at bottom labeled Common Ancestor. Trunk splits into left and right branches. Left branch: organism T branches off lowest, then organism S higher, then W and Z at top tips. Right branch: Y and X at top tips. Vertical axis represents time (bottom = oldest)."
+        }
+      ],
+      "answerKey": { "key": "B", "objective": "LS.Bio.10.2", "sep": "Use Models" }
+    }
+  ]
+}
