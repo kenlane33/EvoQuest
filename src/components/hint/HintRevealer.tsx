@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { usePowerUpEffects } from '@/components/play/PowerUpEffectContext';
 import { SpeakButton } from '@/components/content/SpeakButton';
 import { cn } from '@/lib/cn';
+import { isTextEntryFocused } from '@/lib/text-entry-focus';
 import { HINT_COUNTDOWN_MS, HINT_REVEAL_MS } from '@/types/schemas';
 
 export type EtymHint = {
@@ -29,7 +31,11 @@ export function HintRevealer({
   className,
   onPhaseChange,
 }: HintRevealerProps) {
-  const [countdown, setCountdown] = useState(countdownSec);
+  const powerUpFx = usePowerUpEffects();
+  const bonusSec = Math.round(powerUpFx.extraTimeMs / 1000);
+  const effectiveCountdownSec = countdownSec + bonusSec;
+  const revealNow = powerUpFx.effects.some((e) => e.kind === 'reveal-mnemonic-now');
+  const [countdown, setCountdown] = useState(effectiveCountdownSec);
   const [revealedSet, setRevealedSet] = useState<Set<number>>(new Set());
   const [phase, setPhase] = useState<'waiting' | 'revealing' | 'done'>('waiting');
   const orderRef = useRef<number[]>([]);
@@ -45,14 +51,20 @@ export function HintRevealer({
       [indices[i], indices[j]] = [indices[j], indices[i]];
     }
     orderRef.current = indices;
-    setCountdown(countdownSec);
+    setCountdown(effectiveCountdownSec);
     setRevealedSet(new Set());
     setPhase('waiting');
-  }, [mnemonic, root, countdownSec]);
+  }, [mnemonic, root, effectiveCountdownSec]);
+
+  useEffect(() => {
+    if (!revealNow || !mnemonic || answered || phase !== 'waiting') return;
+    setPhase('revealing');
+  }, [revealNow, mnemonic, answered, phase]);
 
   useEffect(() => {
     if (!mnemonic || phase !== 'waiting' || answered) return;
     const iv = setInterval(() => {
+      if (isTextEntryFocused()) return;
       setCountdown((c) => {
         if (c <= 1) {
           setPhase('revealing');
@@ -77,6 +89,7 @@ export function HintRevealer({
     };
 
     const revealNext = () => {
+      if (isTextEntryFocused()) return false;
       if (count >= total) {
         finish();
         return true;

@@ -85,7 +85,7 @@ function HomePage() {
   }
 
   const lapSummary = overview
-    ? `${overview.laps} full ${overview.laps === 1 ? 'lap' : 'laps'} through everything. Next lap ${overview.nextLapPct} percent.`
+    ? `${overview.totalLapsLabel} laps through everything. Next lap ${overview.nextLapPct} percent.`
     : '';
 
   const readText = resumeSession
@@ -141,7 +141,7 @@ function HomePage() {
 
       <div
         {...devMark('dock')}
-        className="shrink-0 border-t border-(--border-faint) bg-[color-mix(in_oklab,var(--bg-deep)_94%,transparent)] pt-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md"
+        className="glass-md glass-bg-dock shrink-0 border-t border-(--border-faint) pt-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
       >
         <section className="mx-auto flex flex-row flex-wrap gap-2">
           {resumeSession ? (

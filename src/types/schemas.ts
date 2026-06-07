@@ -848,6 +848,8 @@ export const SettingsSchema = z.object({
     autoRead: z.boolean(),
     voice: z.string(),
     serverUrl: z.string(),
+    /** SillyReader: 0 (off) – 10 (constant) frequency of funny TTS interjections. */
+    sillyReader: z.number().int().min(0).max(10).default(3),
   }),
   reveals: z.object({
     countdownMs: z

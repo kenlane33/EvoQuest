@@ -13,6 +13,10 @@ export type QuizCoverageEntry = {
 export type MasteryOverview = {
   totalQuizzes: number;
   laps: number;
+  /** Completed laps plus fraction of the current lap (e.g. 1.34). */
+  totalLaps: number;
+  /** totalLaps formatted to two decimals, e.g. "1.34". */
+  totalLapsLabel: string;
   nextLapPct: number;
   totalTopics: number;
   masteredTopics: number;
@@ -68,12 +72,11 @@ export function computeMasteryOverview(
   }
 
   const targetForNextLap = laps + 1;
-  const nextLapPct =
+  const nextLapFraction =
     totalQuizzes > 0
-      ? Math.round(
-          (coverage.filter((c) => c.count >= targetForNextLap).length / totalQuizzes) * 100,
-        )
+      ? coverage.filter((c) => c.count >= targetForNextLap).length / totalQuizzes
       : 0;
+  const nextLapPct = Math.round(nextLapFraction * 100);
 
   const tileUnitIds = ALL_TILES.map((t) => t.unitId).filter(
     (id) => quizCountForUnit(id, modules) > 0 || unitProgress[id],
@@ -89,9 +92,14 @@ export function computeMasteryOverview(
   const minCount = sorted.length ? sorted[0].count : 0;
   const weakest = sorted.filter((c) => c.count === minCount).slice(0, 24);
 
+  const totalLaps = laps + nextLapFraction;
+  const totalLapsLabel = totalLaps.toFixed(2);
+
   return {
     totalQuizzes,
     laps,
+    totalLaps,
+    totalLapsLabel,
     nextLapPct,
     totalTopics,
     masteredTopics,

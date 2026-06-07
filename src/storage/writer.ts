@@ -4,7 +4,7 @@ import type { StoredBlob } from '@/types/schemas';
 
 const DEBOUNCE_MS = 300;
 
-export const APP_VERSION = '0.0.0';
+export const APP_VERSION = '2026.06.02.1';
 
 type PendingWrite = {
   key: StorageKey;

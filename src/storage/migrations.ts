@@ -208,6 +208,25 @@ const settingsV8ToV9: Migration = {
   describe: 'Add appearance.headlineFont for display text (default Syne)',
 };
 
+const settingsV9ToV10: Migration = {
+  fromVersion: 9,
+  toVersion: 10,
+  forward: (old) => {
+    const prev = old as Record<string, unknown>;
+    const practice = (prev.practice ?? {}) as Record<string, unknown>;
+    const raw = practice.confidenceFrequency;
+    const confidenceFrequency = raw === 'every' ? 'every' : 'never';
+    return {
+      ...prev,
+      practice: {
+        ...practice,
+        confidenceFrequency,
+      },
+    };
+  },
+  describe: 'Default confidence check-ins off (every-3 → never)',
+};
+
 /** Append-only migration chains — one per storage key. */
 export const MIGRATIONS: Record<StorageKey, MigrationChain> = {
   ...Object.fromEntries(
@@ -223,6 +242,7 @@ export const MIGRATIONS: Record<StorageKey, MigrationChain> = {
     settingsV6ToV7,
     settingsV7ToV8,
     settingsV8ToV9,
+    settingsV9ToV10,
   ],
   [STORAGE_KEYS.POWERUPS]: [powerupsV1ToV2],
 } as Record<StorageKey, MigrationChain>;

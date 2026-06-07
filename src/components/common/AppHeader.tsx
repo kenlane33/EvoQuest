@@ -21,13 +21,37 @@ export function AppHeader() {
   return (
     <header
       {...devMark('shell.hdr')}
-      className="sticky top-0 z-40 border-b border-(--border-faint) bg-(--bg-deep)/90 backdrop-blur-md"
+      className="glass-md glass-bg-header sticky top-0 z-40 border-b border-(--border-faint)"
     >
       <div className="page-wrap flex items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-10">
           {showMenu ? <MenuHomeButton devId="shell.menu" /> : null}
         </div>
         <div className="flex items-center gap-3">
+          <Link
+            to="/t1"
+            {...devMark('shell.t1')}
+            className={cn(
+              'flex h-10 w-10 items-center justify-center rounded-full border border-(--border-light) bg-(--bg-card) text-meta font-black text-(--text-secondary) no-underline transition-colors hover:border-(--accent-violet) hover:text-(--text-primary)',
+              buttonPressClasses,
+            )}
+            title="Test as Reader (T1)"
+            aria-label="Test as Reader page T1"
+          >
+            T1
+          </Link>
+          <Link
+            to="/t2"
+            {...devMark('shell.t2')}
+            className={cn(
+              'flex h-10 w-10 items-center justify-center rounded-full border border-(--border-light) bg-(--bg-card) text-meta font-black text-(--text-secondary) no-underline transition-colors hover:border-(--accent-violet) hover:text-(--text-primary)',
+              buttonPressClasses,
+            )}
+            title="Test as Reader (T2)"
+            aria-label="Test as Reader page T2"
+          >
+            T2
+          </Link>
           <Link
             to="/dx/preview"
             {...devMark('shell.dxpreview')}

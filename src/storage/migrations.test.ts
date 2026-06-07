@@ -9,9 +9,9 @@ describe('migrations', () => {
       appearance: { bodyFont: 'nunito' },
       reading: { enabled: true, autoRead: true, voice: 'azelma', serverUrl: '' },
     };
-    const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 9);
+    const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 10);
     expect(result.payload).toEqual(payload);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
   });
 
   it('migrates settings v6 to v7 by clamping countdownMs', () => {
@@ -20,7 +20,7 @@ describe('migrations', () => {
       reveals: { countdownMs: 1000, revealMs: 20000 },
     };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 6);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       reveals: { countdownMs: 2000 },
     });
@@ -32,7 +32,7 @@ describe('migrations', () => {
       reveals: { revealMs: 20000 },
     };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 6);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       reveals: { countdownMs: 8000 },
     });
@@ -44,7 +44,7 @@ describe('migrations', () => {
       reveals: { countdownMs: 6000, revealMs: 3000 },
     };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 5);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       reveals: { revealMs: 4000 },
     });
@@ -53,7 +53,7 @@ describe('migrations', () => {
   it('migrates settings v5 to v6 with default revealMs when missing', () => {
     const payload = { motion: 'full' };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 5);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       reveals: { revealMs: 20000 },
     });
@@ -72,7 +72,7 @@ describe('migrations', () => {
       reading: { enabled: true, autoRead: true, voice: 'azelma', serverUrl: '' },
     };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 4);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       appearance: { bodyFont: 'opendyslexic', dyslexiaFont: true },
     });
@@ -85,7 +85,7 @@ describe('migrations', () => {
       reading: { enabled: true, autoRead: true, voice: 'azelma', serverUrl: '' },
     };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 3);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       appearance: { bodyFont: 'nunito' },
     });
@@ -97,7 +97,7 @@ describe('migrations', () => {
       reading: { enabled: true, voice: 'azelma', serverUrl: '' },
     };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 2);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       reading: { autoRead: true },
       appearance: { bodyFont: 'nunito' },
@@ -107,7 +107,7 @@ describe('migrations', () => {
   it('migrates settings v1 through v5 with reading and font defaults', () => {
     const payload = { motion: 'full', audio: { enabled: false, volume: 0.6, stings: {} } };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 1);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       reading: { enabled: true, autoRead: true, voice: 'azelma', serverUrl: '' },
       appearance: { bodyFont: 'nunito' },
@@ -149,9 +149,32 @@ describe('migrations', () => {
       practice: { confidenceFrequency: 'every-3', defaultMood: 'mixed', defaultLength: 10 },
     };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 7);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
-      practice: { revisitLength: 12 },
+      practice: { revisitLength: 12, confidenceFrequency: 'never' },
+    });
+  });
+
+  it('migrates settings v9 to v10 with confidence check-ins off by default', () => {
+    const payload = {
+      motion: 'full',
+      practice: { confidenceFrequency: 'every-3', defaultMood: 'mixed', defaultLength: 10, revisitLength: 12 },
+    };
+    const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 9);
+    expect(result.toVersion).toBe(10);
+    expect(result.payload).toMatchObject({
+      practice: { confidenceFrequency: 'never' },
+    });
+  });
+
+  it('preserves explicit every confidence frequency in v9 to v10 migration', () => {
+    const payload = {
+      motion: 'full',
+      practice: { confidenceFrequency: 'every', defaultMood: 'mixed', defaultLength: 10, revisitLength: 12 },
+    };
+    const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 9);
+    expect(result.payload).toMatchObject({
+      practice: { confidenceFrequency: 'every' },
     });
   });
 
@@ -161,7 +184,7 @@ describe('migrations', () => {
       appearance: { contrast: 'normal', fontSize: 'md', bodyFont: 'nunito', colorBlindSafe: false },
     };
     const result = applyMigrations(STORAGE_KEYS.SETTINGS, payload, 8);
-    expect(result.toVersion).toBe(9);
+    expect(result.toVersion).toBe(10);
     expect(result.payload).toMatchObject({
       appearance: { headlineFont: 'syne' },
     });

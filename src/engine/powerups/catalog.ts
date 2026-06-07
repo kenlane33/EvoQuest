@@ -1,4 +1,4 @@
-import type { PowerUpEffect } from '@/types';
+import type { PowerUpEffect, PowerUpInstance } from '@/types';
 
 export type PowerUpRarity = 'common' | 'rare';
 
@@ -8,6 +8,10 @@ export type PowerUpDefinition = {
   id: string;
   theme: PowerUpTheme;
   rarity: PowerUpRarity;
+  /** Short display name (tray, swap, gains). */
+  title: string;
+  /** What happens when you use it (tooltip, swap trade-offs). */
+  summary: string;
   icon: string;
   /** Wing-themed visual variants (same function). */
   skinIcons: Partial<Record<string, string>>;
@@ -17,15 +21,24 @@ export type PowerUpDefinition = {
   disabledHint?: string;
 };
 
+export type PowerUpCopy = {
+  title: string;
+  summary: string;
+  icon: string;
+  rarity: PowerUpRarity;
+};
+
 export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
   'pu.darwin-notebook': {
     id: 'pu.darwin-notebook',
     theme: 'evo',
     rarity: 'common',
+    title: "Darwin's Notebook",
+    summary: 'Dims one wrong answer choice on multiple-choice questions.',
     icon: '📓',
     skinIcons: { evo: '📓', cell: '🔬', gen: '🌱', biochem: '🔬', 'bio.eoc': '🔬' },
     effects: [{ kind: 'reveal-option', index: -1 }],
-    appliesToTemplates: ['match', 'scenario', 'debug-the-claim'],
+    appliesToTemplates: ['match', 'scenario', 'speed-reveal-mnemonic'],
     firstUseCopy:
       "**Darwin's Notebook.** Darwin filled notebooks with observations. Open it now — one wrong option will dim. The right answer is still yours to find.",
     disabledHint: 'Save this for a multiple-choice question.',
@@ -34,6 +47,8 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.galapagos-compass',
     theme: 'evo',
     rarity: 'common',
+    title: 'Galápagos Compass',
+    summary: 'Skip this question and re-queue it at the end—no streak penalty.',
     icon: '🧭',
     skinIcons: { evo: '🧭', cell: '🚪', gen: '🌳', biochem: '🚪', 'bio.eoc': '🚪' },
     effects: [{ kind: 'skip-no-penalty' }],
@@ -45,10 +60,12 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.atp-boost',
     theme: 'cell',
     rarity: 'common',
+    title: 'ATP Boost',
+    summary: 'Adds 30 seconds before the mnemonic reveals.',
     icon: '⚡',
     skinIcons: { evo: '⏳', cell: '⚡', gen: '⏰', biochem: '⚡', 'bio.eoc': '⚡' },
     effects: [{ kind: 'add-time', ms: 30_000 }],
-    appliesToTemplates: ['speed-reveal-mnemonic', 'microworld-sandbox', 'predict-run-reflect'],
+    appliesToTemplates: ['speed-reveal-mnemonic'],
     firstUseCopy:
       "**ATP Boost.** Your cell's energy currency. Buys you 30 more seconds before the mnemonic reveals — time to think, not skip.",
     disabledHint: 'Save this for a timed question.',
@@ -57,6 +74,8 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.lysosome',
     theme: 'cell',
     rarity: 'common',
+    title: 'Lysosome',
+    summary: 'One free retry on your next wrong answer without breaking your streak.',
     icon: '🧹',
     skinIcons: { evo: '🧹', cell: '🧹', gen: '🧹', biochem: '🧹', 'bio.eoc': '🧹' },
     effects: [{ kind: 'allow-retry' }],
@@ -68,10 +87,13 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.punnett-predictor',
     theme: 'gen',
     rarity: 'common',
+    title: 'Punnett Predictor',
+    summary:
+      'Reveals underlying numeric truth on Punnett or predict questions, or skips the mnemonic wait on speed reveal.',
     icon: '🌱',
     skinIcons: { evo: '🌱', cell: '🌱', gen: '🌱', biochem: '🌱', 'bio.eoc': '🌱' },
     effects: [{ kind: 'reveal-mnemonic-now' }],
-    appliesToTemplates: ['predict-run-reflect', 'punnett-builder'],
+    appliesToTemplates: ['predict-run-reflect', 'punnett-builder', 'speed-reveal-mnemonic'],
     firstUseCopy:
       "**Punnett Predictor.** Reveal the underlying numeric truth for this question. The biology reasoning is still yours; we'll just spare you the arithmetic.",
     disabledHint: 'Save this for a prediction or Punnett question.',
@@ -80,10 +102,12 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.mendel-pea',
     theme: 'gen',
     rarity: 'common',
+    title: "Mendel's Pea",
+    summary: 'Reveals morpheme roots and meanings in this question.',
     icon: '🟢',
     skinIcons: { evo: '📜', cell: '🦠', gen: '🟢', biochem: '🟢', 'bio.eoc': '🟢' },
     effects: [{ kind: 'show-etymology-all' }],
-    appliesToTemplates: ['etymology-puppet', 'speed-reveal-mnemonic', 'fill', 'match', 'scenario'],
+    appliesToTemplates: 'all',
     firstUseCopy:
       "**Mendel's Pea.** Reveal one of the morphemes in this question's etymology — and the meaning that goes with it. Mendel cataloged 28,000 plants. He'd be okay with a little assistance.",
   },
@@ -91,6 +115,8 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.mitochondrion-shield',
     theme: 'cell',
     rarity: 'common',
+    title: 'Mitochondrion Shield',
+    summary: "Your next wrong answer won't reset your streak.",
     icon: '🛡️',
     skinIcons: { evo: '🦴', cell: '🛡️', gen: '🧬', biochem: '🛡️', 'bio.eoc': '🛡️' },
     effects: [{ kind: 'streak-shield' }],
@@ -102,6 +128,8 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.rna-flashback',
     theme: 'origin',
     rarity: 'rare',
+    title: 'RNA Flashback',
+    summary: 'Replay your last missed unit with a different framing.',
     icon: '🪞',
     skinIcons: {},
     effects: [{ kind: 'reroll-question' }],
@@ -113,6 +141,8 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.etymology-lens',
     theme: 'universal',
     rarity: 'common',
+    title: 'Etymology Lens',
+    summary: 'Reveals every morpheme root and meaning in this question.',
     icon: '🔍',
     skinIcons: { evo: '🔍', cell: '🔬', gen: '🧐', biochem: '🔍', 'bio.eoc': '🔍' },
     effects: [{ kind: 'show-etymology-all' }],
@@ -124,6 +154,8 @@ export const POWERUP_CATALOG: Record<string, PowerUpDefinition> = {
     id: 'pu.palace-portal',
     theme: 'spatial',
     rarity: 'rare',
+    title: 'Palace Portal',
+    summary: "Teleport to any tile you've already visited in Palace Walk.",
     icon: '🌀',
     skinIcons: {},
     effects: [{ kind: 'palace-teleport', toTileId: '' }],
@@ -149,6 +181,47 @@ export function getPowerUpDef(id: string): PowerUpDefinition | undefined {
 export function powerUpAppliesToTemplate(def: PowerUpDefinition, templateKind: string): boolean {
   if (def.appliesToTemplates === 'all') return true;
   return def.appliesToTemplates.includes(templateKind);
+}
+
+export function applicablePowerUpsForTemplate(templateKind: string): PowerUpDefinition[] {
+  return Object.values(POWERUP_CATALOG).filter((def) =>
+    powerUpAppliesToTemplate(def, templateKind),
+  );
+}
+
+export function powerUpDisplayName(def: PowerUpDefinition): string {
+  return def.title;
+}
+
+/** Central title + summary for UI (tray tooltips, swap modal, gains). */
+export function getPowerUpCopy(instance: PowerUpInstance): PowerUpCopy | undefined {
+  const def = getPowerUpDef(instance.id);
+  if (!def) return undefined;
+  return {
+    title: def.title,
+    summary: def.summary,
+    icon: displayIconForPowerUp(def, instance.themedFor),
+    rarity: def.rarity,
+  };
+}
+
+export function powerUpSummary(def: PowerUpDefinition, templateKind?: string): string {
+  if (def.id === 'pu.punnett-predictor' && templateKind === 'speed-reveal-mnemonic') {
+    return 'Reveals the mnemonic immediately instead of waiting.';
+  }
+  return def.summary;
+}
+
+/** Outcome-focused hover copy (instant tooltip, not browser title). */
+export function powerUpTooltip(
+  def: PowerUpDefinition,
+  templateKind: string,
+  applies: boolean,
+): string {
+  if (!applies) {
+    return def.disabledHint ?? `${def.title} does not apply to this question.`;
+  }
+  return `${def.title}: ${powerUpSummary(def, templateKind)}`;
 }
 
 export function displayIconForPowerUp(def: PowerUpDefinition, themedFor?: string): string {

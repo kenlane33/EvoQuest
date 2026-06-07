@@ -28,7 +28,8 @@ import {
   removeState,
   saveState,
 } from '@/storage';
-import { STORAGE_KEY_PREFIX, STORAGE_KEYS } from '@/storage/keys';
+import { PROGRESS_STORAGE_KEYS, STORAGE_KEY_PREFIX, STORAGE_KEYS } from '@/storage/keys';
+import { clearSessionUi, persistSessionUi, resumeSessionState } from '@/storage/session-ui';
 
 export const DEFAULT_POWERUP_INVENTORY: PowerUpInventory = {
   slots: [null, null, null],
@@ -64,6 +65,8 @@ function mergeSettings(raw: Settings): Settings {
     practice: {
       ...DEFAULT_SETTINGS.practice,
       ...raw.practice,
+      confidenceFrequency:
+        raw.practice?.confidenceFrequency ?? DEFAULT_SETTINGS.practice.confidenceFrequency,
       revisitLength: raw.practice?.revisitLength ?? DEFAULT_SETTINGS.practice.revisitLength,
     },
     privacy: { ...DEFAULT_SETTINGS.privacy, ...raw.privacy },
@@ -79,8 +82,10 @@ function persistSession(hydrated: boolean, sessionState: SessionState) {
   const session = extractActiveSession(sessionState);
   if (session) {
     saveState(STORAGE_KEYS.SESSION, session);
+    persistSessionUi(sessionState);
   } else {
     removeState(STORAGE_KEYS.SESSION);
+    clearSessionUi();
   }
 }
 
@@ -103,13 +108,14 @@ export const DEFAULT_SETTINGS: Settings = {
     autoRead: true,
     voice: 'azelma',
     serverUrl: '',
+    sillyReader: 3,
   },
   reveals: {
     countdownMs: HINT_COUNTDOWN_MS.default,
     revealMs: HINT_REVEAL_MS.default,
   },
   practice: {
-    confidenceFrequency: 'every-3',
+    confidenceFrequency: 'never',
     defaultMood: 'mixed',
     defaultLength: 10,
     revisitLength: 12,
@@ -160,6 +166,10 @@ type AppState = {
   exportAllData: () => string;
   importAllData: (json: string) => boolean;
   resetAllData: () => void;
+  /** Remove settings from localStorage and revert in-memory state to defaults. */
+  clearAllSettings: () => void;
+  /** Remove progress from localStorage; settings are preserved. */
+  clearAllProgress: () => void;
 };
 
 function extractActiveSession(state: SessionState): ActiveSession | null {
@@ -178,8 +188,9 @@ function sessionFromStorage(): SessionState {
   const result = loadState<ActiveSession>(STORAGE_KEYS.SESSION);
   const saved = result.ok ? result.value : null;
   if (saved && saved.queue?.length && saved.currentIndex < saved.queue.length) {
-    return { phase: 'brief', session: saved };
+    return resumeSessionState(saved);
   }
+  clearSessionUi();
   return { phase: 'menu' };
 }
 
@@ -526,6 +537,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   clearSession: (resetState = true) => {
     removeState(STORAGE_KEYS.SESSION);
     removeState(STORAGE_KEYS.SESSION_BACKUP);
+    clearSessionUi();
     if (resetState) {
       set({ sessionState: { phase: 'menu' } });
     }
@@ -549,6 +561,30 @@ export const useAppStore = create<AppState>((set, get) => ({
     } catch {
       return false;
     }
+  },
+
+  clearAllSettings: () => {
+    removeState(STORAGE_KEYS.SETTINGS);
+    set({ settings: DEFAULT_SETTINGS });
+  },
+
+  clearAllProgress: () => {
+    if (typeof window !== 'undefined') {
+      flushNow();
+      for (const key of PROGRESS_STORAGE_KEYS) {
+        removeState(key);
+      }
+    }
+    clearSessionUi();
+    get().loadFromStorage();
+    set({
+      pendingJourneyRewards: {
+        achievementsEarned: [],
+        powerupsEarned: [],
+        morphemesTouchedFirst: [],
+        tierUps: [],
+      },
+    });
   },
 
   resetAllData: () => {

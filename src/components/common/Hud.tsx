@@ -54,7 +54,7 @@ export function Hud({ current, total, score, streak, startedAt, onProgressClick,
       ref={headerRef}
       {...devMark('hud')}
       className={cn(
-        'fixed inset-x-0 top-0 z-50 border-b border-(--border-faint) bg-[color-mix(in_oklab,var(--bg-deep)_92%,transparent)] backdrop-blur-xl safe-top',
+        'fixed inset-x-0 top-0 z-50 border-b border-(--border-faint) bg-[color-mix(in_oklab,var(--bg-deep)_96%,transparent)] safe-top',
         className,
       )}
     >

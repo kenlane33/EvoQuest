@@ -17,7 +17,7 @@ export function PowerUpFirstUseModal({ powerUpId, onConfirm, onCancel }: PowerUp
   if (!def) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div className="glass-sm glass-bg-overlay-modal fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="w-full max-w-sm rounded-(--r-lg) border border-(--border-light) bg-(--bg-card) p-6 animate-pop-in">
         <p className="text-body text-(--text-secondary)">{def.firstUseCopy}</p>
         <label className="mt-4 flex items-center gap-2 text-meta text-(--text-dim)">

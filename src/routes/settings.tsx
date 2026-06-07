@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { ChevronLeft, Download, Upload } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { ClearProgressConfirm } from '@/components/common/ClearProgressConfirm';
 import { ToggleField } from '@/components/common/ToggleField';
 import { Card } from '@/components/common/Card';
 import { cn } from '@/lib/cn';
@@ -22,6 +23,9 @@ import {
   usePocketTtsVoices,
 } from '@/hooks/use-pocket-tts-voices';
 import { formatPocketTtsVoiceLabel } from '@/audio/pocket-tts';
+import { getPocketTtsFallbackReason } from '@/audio/read-aloud-bootstrap';
+import { isPocketTtsAvailable } from '@/audio/read-aloud';
+import { useReadAloudBootstrap } from '@/hooks/use-read-aloud-bootstrap';
 import { devMark } from '@/lib/dev-mark';
 
 export const Route = createFileRoute('/settings')({
@@ -39,7 +43,7 @@ function SettingsPage() {
   const setSettings = useAppStore((s) => s.setSettings);
   const exportAllData = useAppStore((s) => s.exportAllData);
   const importAllData = useAppStore((s) => s.importAllData);
-  const resetAllData = useAppStore((s) => s.resetAllData);
+  const clearAllProgress = useAppStore((s) => s.clearAllProgress);
   const fileRef = useRef<HTMLInputElement>(null);
   const [importMsg, setImportMsg] = useState<string | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -49,6 +53,13 @@ function SettingsPage() {
 
   const trimmedTryRead = tryReadText.trim();
   const pageReadText = trimmedTryRead || SETTINGS_PAGE_READ_TEXT;
+
+  const readAloudBootstrap = useReadAloudBootstrap(
+    settings.reading.enabled,
+    settings.reading.voice,
+  );
+  const pocketFallbackReason =
+    readAloudBootstrap.pocketFallbackReason ?? getPocketTtsFallbackReason();
 
   const {
     voices: pocketTtsVoices,
@@ -257,6 +268,20 @@ function SettingsPage() {
               How many least-covered questions to queue when you tap Next lap on the home overview.
             </p>
           </Field>
+
+          <ToggleField
+            label="Confidence check-ins"
+            description="Rate certainty before answering (Lock in prediction)"
+            checked={settings.practice.confidenceFrequency !== 'never'}
+            onChange={(v) =>
+              setSettings({
+                practice: {
+                  ...settings.practice,
+                  confidenceFrequency: v ? 'every-3' : 'never',
+                },
+              })
+            }
+          />
         </Card>
       </section>
 
@@ -365,6 +390,18 @@ function SettingsPage() {
             changes (briefs, feedback, welcome steps).
           </p>
           <Field label="Voice">
+            {!isPocketTtsAvailable() && settings.reading.enabled && (
+              <p className="text-meta text-(--text-faint)">
+                This browser uses your device&apos;s built-in voice (Settings →
+                Accessibility → Spoken Content on iPad).
+              </p>
+            )}
+            {pocketFallbackReason && settings.reading.enabled && (
+              <p className="text-meta text-(--status-wrong)">
+                Pocket voice could not load ({pocketFallbackReason}). Using your
+                device&apos;s built-in voice instead.
+              </p>
+            )}
             {pocketTtsVoicesStatus === 'loading' && (
               <p className="text-meta text-(--text-faint)">
                 Loading voices… first use downloads the English model (~200&nbsp;MB).
@@ -398,7 +435,36 @@ function SettingsPage() {
               </p>
             )}
             <p className="mt-2 text-meta text-(--text-faint)">
-              Runs in your browser (WASM). Built-in English voices ship with the model.
+              {isPocketTtsAvailable()
+                ? 'Runs in your browser (WASM). Built-in English voices ship with the model.'
+                : 'Uses your device speech engine when Pocket TTS is unavailable.'}
+            </p>
+          </Field>
+          <Field label="SillyReader">
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={0}
+                max={10}
+                step={1}
+                value={settings.reading.sillyReader}
+                onChange={(e) =>
+                  setSettings({
+                    reading: {
+                      ...settings.reading,
+                      sillyReader: Number(e.target.value),
+                    },
+                  })
+                }
+                className="w-full accent-(--accent-violet)"
+              />
+              <span className="w-10 shrink-0 text-right text-meta font-bold tabular-nums text-(--text-secondary)">
+                {settings.reading.sillyReader}
+              </span>
+            </div>
+            <p className="mt-2 text-meta text-(--text-faint)">
+              How often the reader drops a silly interjection on the T1/T2 reader pages
+              (0 = never, 10 = constant). 🤖
             </p>
           </Field>
           <Field label="Try read-aloud">
@@ -461,24 +527,13 @@ function SettingsPage() {
               Reset all progress
             </Button>
           ) : (
-            <div className="space-y-2">
-              <p className="text-body text-(--status-wrong)">
-                This erases all local progress. Cannot be undone.
-              </p>
-              <Button
-                variant="destructive"
-                fullWidth
-                onClick={() => {
-                  resetAllData();
-                  setConfirmReset(false);
-                }}
-              >
-                Yes, erase everything
-              </Button>
-              <Button variant="ghost" fullWidth onClick={() => setConfirmReset(false)}>
-                Cancel
-              </Button>
-            </div>
+            <ClearProgressConfirm
+              onConfirm={() => {
+                clearAllProgress();
+                setConfirmReset(false);
+              }}
+              onCancel={() => setConfirmReset(false)}
+            />
           )}
         </Card>
       </section>

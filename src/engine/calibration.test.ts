@@ -7,6 +7,11 @@ import {
 import type { CalibrationRecord } from '@/types/schemas';
 
 describe('calibration', () => {
+  it('skips confidence prompts when disabled', () => {
+    expect(shouldAskConfidence('never', 0)).toBe(false);
+    expect(shouldAskConfidence('never', 3)).toBe(false);
+  });
+
   it('samples every third question when set to every-3', () => {
     expect(shouldAskConfidence('every-3', 0)).toBe(true);
     expect(shouldAskConfidence('every-3', 1)).toBe(false);

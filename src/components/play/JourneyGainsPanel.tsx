@@ -1,7 +1,7 @@
 'use client';
 
 import type { PowerUpInstance } from '@/types';
-import { displayIconForPowerUp, getPowerUpDef } from '@/engine/powerups/catalog';
+import { getPowerUpCopy } from '@/engine/powerups/catalog';
 
 type JourneyGainsPanelProps = {
   achievementsEarned: string[];
@@ -53,11 +53,15 @@ export function JourneyGainsPanel({
               power-up{powerupsEarned.length === 1 ? '' : 's'}:
             </span>
             {powerupsEarned.map((pu, i) => {
-              const def = getPowerUpDef(pu.id);
-              const icon = def ? displayIconForPowerUp(def, pu.themedFor) : '✨';
+              const copy = getPowerUpCopy(pu);
               return (
-                <span key={`${pu.id}-${i}`} className="text-xl" aria-hidden>
-                  {icon}
+                <span
+                  key={`${pu.id}-${i}`}
+                  className="text-xl"
+                  title={copy ? `${copy.title}: ${copy.summary}` : undefined}
+                  aria-label={copy?.title ?? 'Power-up'}
+                >
+                  {copy?.icon ?? '✨'}
                 </span>
               );
             })}

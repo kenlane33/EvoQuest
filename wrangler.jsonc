@@ -1,8 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "evo-quest",
-  "account_id": "e750d3840f4db8aafdfc181a4e01c4cb",
+  "account_id": "0c3aa2b477a6dbe8a2ce83a7e89043e7",
+  "workers_dev": true,
   "compatibility_date": "2026-05-24",
+  "routes": [
+    {
+      "pattern": "eq.clarityxr.net",
+      "custom_domain": true
+    }
+  ],
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
   "observability": {

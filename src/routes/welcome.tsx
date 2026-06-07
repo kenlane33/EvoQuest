@@ -71,8 +71,12 @@ function WelcomePage() {
     if (step === 1) {
       return 'Your achievement grid. Every cell is a piece of biology.';
     }
-    return 'A few choices. Audio stings, read it with voice Azelma, full motion, confidence check-ins.';
-  }, [step, showMnemonic]);
+    const confidenceLine =
+      settings.practice.confidenceFrequency !== 'never'
+        ? ', confidence check-ins'
+        : '';
+    return `A few choices. Audio stings, read it with voice Azelma, full motion${confidenceLine}.`;
+  }, [step, showMnemonic, settings.practice.confidenceFrequency]);
 
   usePageReadAloud(stepReadText, { autoRead: true, autoReadKey: `welcome-${step}-${demoReplayKey}` });
 

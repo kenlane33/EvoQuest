@@ -2,10 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { useShallow } from 'zustand/react/shallow';
 import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';
 import { Hud } from '@/components/common/Hud';
 import { EtymologyCard } from '@/components/etymology/EtymologyCard';
+import { immediateFeedbackSpeakText } from '@/audio/feedback-answer-speak';
 import { feedbackHeadlineForAttempt } from '@/audio/feedback-phrases';
 import {
   buildFeedbackReadBundle,
@@ -13,8 +15,8 @@ import {
   feedbackDescReadText,
 } from '@/audio/feedback-read-text';
 import { getQuizReadText } from '@/audio/quiz-read-text';
-import { canAutoReadAloud } from '@/audio/read-aloud';
-import { stopPocketTtsEngine } from '@/audio/pocket-tts-engine';
+import { canAutoReadAloud, REACTION_SPEAK_TIMEOUT_MS } from '@/audio/read-aloud';
+import { stopReadAloud } from '@/audio/read-aloud-engine';
 import { teachToPlainText } from '@/audio/teach-text';
 import { SpeakButton } from '@/components/content/SpeakButton';
 import {
@@ -54,6 +56,7 @@ import {
 import { getQuizPlayFigures } from '@/lib/quiz-figures';
 import { QuizPlayFigures } from '@/components/play/QuizPlayFigures';
 import { AchievementEarnedMoment } from '@/components/play/AchievementEarnedMoment';
+import { FillQuestion } from '@/components/play/FillQuestion';
 import { JourneyGainsPanel } from '@/components/play/JourneyGainsPanel';
 import {
   PowerUpEffectProvider,
@@ -84,6 +87,8 @@ import type {
   SessionState,
   SpeedRevealData,
 } from '@/types';
+import { useReadAloudBootstrap } from '@/hooks/use-read-aloud-bootstrap';
+import { useDebouncedSessionSnapshot } from '@/hooks/use-debounced-session-snapshot';
 import { useAppStore } from '@/store/app-store';
 
 type PlaySessionProps = {
@@ -185,112 +190,6 @@ function MultipleChoiceQuestion({
           );
         })}
       </div>
-    </div>
-  );
-}
-
-function FillQuestion({
-  question,
-  disabled,
-  onAnswer,
-  descText,
-  onHintShown,
-}: {
-  question: Extract<InnerQuestion, { kind: 'fill' }>;
-  disabled: boolean;
-  onAnswer: (correct: boolean) => void;
-  descText?: string;
-  onHintShown?: (shown: boolean) => void;
-}) {
-  const [val, setVal] = useState('');
-  const [done, setDone] = useState(false);
-  const [showHint, setShowHint] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (disabled || done) return;
-    const t = setTimeout(() => inputRef.current?.focus(), 100);
-    return () => clearTimeout(t);
-  }, [disabled, done]);
-
-  function submit() {
-    if (!val.trim() || done || disabled) return;
-    setDone(true);
-    const ok = question.acceptable.some((a) => norm(val) === norm(a));
-    onAnswer(ok);
-  }
-
-  const parts = question.prompt.split('_____');
-  const ok = done && question.acceptable.some((a) => norm(val) === norm(a));
-  const correctAnswer = question.acceptable[0];
-
-  return (
-    <div className="space-y-4">
-      <Card>
-        <div className="flex items-start gap-2">
-          <p className="min-w-0 flex-1 text-body-lg leading-relaxed text-(--text-primary)">
-            {parts[0]}
-            <span
-              className={cn(
-                'mx-1 inline-flex min-w-[3rem] max-sm:min-w-[2.5rem] items-center gap-1 border-b-2 px-1 font-bold',
-                done
-                  ? 'border-(--status-correct) text-(--status-correct)'
-                  : 'border-(--accent-cyan) text-(--accent-cyan)',
-              )}
-            >
-              {done ? (ok ? val : correctAnswer) : val || '?????'}
-              {done ? (
-                <span aria-hidden className="text-(--status-correct)">
-                  ✓
-                </span>
-              ) : null}
-            </span>
-            {parts[1]}
-          </p>
-          {descText ? (
-            <SpeakButton slot="desc" text={descText} label="Read question" className="mt-0.5" />
-          ) : null}
-        </div>
-      </Card>
-      {done && !ok && (
-        <p className="text-meta text-(--text-dim)">
-          Your answer:{' '}
-          <span className="font-semibold text-(--status-wrong)">
-            ✗ {val}
-          </span>
-        </p>
-      )}
-      <div className="flex gap-2">
-        <input
-          ref={inputRef}
-          type="text"
-          value={val}
-          disabled={done || disabled}
-          onChange={(e) => setVal(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && submit()}
-          placeholder="Type your answer…"
-          autoComplete="off"
-          spellCheck={false}
-          className="flex-1 rounded-(--r-lg) border border-(--border-light) bg-(--bg-card-hi) px-4 py-3 text-body text-(--text-primary) outline-none focus:border-(--accent-cyan)"
-        />
-        <Button variant="primary" disabled={!val.trim() || done || disabled} onClick={submit}>
-          GO
-        </Button>
-      </div>
-      {!done && question.hint && (
-        <div className="flex items-center gap-1">
-          <Button
-            variant="text"
-            onClick={() => {
-              setShowHint(true);
-              onHintShown?.(true);
-            }}
-            className={showHint ? 'text-(--accent-amber) hover:text-(--accent-amber)' : 'hover:text-(--accent-amber)'}
-          >
-            {showHint ? `💡 ${question.hint}` : 'Need a hint?'}
-          </Button>
-        </div>
-      )}
     </div>
   );
 }
@@ -439,6 +338,34 @@ function FeedbackNextButton({
   );
 }
 
+function BriefContinueButton({
+  onContinue,
+  ready = true,
+}: {
+  onContinue: () => void;
+  /** Pulse when auto-read has finished; always clickable. */
+  ready?: boolean;
+}) {
+  return (
+    <Button
+      variant="secondary"
+      fullWidth
+      {...devMark('brief.cont')}
+      className={cn(
+        'mt-8 max-w-sm animate-slide-up transition-[border-color,background-color,box-shadow,color] duration-300',
+        ready &&
+          'animate-next-ready-pulse border-[color-mix(in_oklab,var(--status-correct)_55%,var(--border-light))] bg-[color-mix(in_oklab,var(--status-correct)_14%,var(--bg-card-hi))] text-(--text-primary) hover:border-(--status-correct) hover:bg-[color-mix(in_oklab,var(--status-correct)_22%,var(--bg-card-hi))]',
+      )}
+      onClick={() => {
+        stopReadAloud();
+        onContinue();
+      }}
+    >
+      CONTINUE →
+    </Button>
+  );
+}
+
 function TemplateRenderer({
   data,
   answered,
@@ -478,27 +405,52 @@ function TemplateRenderer({
 
 export function PlaySession({ sessionId }: PlaySessionProps) {
   const navigate = useNavigate();
-  const settings = useAppStore((s) => s.settings);
-  const sessionState = useAppStore((s) => s.sessionState);
-  const setSessionState = useAppStore((s) => s.setSessionState);
-  const updateUnitProgress = useAppStore((s) => s.updateUnitProgress);
-  const addJourney = useAppStore((s) => s.addJourney);
-  const appendCalibration = useAppStore((s) => s.appendCalibration);
-  const clearSession = useAppStore((s) => s.clearSession);
-  const powerups = useAppStore((s) => s.powerups);
-  const grantPowerUp = useAppStore((s) => s.grantPowerUp);
-  const swapPowerUp = useAppStore((s) => s.swapPowerUp);
-  const usePowerUp = useAppStore((s) => s.usePowerUp);
-  const markPowerUpFirstUseShown = useAppStore((s) => s.markPowerUpFirstUseShown);
-  const rollStreakReward = useAppStore((s) => s.rollStreakReward);
-  const earnAchievement = useAppStore((s) => s.earnAchievement);
-  const updateAchievementState = useAppStore((s) => s.updateAchievementState);
-  const updateMorphemeProgress = useAppStore((s) => s.updateMorphemeProgress);
-  const appendPendingJourneyReward = useAppStore((s) => s.appendPendingJourneyReward);
-  const pendingJourneyRewards = useAppStore((s) => s.pendingJourneyRewards);
+  const { settings, sessionState, powerups, pendingJourneyRewards } = useAppStore(
+    useShallow((s) => ({
+      settings: s.settings,
+      sessionState: s.sessionState,
+      powerups: s.powerups,
+      pendingJourneyRewards: s.pendingJourneyRewards,
+    })),
+  );
+  const {
+    setSessionState,
+    updateUnitProgress,
+    addJourney,
+    appendCalibration,
+    clearSession,
+    grantPowerUp,
+    swapPowerUp,
+    usePowerUp,
+    markPowerUpFirstUseShown,
+    rollStreakReward,
+    earnAchievement,
+    updateAchievementState,
+    updateMorphemeProgress,
+    appendPendingJourneyReward,
+  } = useAppStore(
+    useShallow((s) => ({
+      setSessionState: s.setSessionState,
+      updateUnitProgress: s.updateUnitProgress,
+      addJourney: s.addJourney,
+      appendCalibration: s.appendCalibration,
+      clearSession: s.clearSession,
+      grantPowerUp: s.grantPowerUp,
+      swapPowerUp: s.swapPowerUp,
+      usePowerUp: s.usePowerUp,
+      markPowerUpFirstUseShown: s.markPowerUpFirstUseShown,
+      rollStreakReward: s.rollStreakReward,
+      earnAchievement: s.earnAchievement,
+      updateAchievementState: s.updateAchievementState,
+      updateMorphemeProgress: s.updateMorphemeProgress,
+      appendPendingJourneyReward: s.appendPendingJourneyReward,
+    })),
+  );
 
   const [answered, setAnswered] = useState(false);
   const [pendingCorrect, setPendingCorrect] = useState<boolean | null>(null);
+  /** True after the play-phase answer recap; feedback skips repeating headline + answer. */
+  const [answerRecapShown, setAnswerRecapShown] = useState(false);
   const [confidenceValue, setConfidenceValue] = useState<number | null>(null);
   const [confidenceCommitted, setConfidenceCommitted] = useState(false);
   const [fillHintShown, setFillHintShown] = useState(false);
@@ -530,6 +482,10 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     return null;
   }, [sessionState]);
 
+  const saveInFlightSnapshot = useDebouncedSessionSnapshot(session, setSessionState);
+
+  useReadAloudBootstrap(settings.reading.enabled, settings.reading.voice);
+
   useEffect(() => {
     if (sessionState.phase === 'end') return;
     if (!session) {
@@ -552,6 +508,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     if (sessionState.phase === 'play') {
       setAnswered(false);
       setPendingCorrect(null);
+      setAnswerRecapShown(false);
       setFillHintShown(false);
       setMnemonicPhase('waiting');
       setConfidenceValue(null);
@@ -631,7 +588,22 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
           }
         }
         if (effect.kind === 'reveal-option' && templateKind === 'scenario') {
-          setMcDimmedIndex(0);
+          const currentSession = useAppStore.getState().sessionState;
+          if (currentSession.phase === 'play' || currentSession.phase === 'paused') {
+            const s = currentSession.session;
+            const unit = getUnitById(s.queue[s.currentIndex].unitId);
+            const quiz = unit?.quizzes.find((q) => q.id === s.queue[s.currentIndex].templateId);
+            if (quiz?.kind === 'scenario') {
+              const wrongIndices = quiz.data.options
+                .map((_, i) => i)
+                .filter((i) => i !== quiz.data.options.indexOf(quiz.data.answer));
+              if (wrongIndices.length) {
+                setMcDimmedIndex(
+                  wrongIndices[Math.floor(Math.random() * wrongIndices.length)],
+                );
+              }
+            }
+          }
         }
       }
 
@@ -691,6 +663,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       if (!confidenceReady) return;
       setAnswered(true);
       setPendingCorrect(correct);
+      setAnswerRecapShown(true);
     },
     [session, sessionState.phase, pendingCorrect, confidenceReady],
   );
@@ -698,13 +671,14 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
   const handleContinueToFeedback = useCallback(() => {
     if (!session || sessionState.phase !== 'play' || pendingCorrect === null) return;
 
-    stopPocketTtsEngine();
+    stopReadAloud();
 
     const correct = pendingCorrect;
     const effectState = buildActiveEffects(activeEffects);
 
     if (!correct && effectState.allowRetry) {
       setPendingCorrect(null);
+      setAnswerRecapShown(false);
       setAnswered(false);
       setActiveEffects(activeEffects.filter((e) => e.kind !== 'allow-retry'));
       return;
@@ -892,7 +866,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
   );
 
   const goNext = useCallback(() => {
-    stopPocketTtsEngine();
+    stopReadAloud();
     if (sessionState.phase !== 'feedback') return;
     const { session } = sessionState;
     const nextIndex = session.currentIndex + 1;
@@ -1081,23 +1055,38 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     );
   }, [pendingCorrect, session, sessionState.phase]);
 
+  const pendingFeedbackSpeakText = useMemo(() => {
+    if (pendingCorrect === null || !session || !activeQuiz || sessionState.phase !== 'play') {
+      return null;
+    }
+    return immediateFeedbackSpeakText({
+      journeyId: session.journeyId,
+      questionIndex: session.currentIndex,
+      currentStreak: session.currentStreak,
+      correct: pendingCorrect,
+      streakIncludesAnswer: false,
+      quiz: activeQuiz,
+    });
+  }, [pendingCorrect, session, activeQuiz, sessionState.phase]);
+
   const feedbackPreloadTarget = useMemo(
     () =>
-      session && sessionState.phase === 'play' && activeUnit
+      session && sessionState.phase === 'play' && activeUnit && activeQuiz
         ? {
             journeyId: session.journeyId,
             questionIndex: session.currentIndex,
             currentStreak: session.currentStreak,
             unit: activeUnit,
+            quiz: activeQuiz,
             playCtx: activePlayCtx,
           }
         : null,
-    [session, sessionState.phase, activeUnit, activePlayCtx],
+    [session, sessionState.phase, activeUnit, activeQuiz, activePlayCtx],
   );
 
   useFeedbackReadPreload(feedbackPreloadTarget);
 
-  useImmediateFeedbackSpeak(pendingFeedbackHeadline);
+  useImmediateFeedbackSpeak(pendingFeedbackSpeakText);
 
   const feedbackReadBundle = useMemo(() => {
     if (sessionState.phase !== 'feedback' || !activeUnit) return null;
@@ -1213,6 +1202,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
 
   const advanceBriefToPlay = useCallback(() => {
     if (phaseRef.current !== 'brief' || !session) return;
+    stopReadAloud();
     setSessionState({ phase: 'play', session });
     setAnswered(false);
     setPendingCorrect(null);
@@ -1228,6 +1218,21 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
     briefAutoAdvance,
     briefReadDone,
     advanceBriefToPlay,
+  ]);
+
+  useEffect(() => {
+    if (sessionState.phase !== 'brief' || !session || !briefAutoAdvance) return;
+    const timeoutId = window.setTimeout(
+      advanceBriefToPlay,
+      REACTION_SPEAK_TIMEOUT_MS + 500,
+    );
+    return () => clearTimeout(timeoutId);
+  }, [
+    sessionState.phase,
+    session,
+    briefAutoAdvance,
+    advanceBriefToPlay,
+    pageReadAutoKey,
   ]);
 
   if (sessionState.phase === 'end') {
@@ -1313,7 +1318,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
         <div
           data-wing={unit.achievement.wingId}
           {...devMark('brief')}
-          className="mx-auto flex min-h-screen max-w-(--w-content) flex-col items-center justify-center px-4 play-content-top animate-pop-in max-sm:px-3"
+          className="mx-auto flex min-h-[calc(100dvh-var(--hud-height,3.25rem))] max-w-(--w-content) flex-col items-center justify-center overflow-y-auto px-4 play-content-top play-content-bottom-with-readbar animate-pop-in max-sm:px-3"
         >
           <div {...devMark('brief.hero')} className="text-center">
             <div
@@ -1336,17 +1341,10 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
               <p className="mt-2 text-meta italic text-(--text-dim)">{unit.teach.hook}</p>
             ) : null}
           </div>
-          {!briefAutoAdvance ? (
-            <Button
-              variant="primary"
-              fullWidth
-              {...devMark('brief.cont')}
-              className="mt-8 max-w-sm animate-slide-up"
-              onClick={advanceBriefToPlay}
-            >
-              CONTINUE →
-            </Button>
-          ) : null}
+          <BriefContinueButton
+            onContinue={advanceBriefToPlay}
+            ready={!briefAutoAdvance || briefReadDone}
+          />
         </div>
       )}
 
@@ -1474,12 +1472,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
                     descText={questionDescText || undefined}
                     onResult={(result) => handleAnswerSelect(result.correct)}
                     resumeFromSnapshot={session.inFlightSnapshot}
-                    saveSnapshot={(snapshot) => {
-                      setSessionState({
-                        phase: 'play',
-                        session: { ...session, inFlightSnapshot: snapshot },
-                      });
-                    }}
+                    saveSnapshot={saveInFlightSnapshot}
                   />
                 </>
               ) : (
@@ -1533,7 +1526,7 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       {sessionState.phase === 'feedback' && feedbackReadBundle && (
         <QuestionSpeakProvider
           slots={{
-            title: feedbackReadBundle.headline,
+            title: answerRecapShown ? '' : feedbackReadBundle.headline,
             desc: feedbackDescText,
             sidebar: feedbackSidebarText,
           }}
@@ -1553,41 +1546,45 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
               </div>
             ) : null}
 
-            <div {...devMark('fb.verdict')} className="mb-6 text-center">
-              <div
-                {...devMark('fb.icon')}
-                className={cn(
-                  'mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full text-3xl',
-                  sessionState.feedback.correct
-                    ? 'bg-[color-mix(in_oklab,var(--status-correct)_15%,transparent)]'
-                    : 'bg-[color-mix(in_oklab,var(--status-wrong)_15%,transparent)]',
-                )}
-              >
-                {sessionState.feedback.correct ? '✓' : '✗'}
-              </div>
-              <div {...devMark('fb.headline')} className="flex items-center justify-center gap-2">
-                <h3
-                  className="text-headline-lg font-black"
-                  style={{
-                    color: sessionState.feedback.correct
-                      ? 'var(--status-correct)'
-                      : 'var(--status-wrong)',
-                  }}
-                >
-                  {feedbackHeadline}
-                </h3>
-                <SpeakButton
-                  slot="title"
-                  text={feedbackReadBundle.headline}
-                  label={`Read feedback: ${feedbackHeadline}`}
-                />
-              </div>
-            </div>
+            {!answerRecapShown ? (
+              <>
+                <div {...devMark('fb.verdict')} className="mb-6 text-center">
+                  <div
+                    {...devMark('fb.icon')}
+                    className={cn(
+                      'mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full text-3xl',
+                      sessionState.feedback.correct
+                        ? 'bg-[color-mix(in_oklab,var(--status-correct)_15%,transparent)]'
+                        : 'bg-[color-mix(in_oklab,var(--status-wrong)_15%,transparent)]',
+                    )}
+                  >
+                    {sessionState.feedback.correct ? '✓' : '✗'}
+                  </div>
+                  <div {...devMark('fb.headline')} className="flex items-center justify-center gap-2">
+                    <h3
+                      className="text-headline-lg font-black"
+                      style={{
+                        color: sessionState.feedback.correct
+                          ? 'var(--status-correct)'
+                          : 'var(--status-wrong)',
+                      }}
+                    >
+                      {feedbackHeadline}
+                    </h3>
+                    <SpeakButton
+                      slot="title"
+                      text={feedbackReadBundle.headline}
+                      label={`Read feedback: ${feedbackHeadline}`}
+                    />
+                  </div>
+                </div>
 
-            {correctAnswerDisplay ? (
-              <div {...devMark('fb.answer')}>
-                <CorrectAnswerReveal answer={correctAnswerDisplay} className="mb-6" />
-              </div>
+                {correctAnswerDisplay ? (
+                  <div {...devMark('fb.answer')}>
+                    <CorrectAnswerReveal answer={correctAnswerDisplay} className="mb-6" />
+                  </div>
+                ) : null}
+              </>
             ) : null}
 
             <Card {...devMark('fb.explain')} variant={sessionState.feedback.correct ? 'correct' : 'wrong'}>
@@ -1681,12 +1678,12 @@ export function PlaySession({ sessionId }: PlaySessionProps) {
       {pendingSwap ? (
         <PowerUpSwapModal
           earned={pendingSwap}
-          inventory={powerups.slots.filter((s): s is PowerUpInstance => s !== null)}
-          onSwap={(slotIndex) => {
+          slots={powerups.slots}
+          onReplaceSlot={(slotIndex) => {
             swapPowerUp(slotIndex, pendingSwap);
             setPendingSwap(null);
           }}
-          onDiscard={() => setPendingSwap(null)}
+          onDiscardEarned={() => setPendingSwap(null)}
         />
       ) : null}
     </>

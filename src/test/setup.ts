@@ -4,9 +4,11 @@ import '@/engine/templates';
 
 beforeEach(() => {
   localStorage.clear();
+  sessionStorage.clear();
 });
 
 afterEach(() => {
   cleanup();
   localStorage.clear();
+  sessionStorage.clear();
 });

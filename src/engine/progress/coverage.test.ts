@@ -36,6 +36,8 @@ describe('computeMasteryOverview', () => {
   it('returns zero laps with no progress', () => {
     const overview = computeMasteryOverview({});
     expect(overview.laps).toBe(0);
+    expect(overview.totalLaps).toBe(0);
+    expect(overview.totalLapsLabel).toBe('0.00');
     expect(overview.totalQuizzes).toBeGreaterThan(0);
     expect(overview.nextLapPct).toBe(0);
   });
@@ -61,7 +63,11 @@ describe('computeMasteryOverview', () => {
         achievementEarned: false,
       },
     };
-    expect(computeMasteryOverview(progress).laps).toBe(0);
+    const overview = computeMasteryOverview(progress);
+    expect(overview.laps).toBe(0);
+    expect(overview.totalLaps).toBeGreaterThan(0);
+    expect(overview.totalLaps).toBeLessThan(1);
+    expect(overview.totalLapsLabel).toBe(overview.totalLaps.toFixed(2));
   });
 
   it('counts one lap when every quiz has been answered at least once', () => {
@@ -91,6 +97,8 @@ describe('computeMasteryOverview', () => {
     }
     const overview = computeMasteryOverview(progress);
     expect(overview.laps).toBe(1);
+    expect(overview.totalLaps).toBe(1);
+    expect(overview.totalLapsLabel).toBe('1.00');
     expect(overview.nextLapPct).toBe(0);
   });
 

@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { removeState } from '@/storage';
 import { loadKey } from '@/storage/reader';
 import {
   flushNow,
@@ -104,5 +105,25 @@ describe('storage reader', () => {
     if (result.ok) {
       expect(result.value.motion).toBe('full');
     }
+  });
+
+  it('removeState clears only the requested key', () => {
+    writeBlob(STORAGE_KEYS.SETTINGS, {
+      schemaVersion: 10,
+      savedAt: Date.now(),
+      appVersion: '0.0.0',
+      payload: DEFAULT_SETTINGS,
+    });
+    writeBlob(STORAGE_KEYS.UNITS, {
+      schemaVersion: 1,
+      savedAt: Date.now(),
+      appVersion: '0.0.0',
+      payload: { 'unit-a': { unitId: 'unit-a' } },
+    });
+
+    removeState(STORAGE_KEYS.SETTINGS);
+
+    expect(localStorage.getItem(STORAGE_KEYS.SETTINGS)).toBeNull();
+    expect(localStorage.getItem(STORAGE_KEYS.UNITS)).toBeTruthy();
   });
 });

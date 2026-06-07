@@ -27,7 +27,7 @@ export function PauseModal({ session, onResume, onEndJourney }: PauseModalProps)
   return (
     <div
       {...devMark('pause')}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[color-mix(in_oklab,var(--bg-deep)_55%,transparent)] p-6 backdrop-blur-sm"
+      className="glass-sm glass-bg-overlay-play fixed inset-0 z-[100] flex items-center justify-center p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="pause-title"

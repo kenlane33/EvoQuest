@@ -34,7 +34,7 @@ export function AchievementEarnedMoment({
       aria-describedby="achievement-moment-desc"
     >
       <div
-        className="absolute inset-0 bg-[color-mix(in_oklab,var(--bg-app)_82%,transparent)] backdrop-blur-sm"
+        className="glass-sm glass-bg-overlay-moment absolute inset-0"
         aria-hidden
       />
       <div
