@@ -36,6 +36,23 @@ export const SILLY_QUESTION_INTROS: string[] = [
   'Let him cook.',
   'Eyes up, scholar.',
   'Achievement unlocked: reading the question.',
+  'Flint and steel, let us spark this.',
+  'Chicken jockey! Okay, question now.',
+  'First we read, then we answer.',
+  'As a child, I yearned for the quiz.',
+  'Comin in hot with this one.',
+  'I am Steve, and Steve says focus.',
+  'Then we got the question, which is a question.',
+  'Big ol red mushroom of knowledge incoming.',
+  "Don't noclip out of reality, stay with me.",
+  'Almond water in hand, brain ready.',
+  'Mind the mono-yellow walls, eyes here.',
+  'The fluorescent hum says: think.',
+  'We are deep in the liminal study zone.',
+  'Something is wandering nearby. It is curiosity.',
+  'Entered the right level: question level.',
+  'Keep focused, keep going.',
+  'One block at a time, scholar.',
 ];
 
 /** Said right before revealing the answer. */
@@ -64,6 +81,20 @@ export const SILLY_ANSWER_INTROS: string[] = [
   'Final answer:',
   'Hot take, but correct:',
   'Robot wisdom dispensing now:',
+  'Flint and steel, igniting the answer:',
+  'First we mine, then we craft. The answer:',
+  'Then we got the answer, which is the answer:',
+  'I am Steve, and Steve declares:',
+  'Comin in hot with the answer:',
+  'Crafting table says:',
+  'Ender pearl tossed straight to the truth:',
+  'Big ol correct one:',
+  'Noclipping straight to the answer:',
+  'Survivor of the backrooms reports:',
+  'Found the exit, and it leads to:',
+  'Almond water sipped, answer revealed:',
+  'Past the mono-yellow halls lies:',
+  'The liminal hallway opens to:',
 ];
 
 /** Short bridge between questions when Auto advances to the next one. */
@@ -88,6 +119,16 @@ export const SILLY_TRANSITIONS: string[] = [
   'Galaxy brain reload complete.',
   'Lock in for the next one.',
   'Sheesh, here comes another.',
+  'Flint and steel, sparking the next.',
+  'First we mine, then we craft the next one.',
+  'Then we got the next question, which is a question.',
+  'Comin in hot to the next one.',
+  'Chicken jockey, onto the next.',
+  'Found the exit door, next room awaits.',
+  'Noclip to the next question.',
+  'Refilled the almond water, let us go.',
+  'New level loaded, mono-yellow and all.',
+  'One block closer, next up.',
 ];
 
 /** Short audio feedback when a wrong choice is picked (Auto off). */
