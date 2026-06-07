@@ -136,10 +136,14 @@ export function ReaderQuiz({
     [autoKey],
   );
 
-  const setPaused = useCallback((b: boolean) => {
-    setPausedState(b);
-    pausedRef.current = b;
-  }, []);
+  const setPaused = useCallback(
+    (b: boolean) => {
+      setPausedState(b);
+      pausedRef.current = b;
+      if (b) stop();
+    },
+    [stop],
+  );
 
   const cancel = useCallback(() => {
     runRef.current += 1;
