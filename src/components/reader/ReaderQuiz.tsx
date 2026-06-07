@@ -471,7 +471,12 @@ function GroupBlock({
   return (
     <section
       {...devMark(`group.${group.id}`)}
-      className="rounded-(--r-xl) border border-l-4 border-(--border-light) border-l-(--accent-violet) bg-[color-mix(in_oklab,var(--accent-violet)_6%,var(--bg-card))] p-5"
+      className={cn(
+        'rounded-(--r-xl) border border-l-4 border-(--border-light) border-l-(--accent-violet) p-5 transition-colors',
+        speaking
+          ? 'bg-[color-mix(in_oklab,var(--accent-amber)_16%,var(--bg-card))]'
+          : 'bg-[color-mix(in_oklab,var(--accent-violet)_6%,var(--bg-card))]',
+      )}
     >
       <div className="mb-2 flex items-start justify-between gap-3">
         <h2 className="text-body-lg font-black text-(--text-primary)">{group.title}</h2>
@@ -550,12 +555,12 @@ function QuestionCard({
       ref={cardRef}
       {...devMark(`q${q.label}`)}
       className={cn(
-        'relative rounded-(--r-xl) border bg-(--bg-card) p-5 transition-all duration-150 lift-card',
+        'relative rounded-(--r-xl) border p-5 transition-all duration-150 lift-card',
         active
-          ? 'border-(--accent-violet) ring-2 ring-(--accent-violet)'
+          ? 'animate-reader-active-frame border-(--accent-violet) ring-2 ring-(--accent-violet) animate-pulse'
           : done || revealed
-            ? 'border-l-4 border-(--border-light) border-l-(--status-correct)'
-            : 'border-(--border-light)',
+            ? 'border-l-4 border-(--border-light) border-l-(--status-correct) bg-(--bg-card)'
+            : 'border-(--border-light) bg-(--bg-card)',
       )}
     >
       <div className="flex items-start gap-3">
@@ -700,7 +705,14 @@ function ChoiceBodyView({
                 >
                   {c.label}
                 </span>
-                <span className="flex-1 leading-snug">{c.text}</span>
+                <span
+                  className={cn(
+                    'flex-1 whitespace-pre-line',
+                    q.choicesMono ? 'font-mono leading-tight' : 'leading-snug',
+                  )}
+                >
+                  {c.text}
+                </span>
                 {isGreen ? <Check size={18} className="mt-0.5 shrink-0 text-(--status-correct)" /> : null}
                 {isRed ? <X size={18} className="mt-0.5 shrink-0 text-(--status-wrong)" /> : null}
               </button>

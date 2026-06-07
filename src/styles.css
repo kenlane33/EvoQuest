@@ -42,6 +42,7 @@
   --animate-feedback-headline-pulse: feedbackHeadlinePulse 1.1s ease-in-out infinite;
   --animate-next-ready-pulse: nextReadyPulse 1.4s ease-in-out infinite;
   --animate-reader-await-frame: readerAwaitFrame 1.1s ease-in-out infinite;
+  --animate-reader-active-frame: readerActiveFrame 1.6s ease-in-out infinite;
 }
 
 :root {
@@ -316,6 +317,18 @@
   }
 }
 
+@keyframes readerActiveFrame {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-violet) 85%, transparent),
+      0 0 0 0 color-mix(in oklab, var(--accent-violet) 40%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-violet) 85%, transparent),
+      0 0 18px 5px color-mix(in oklab, var(--accent-violet) 38%, transparent);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-pop-in,
   .animate-slide-up,
@@ -325,7 +338,8 @@
   .animate-correct-flash,
   .animate-feedback-headline-pulse,
   .animate-next-ready-pulse,
-  .animate-reader-await-frame {
+  .animate-reader-await-frame,
+  .animate-reader-active-frame {
     animation: none !important;
   }
 }

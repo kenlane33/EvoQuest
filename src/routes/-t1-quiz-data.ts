@@ -225,10 +225,10 @@ export const T1_QUIZ: QuizQuestion[] = [
     n: 20,
     prompt: 'Which correctly matches a strand of DNA with its complementary strand of RNA?',
     choices: [
-      { letter: 'A', text: 'DNA: TAC TAG &#10; RNA: ATG AUC &#10; &#10;' },
-      { letter: 'B', text: 'DNA: ATA CCG &#10;RNA: UAU GGC &#10; &#10;' },
-      { letter: 'C', text: 'DNA: CUG AUU &#10;RNA: GAC UAA &#10; &#10;' },
-      { letter: 'D', text: 'DNA: TAA CGC &#10;RNA: ATT GGG' },
+      { letter: 'A', text: 'DNA: TAC TAG\nRNA: ATG AUC' },
+      { letter: 'B', text: 'DNA: ATA CCG\nRNA: UAU GGC' },
+      { letter: 'C', text: 'DNA: CUG AUU\nRNA: GAC UAA' },
+      { letter: 'D', text: 'DNA: TAA CGC\nRNA: ATT GGG' },
     ],
     answer: 'B',
   },
@@ -245,7 +245,7 @@ export const T1_QUIZ: QuizQuestion[] = [
   },
   {
     n: 22,
-    prompt: 'Black hair color is dominant to white hair color in mice. Interpret the Punnett squrare below to determine the expected phenotypic ratio for the offpring of a homozygous black mouse and a white mouse.',
+    prompt: 'Black hair color is dominant to white hair color in mice. Interpret the Punnett square below to determine the expected phenotypic ratio for the offpring of a homozygous black mouse and a white mouse.',
     choices: [
       { letter: 'A', text: '4 Black: 0 White' },
       { letter: 'B', text: '3 Black: 1 White' },
@@ -256,7 +256,7 @@ export const T1_QUIZ: QuizQuestion[] = [
   },
   {
     n: 23,
-    prompt: 'Black hair color is dominant to white hair color in mice. Interpret the Punnett squrare below to determine the expected phenotypic ratio for the offpring of a heterozygous black mouse and a white mouse.',
+    prompt: 'Black hair color is dominant to white hair color in mice. Interpret the Punnett square below to determine the expected phenotypic ratio for the offpring of a heterozygous black mouse and a white mouse.',
     choices: [
       { letter: 'A', text: '4 Black: 0 White' },
       { letter: 'B', text: '3 Black: 1 White' },
@@ -269,10 +269,22 @@ export const T1_QUIZ: QuizQuestion[] = [
     n: 24,
     prompt: 'Black hair color in mice is dominant to white hair color. Which Punnett square depicts a cross between two heterozygous black mice?',
     choices: [
-      { letter: 'A', text: '' },
-      { letter: 'B', text: '' },
-      { letter: 'C', text: '' },
-      { letter: 'D', text: '' },
+      {
+        letter: 'A',
+        text: 'BB × bb\n    ┌───┬───┬───┐\n    │   │ b │ b │\n    ├───┼───┼───┤\n    │ B │ Bb│ Bb│\n    ├───┼───┼───┤\n    │ B │ Bb│ Bb│\n    └───┴───┴───┘',
+      },
+      {
+        letter: 'B',
+        text: 'Bb × bb\n    ┌───┬───┬───┐\n    │   │ b │ b │\n    ├───┼───┼───┤\n    │ B │ Bb│ bb│\n    ├───┼───┼───┤\n    │ b │ Bb│ bb│\n    └───┴───┴───┘',
+      },
+      {
+        letter: 'C',
+        text: 'Bb × Bb\n    ┌───┬───┬───┐\n    │   │ B │ b │\n    ├───┼───┼───┤\n    │ B │ BB│ Bb│\n    ├───┼───┼───┤\n    │ b │ Bb│ bb│\n    └───┴───┴───┘',
+      },
+      {
+        letter: 'D',
+        text: 'bb × bb\n    ┌───┬───┬───┐\n    │   │ b │ b │\n    ├───┼───┼───┤\n    │ b │ bb│ bb│\n    ├───┼───┼───┤\n    │ b │ bb│ bb│\n    └───┴───┴───┘',
+      },
     ],
     answer: 'C',
   },
@@ -523,7 +535,7 @@ export const T1_QUIZ: QuizQuestion[] = [
     prompt: 'Opponents of the genetic engineering of plants argue that it is difficult to accurately predict the consequences of plant alterations to the local habitat. Which is the most likely negative outcome of genetic modification in plants?',
     choices: [
       { letter: 'A', text: 'Genetically engineered plants would outcompete the local, native plants, causing massive die outs.' },
-      { letter: 'B', text: 'Genetically engineered plants that are pest-resistant would reduce the local population of pollinating insects. &#10;' },
+      { letter: 'B', text: 'Genetically engineered plants that are pest-resistant would reduce the local population of pollinating insects.' },
       { letter: 'C', text: 'Genetically engineered plants that are greener in appearance would be chosen more often as food by consumers.' },
       { letter: 'D', text: 'Genetically engineered plants would transfer genes to the local, native plants, creating new species that cannot be killed.' },
     ],
@@ -764,7 +776,7 @@ export const T1_QUIZ: QuizQuestion[] = [
     n: 69,
     prompt: 'Which mechanism has the least effect on natural selection over time?',
     choices: [
-      { letter: 'A', text: 'mutation &#10;' },
+      { letter: 'A', text: 'mutation' },
       { letter: 'B', text: 'inheritance' },
       { letter: 'C', text: 'asexual reproduction' },
       { letter: 'D', text: 'environmental change' },
@@ -1138,10 +1150,10 @@ export const T1_QUIZ: QuizQuestion[] = [
     n: 103,
     prompt: 'Which type of transport is most likely to be used to move a product made inside a cell to the extracellular matrix?',
     choices: [
-      { letter: 'A', text: 'diffusion &#10;' },
-      { letter: 'B', text: 'active transport &#10;' },
+      { letter: 'A', text: 'diffusion' },
+      { letter: 'B', text: 'active transport' },
       { letter: 'C', text: 'passive transport' },
-      { letter: 'D', text: 'facilitated diffusion &#10;' },
+      { letter: 'D', text: 'facilitated diffusion' },
     ],
     answer: 'B',
   },
@@ -1358,7 +1370,7 @@ export const T1_QUIZ: QuizQuestion[] = [
     n: 124,
     prompt: 'A student uses a microscope to observe a cell that has a cell wall, a plasma membrane, and circular DNA. What kind of cell is this student observing?',
     choices: [
-      { letter: 'A', text: 'plant cell &#10;' },
+      { letter: 'A', text: 'plant cell' },
       { letter: 'B', text: 'animal cell' },
       { letter: 'C', text: 'eukaryotic cell' },
       { letter: 'D', text: 'prokaryotic cell' },
@@ -1457,7 +1469,7 @@ export const T1_QUIZ: QuizQuestion[] = [
     n: 133,
     prompt: 'Which is not a characteristic of prokaryotes?',
     choices: [
-      { letter: 'A', text: 'circular DNA &#10;' },
+      { letter: 'A', text: 'circular DNA' },
       { letter: 'B', text: 'cell specialization' },
       { letter: 'C', text: 'presence of ribosomes' },
       { letter: 'D', text: 'lack of membrane-bound organelles' },
@@ -1655,9 +1667,9 @@ export const T1_QUIZ: QuizQuestion[] = [
     n: 151,
     prompt: 'Pepsin, an enzyme that is found in the stomach of humans, functions in breaking down proteins. It is denatured as it travels to the small intestine and can no longer decompose proteins. Which factor most likely causes the enzyme to denature as it moves through the digestive tract?',
     choices: [
-      { letter: 'A', text: 'pH &#10;' },
-      { letter: 'B', text: 'temperature &#10;' },
-      { letter: 'C', text: 'enzyme concentration &#10;' },
+      { letter: 'A', text: 'pH' },
+      { letter: 'B', text: 'temperature' },
+      { letter: 'C', text: 'enzyme concentration' },
       { letter: 'D', text: 'substrate concentration' },
     ],
     answer: 'A',
@@ -1666,10 +1678,10 @@ export const T1_QUIZ: QuizQuestion[] = [
     n: 152,
     prompt: 'The human body utilizes water to balance body temperature. Under what conditions might thermal regulation break down and no longer function correctly?',
     choices: [
-      { letter: 'A', text: 'decreased physical activity &#10;' },
+      { letter: 'A', text: 'decreased physical activity' },
       { letter: 'B', text: 'increased digestive activity' },
       { letter: 'C', text: 'high water intake and low water output' },
-      { letter: 'D', text: 'low water intake and high water output &#10;' },
+      { letter: 'D', text: 'low water intake and high water output' },
     ],
     answer: 'D',
   },

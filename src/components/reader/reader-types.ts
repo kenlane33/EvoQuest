@@ -17,6 +17,8 @@ export type ChoiceBody = {
   multi: boolean;
   /** For multiselect: how many to choose. */
   selectCount?: number;
+  /** Render choice text in a monospace face (e.g. Punnett squares, aligned DNA/RNA). */
+  choicesMono?: boolean;
   choices: ReaderChoice[];
 };
 

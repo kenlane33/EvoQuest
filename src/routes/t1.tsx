@@ -48,7 +48,7 @@ carbon of one bonds to the nitrogen of the next.
         peptide bond (C - N)`;
 
 /** Supplemental context for questions whose source document only had an image. */
-const SUPPLEMENT: Record<number, { ascii?: string; figureNotes?: string[] }> = {
+const SUPPLEMENT: Record<number, { ascii?: string; figureNotes?: string[]; choicesMono?: boolean }> = {
   1: { ascii: CODON_CHART },
   7: {
     ascii: CODON_CHART,
@@ -119,6 +119,13 @@ const SUPPLEMENT: Record<number, { ascii?: string; figureNotes?: string[] }> = {
       'Cell 1 is large with a true nucleus and membrane-bound organelles; Cell 2 is much smaller with no nucleus — just a cell membrane, cytoplasm, and free-floating ribosomes.',
     ],
   },
+  20: { choicesMono: true },
+  24: {
+    choicesMono: true,
+    figureNotes: [
+      'B = black (dominant), b = white (recessive). Each choice is a Punnett square — alleles across the top from one parent, alleles down the left from the other. Two heterozygous black mice are both Bb.',
+    ],
+  },
 };
 
 function T1Page() {
@@ -134,6 +141,7 @@ function T1Page() {
           ...(extra?.figureNotes ? { figureNotes: extra.figureNotes } : {}),
           kind: 'choice',
           multi: false,
+          ...(extra?.choicesMono ? { choicesMono: true } : {}),
           choices: q.choices.map((c) => ({
             label: c.letter,
             text: c.text,
