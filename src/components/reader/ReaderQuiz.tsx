@@ -593,7 +593,7 @@ function QuestionCard({
       </div>
 
       {q.ascii ? (
-        <pre className="mt-3 overflow-x-auto rounded-(--r-lg) bg-(--bg-elevated) p-3 font-mono text-[11px] leading-tight text-(--text-secondary)">
+        <pre className="mt-3 overflow-x-auto whitespace-pre rounded-(--r-lg) bg-(--bg-elevated) p-3 font-mono text-[11px] leading-tight text-(--text-secondary)">
           {q.ascii}
         </pre>
       ) : null}
@@ -711,8 +711,8 @@ function ChoiceBodyView({
                 </span>
                 <span
                   className={cn(
-                    'flex-1 whitespace-pre-line',
-                    q.choicesMono ? 'font-mono leading-tight' : 'leading-snug',
+                    'flex-1',
+                    q.choicesMono ? 'overflow-x-auto whitespace-pre font-mono leading-tight' : 'whitespace-pre-line leading-snug',
                   )}
                 >
                   {c.text}

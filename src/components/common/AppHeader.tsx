@@ -17,6 +17,17 @@ export function AppHeader() {
   }
 
   const showMenu = pathname !== '/' && pathname !== '/welcome';
+  const isT1 = pathname === '/t1';
+  const isT2 = pathname === '/t2';
+
+  const tLinkClass = (active: boolean) =>
+    cn(
+      'flex h-10 w-10 items-center justify-center rounded-full border bg-(--bg-card) text-meta font-black no-underline transition-colors',
+      buttonPressClasses,
+      active
+        ? 'border-(--accent-violet) text-(--text-primary) bg-[color-mix(in_oklab,var(--accent-violet)_10%,transparent)]'
+        : 'border-(--border-light) text-(--text-secondary) hover:border-(--accent-violet) hover:text-(--text-primary)',
+    );
 
   return (
     <header
@@ -31,24 +42,20 @@ export function AppHeader() {
           <Link
             to="/t1"
             {...devMark('shell.t1')}
-            className={cn(
-              'flex h-10 w-10 items-center justify-center rounded-full border border-(--border-light) bg-(--bg-card) text-meta font-black text-(--text-secondary) no-underline transition-colors hover:border-(--accent-violet) hover:text-(--text-primary)',
-              buttonPressClasses,
-            )}
+            className={tLinkClass(isT1)}
             title="Test as Reader (T1)"
             aria-label="Test as Reader page T1"
+            aria-current={isT1 ? 'page' : undefined}
           >
             T1
           </Link>
           <Link
             to="/t2"
             {...devMark('shell.t2')}
-            className={cn(
-              'flex h-10 w-10 items-center justify-center rounded-full border border-(--border-light) bg-(--bg-card) text-meta font-black text-(--text-secondary) no-underline transition-colors hover:border-(--accent-violet) hover:text-(--text-primary)',
-              buttonPressClasses,
-            )}
+            className={tLinkClass(isT2)}
             title="Test as Reader (T2)"
             aria-label="Test as Reader page T2"
+            aria-current={isT2 ? 'page' : undefined}
           >
             T2
           </Link>
