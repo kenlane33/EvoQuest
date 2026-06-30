@@ -6,6 +6,8 @@ import {
   getPocketTtsEngine,
   getPocketTtsUtterancePlayedMs,
   getPocketTtsUtteranceProgress,
+  getPocketTtsUtteranceTotalMs,
+  getPocketTtsUtteranceWordAnchors,
   beginPocketTtsAudioFromUserGesture,
   ensurePocketTtsAudioOutputReady,
   preloadPocketTtsText,
@@ -180,6 +182,22 @@ export function getReadAloudAudioProgress(): number | null {
 export function getReadAloudPlayedMs(): number | null {
   if (!shouldUsePocketTts()) return null;
   return getPocketTtsUtterancePlayedMs();
+}
+
+/** Per-sentence audio→text anchors; null when idle or on Web Speech fallback. */
+export function getReadAloudWordAnchors(): Array<{
+  ms: number;
+  charOffset: number;
+  wordOffset: number;
+}> | null {
+  if (!shouldUsePocketTts()) return null;
+  return getPocketTtsUtteranceWordAnchors();
+}
+
+/** Total ms of the active Pocket utterance once finalized; null while streaming. */
+export function getReadAloudTotalMs(): number | null {
+  if (!shouldUsePocketTts()) return null;
+  return getPocketTtsUtteranceTotalMs();
 }
 
 /** Whether the active Pocket utterance has received all audio chunks. */

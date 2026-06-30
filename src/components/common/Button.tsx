@@ -6,7 +6,7 @@ import { cn } from '@/lib/cn';
 export const buttonPressClasses =
   'cursor-pointer transition-transform duration-150 ease-out hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100';
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive' | 'icon' | 'text';
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive' | 'icon' | 'text' | 'outline';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
@@ -26,6 +26,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   icon:
     'h-10 w-10 shrink-0 rounded-full border border-(--border-light) bg-(--bg-card) p-0 text-(--text-secondary) hover:border-(--border-medium) hover:text-(--text-primary)',
   text: 'border-0 bg-transparent px-0 py-0 font-normal text-(--text-dim) hover:bg-transparent hover:text-(--text-secondary)',
+  outline: 'border border-(--border-light) hover:border-(--border-medium)',
 };
 
 export function Button({

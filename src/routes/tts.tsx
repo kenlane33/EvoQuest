@@ -125,10 +125,11 @@ function scrollElementToVerticalCenter(
 }
 
 function spokenWordHighlightClass(distance: number): string {
-  if (distance === 0) {
-    return 'rounded-[0.2em] bg-[color-mix(in_oklab,var(--accent-cyan)_22%,transparent)] text-(--text-primary) font-semibold';
-  }
-  if (distance === 1) return 'text-(--text-secondary)';
+  // if (distance === 0) {
+  //   return 'rounded-[0.2em] bg-[color-mix(in_oklab,var(--accent-cyan)_22%,transparent)] text-(--text-primary) font-semibold';
+  // }
+  if (distance <= 2) return 'text-(--text-secondary)';
+  if (distance <= 3) return 'text-(--text-dim)';
   return 'text-(--text-faint)';
 }
 
@@ -137,6 +138,7 @@ function renderHighlightedPlainText(
   words: SpeakWord[],
   activeWordIndex: number | null,
   activeWordRef?: React.RefObject<HTMLSpanElement | null>,
+  onWordClick?: (wordIndex: number) => void,
 ) {
   if (activeWordIndex == null || words.length === 0) {
     return text;
@@ -155,9 +157,31 @@ function renderHighlightedPlainText(
       <span
         key={`${word.start}-${word.text}`}
         ref={index === active ? activeWordRef : undefined}
+        role={onWordClick ? 'button' : undefined}
+        tabIndex={onWordClick ? 0 : undefined}
+        onClick={
+          onWordClick
+            ? (event) => {
+                event.stopPropagation();
+                onWordClick(index);
+              }
+            : undefined
+        }
+        onKeyDown={
+          onWordClick
+            ? (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  onWordClick(index);
+                }
+              }
+            : undefined
+        }
         className={cn(
           spokenWordHighlightClass(distance),
           distance === 0 ? 'oo--spoken-text-word' : undefined,
+          onWordClick &&
+            'cursor-pointer rounded-[0.2em] hover:bg-[color-mix(in_oklab,var(--accent-cyan)_12%,transparent)]',
         )}
       >
         {word.text}
@@ -177,10 +201,12 @@ function SpokenTextHighlight({
   text,
   words,
   activeWordIndex,
+  onWordClick,
 }: {
   text: string;
   words: SpeakWord[];
   activeWordIndex: number;
+  onWordClick?: (wordIndex: number) => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLSpanElement>(null);
@@ -204,7 +230,7 @@ function SpokenTextHighlight({
       className="oo--tts-spoken-text max-h-[calc(3*1.625*1em+1rem)] overflow-y-auto overscroll-y-contain scroll-smooth rounded-(--r-lg) border border-(--border-light) bg-[color-mix(in_oklab,var(--bg-card-hi)_70%,transparent)] px-3 py-2 text-body leading-relaxed scrollbar-thin"
     >
       <p className="whitespace-pre-wrap wrap-break-word">
-        {renderHighlightedPlainText(text, words, activeWordIndex, activeWordRef)}
+        {renderHighlightedPlainText(text, words, activeWordIndex, activeWordRef, onWordClick)}
       </p>
     </div>
   );
@@ -229,7 +255,7 @@ function TtsPage() {
   );
   const clipVoice = selectedClip?.voice ?? settings.reading.voice;
   const bootstrap = useReadAloudBootstrap(true, clipVoice);
-  const { voices: pocketVoices } = usePocketTtsVoices({
+  const { voices: pocketVoices, status: pocketVoicesStatus } = usePocketTtsVoices({
     enabled: true,
     voice: clipVoice,
   });
@@ -423,6 +449,18 @@ function TtsPage() {
   const canRestart =
     displayWordIndex > 0 || playbackAnchorWordIndex > 0 || elapsedMs > 0;
 
+  const commitSeek = useCallback(
+    (wordIndex: number) => {
+      if (!canPlay || wordCount === 0 || playbackLocked) return;
+      const clamped = clampWordIndex(wordIndex, wordCount);
+      seekToWord(clamped);
+      if (isActive || pendingTargetWordRef.current != null) {
+        scheduleResume(clamped);
+      }
+    },
+    [canPlay, isActive, playbackLocked, scheduleResume, seekToWord, wordCount],
+  );
+
   const seekBySeconds = useCallback(
     (deltaSec: number) => {
       if (!canPlay || wordCount === 0) return;
@@ -431,22 +469,16 @@ function TtsPage() {
           ? estimateMsAtWordIndex(speakWeights, pendingTargetWordRef.current, fullEstimatedMs)
           : playbackMs;
       const targetMs = Math.max(0, Math.min(fullEstimatedMs, baseMs + deltaSec * 1000));
-      const wordIndex = wordIndexFromMs(targetMs, speakWeights, fullEstimatedMs);
-      seekToWord(wordIndex);
-      if (isActive || pendingTargetWordRef.current != null) {
-        scheduleResume(wordIndex);
-      }
+      commitSeek(wordIndexFromMs(targetMs, speakWeights, fullEstimatedMs));
     },
-    [
-      canPlay,
-      fullEstimatedMs,
-      isActive,
-      playbackMs,
-      scheduleResume,
-      seekToWord,
-      speakWeights,
-      wordCount,
-    ],
+    [canPlay, commitSeek, fullEstimatedMs, playbackMs, speakWeights, wordCount],
+  );
+
+  const handleWordClick = useCallback(
+    (wordIndex: number) => {
+      commitSeek(wordIndex);
+    },
+    [commitSeek],
   );
 
   const handleRestart = useCallback(() => {
@@ -660,10 +692,9 @@ function TtsPage() {
         <section className="oo--tts-detail-section space-y-5">
           <Card className="oo--tts-playback-card glass-md glass-bg-header sticky top-16 z-30 space-y-4 border-(--border-light) shadow-[0_8px_24px_color-mix(in_oklab,var(--bg-deep)_40%,transparent)]">
             <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <h2 className="text-headline-md font-bold">Playback</h2>
-                <p className="mt-1 text-meta text-(--text-faint)">
-                  {formatPocketTtsVoiceLabel(resolvedClipVoice)} ·{' '}
+                <p className="oo--tts-playback-voice-info mt-1 text-meta text-(--text-faint)">
                   {Math.round(settings.audio.volume * 100)}% volume
                 </p>
               </div>
@@ -675,6 +706,33 @@ function TtsPage() {
                 Settings
               </Link>
             </div>
+
+            <Field label="Voice">
+              {pocketVoicesStatus === 'loading' ? (
+                <p className="text-meta text-(--text-faint)">Loading voices…</p>
+              ) : pocketVoices.length > 0 ? (
+                <select
+                  value={resolvedClipVoice}
+                  onChange={(e) => {
+                    cancelPendingSeek();
+                    stop();
+                    updateClip(selectedClip.id, { voice: e.target.value });
+                  }}
+                  disabled={playbackLocked}
+                  className={cn(inputClassName, 'xx--tts-voice-select')}
+                >
+                  {pocketVoices.map((voice) => (
+                    <option key={voice} value={voice}>
+                      {formatPocketTtsVoiceLabel(voice)}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="text-meta text-(--text-faint)">
+                  Voice list unavailable — check Settings.
+                </p>
+              )}
+            </Field>
 
             {modelBootstrapping ? (
               <div className="oo--tts-model-load-progress space-y-1.5" aria-live="polite">
@@ -737,6 +795,9 @@ function TtsPage() {
               text={spokenText}
               words={speakWords}
               activeWordIndex={displayWordIndex}
+              onWordClick={
+                canPlay && wordCount > 0 && !playbackLocked ? handleWordClick : undefined
+              }
             />
             {spokenTextDiffers ? (
               <p className="oo--tts-spoken-text-note text-meta text-(--text-faint)">
@@ -744,56 +805,49 @@ function TtsPage() {
               </p>
             ) : null}
 
-            <div className="oo--tts-playback-controls flex flex-wrap items-center gap-2">
+            <div className="oo--tts-playback-controls flex flex-wrap items-center gap-3">
               <ReadAloudButton
                 text={spokenText}
                 status={status}
                 error={error}
                 onToggle={handlePlaybackToggle}
                 label="Play clip"
+                playingLabel="Pause clip"
                 disabled={playbackLocked}
-                className="min-w-38"
+                // className="min-w-38"
                 buttonClassName="xx--tts-playback-play"
               />
               <Button
-                variant="ghost"
+                variant="outline"
+                disabled={!canRestart || playbackLocked}
+                onClick={handleRestart}
+                aria-label="Jump to beginning"
+                className="xx--tts-playback-restart gap-2 h-9"
+              >
+                <Square size={14} aria-hidden />
+                Restart
+              </Button>
+              {/* spacer */}
+              <div className="flex-1" />
+              <Button
+                variant="outline"
                 disabled={!canPlay || wordCount === 0 || playbackLocked}
                 onClick={() => seekBySeconds(-5)}
                 aria-label="Back 5 seconds"
-                className="xx--tts-playback-back gap-1.5 tabular-nums"
+                className="xx--tts-playback-back gap-1.5 tabular-nums h-9"
               >
                 <RotateCcw size={14} aria-hidden />
                 5
               </Button>
               <Button
-                variant="ghost"
+                variant="outline"
                 disabled={!canPlay || wordCount === 0 || playbackLocked}
                 onClick={() => seekBySeconds(5)}
                 aria-label="Forward 5 seconds"
-                className="xx--tts-playback-forward gap-1.5 tabular-nums"
+                className="xx--tts-playback-forward gap-1.5 tabular-nums h-9"
               >
                 <RotateCw size={14} aria-hidden />
                 5
-              </Button>
-              <Button
-                variant="ghost"
-                disabled={!canRestart || playbackLocked}
-                onClick={handleRestart}
-                aria-label="Jump to beginning"
-                className="xx--tts-playback-restart gap-2"
-              >
-                <Square size={14} aria-hidden />
-                Restart
-              </Button>
-              <Button
-                variant="ghost"
-                disabled={!isActive}
-                onClick={stop}
-                aria-label="Stop playback"
-                className="xx--tts-playback-stop gap-2"
-              >
-                <Square size={14} aria-hidden />
-                Stop
               </Button>
             </div>
           </Card>
@@ -830,25 +884,6 @@ function TtsPage() {
                 });
               }}
             />
-
-            <Field label="Voice">
-              <select
-                value={resolvedClipVoice}
-                onChange={(e) => {
-                  cancelPendingSeek();
-                  stop();
-                  updateClip(selectedClip.id, { voice: e.target.value });
-                }}
-                disabled={pocketVoices.length === 0}
-                className={cn(inputClassName, 'xx--tts-voice-select')}
-              >
-                {(pocketVoices.length > 0 ? pocketVoices : [resolvedClipVoice]).map((voice) => (
-                  <option key={voice} value={voice}>
-                    {formatPocketTtsVoiceLabel(voice)}
-                  </option>
-                ))}
-              </select>
-            </Field>
 
             {!selectedClip.noTitle ? (
               <Field label="Title">

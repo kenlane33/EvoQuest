@@ -1,6 +1,7 @@
 'use client';
 
-import { Loader2, Square, Volume2 } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Loader2, Pause, Square, Volume2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { cn } from '@/lib/cn';
 import type { PocketTtsStatus } from '@/audio/use-pocket-tts';
@@ -13,6 +14,10 @@ type ReadAloudButtonProps = {
   className?: string;
   buttonClassName?: string;
   label?: string;
+  /** Visible + accessible label shown while playing. Defaults to "Stop". */
+  playingLabel?: string;
+  /** Icon shown while playing. Defaults to a stop square. */
+  playingIcon?: ReactNode;
   /** When true, control is inactive (e.g. voice model still loading). */
   disabled?: boolean;
 };
@@ -25,11 +30,15 @@ export function ReadAloudButton({
   className,
   buttonClassName,
   label = 'Read it',
+  playingLabel,
+  playingIcon,
   disabled: disabledExternal = false,
 }: ReadAloudButtonProps) {
   const busy = status === 'loading';
   const playing = status === 'playing';
   const disabled = disabledExternal || !text.trim();
+  const resolvedPlayingIcon =
+    playingIcon ?? (playingLabel ? <Pause size={16} aria-hidden /> : <Square size={16} aria-hidden />);
 
   return (
     <div className={cn('flex flex-col items-start gap-1 h-9', className)}>
@@ -37,17 +46,17 @@ export function ReadAloudButton({
         variant="secondary"
         onClick={onToggle}
         disabled={disabled || busy}
-        aria-label={playing ? 'Stop reading' : label}
+        aria-label={playing ? (playingLabel ?? 'Stop reading') : label}
         className={cn('gap-2 h-9', buttonClassName)}
       >
         {busy ? (
           <Loader2 size={16} className="animate-spin" aria-hidden />
         ) : playing ? (
-          <Square size={16} aria-hidden />
+          resolvedPlayingIcon
         ) : (
           <Volume2 size={16} aria-hidden />
         )}
-        {busy ? 'Loading…' : playing ? 'Stop' : label}
+        {busy ? 'Loading…' : playing ? (playingLabel ?? 'Stop') : label}
       </Button>
       {error ? (
         <p className="text-meta text-(--status-wrong)" role="status">

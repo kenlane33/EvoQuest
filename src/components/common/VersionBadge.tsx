@@ -71,7 +71,7 @@ export function VersionBadge() {
 
   return (
     <>
-      <div ref={rootRef} className="fixed top-1 right-2 z-60">
+      <div ref={rootRef} className="fixed -top-1.5 right-0 z-60">
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}

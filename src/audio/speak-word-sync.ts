@@ -137,10 +137,16 @@ export function clipSpeakRawText(clip: {
   return `${clip.title.trim()}\n${body}`;
 }
 
+export type PocketWordAnchor = { ms: number; charOffset: number; wordOffset: number };
+
 export type SpeakWordSyncInput = {
   pocketBackend: boolean;
   /** Ms of Pocket audio heard so far; null when not speaking yet. */
   pocketPlayedMs: number | null;
+  /** Real audio→text anchors from Pocket TTS; null when unavailable. */
+  pocketWordAnchors: PocketWordAnchor[] | null;
+  /** Total ms of the utterance once finalized; null while streaming. */
+  pocketTotalMs: number | null;
   boundaryCharIndex: number | null;
   /** Wall-clock fallback progress for Web Speech (0–1). */
   timeProgress: number;
@@ -158,11 +164,125 @@ export type SpeakWordSyncResult = {
   progress: number;
 };
 
+function estimateMsForWordRange(
+  weights: number[],
+  wordStart: number,
+  wordEnd: number,
+  totalEstimatedMs: number,
+  anchorWordIndex: number,
+): number {
+  const slice = weights.slice(anchorWordIndex);
+  const rangeSlice = weights.slice(wordStart, wordEnd);
+  const totalWeight = slice.reduce((sum, weight) => sum + weight, 0);
+  const rangeWeight = rangeSlice.reduce((sum, weight) => sum + weight, 0);
+  if (totalWeight <= 0 || rangeWeight <= 0) return 1000;
+  return (rangeWeight / totalWeight) * totalEstimatedMs;
+}
+
+function progressFromWordIndex(
+  wordIndex: number,
+  weights: number[],
+  startWordIndex: number,
+): number {
+  const slice = weights.slice(startWordIndex);
+  if (slice.length === 0) return 0;
+  const total = slice.reduce((sum, weight) => sum + weight, 0);
+  if (total <= 0) return 0;
+  const clamped = clampWordIndex(wordIndex, weights.length);
+  const weightBefore = weights
+    .slice(startWordIndex, clamped)
+    .reduce((sum, weight) => sum + weight, 0);
+  return Math.min(1, weightBefore / total);
+}
+
+function wordIndexFromUtteranceCharOffset(
+  charOffset: number,
+  words: SpeakWord[],
+  startWordIndex: number,
+): number {
+  const anchorStart = words[startWordIndex]?.start ?? 0;
+  return wordIndexFromCharIndex(anchorStart + charOffset, words);
+}
+
+function absoluteWordIndexFromAnchor(
+  anchor: PocketWordAnchor,
+  words: SpeakWord[],
+  startWordIndex: number,
+): number {
+  if (words.length === 0) return startWordIndex;
+  return clampWordIndex(
+    wordIndexFromUtteranceCharOffset(anchor.charOffset, words, startWordIndex),
+    words.length,
+  );
+}
+
+/** Map heard audio time to a word index using per-sentence/clause anchors. */
+export function wordIndexFromPocketAnchors(
+  playedMs: number,
+  anchors: PocketWordAnchor[],
+  weights: number[],
+  words: SpeakWord[],
+  startWordIndex: number,
+  estimatedMs: number,
+  totalMs: number | null,
+): number {
+  if (anchors.length === 0 || words.length === 0) return startWordIndex;
+
+  let segmentIdx = 0;
+  for (let i = anchors.length - 1; i >= 0; i--) {
+    if (playedMs >= anchors[i]!.ms) {
+      segmentIdx = i;
+      break;
+    }
+  }
+
+  const segmentStartMs = anchors[segmentIdx]!.ms;
+  const nextAnchor = anchors[segmentIdx + 1];
+  const absWordStart = absoluteWordIndexFromAnchor(anchors[segmentIdx]!, words, startWordIndex);
+  const absWordEnd = nextAnchor
+    ? absoluteWordIndexFromAnchor(nextAnchor, words, startWordIndex)
+    : words.length;
+
+  if (playedMs <= segmentStartMs || absWordStart >= absWordEnd) {
+    return clampWordIndex(absWordStart, words.length);
+  }
+
+  const estimatedSegmentMs = estimateMsForWordRange(
+    weights,
+    absWordStart,
+    absWordEnd,
+    estimatedMs,
+    startWordIndex,
+  );
+  const segmentEndMs = nextAnchor
+    ? nextAnchor.ms
+    : totalMs != null && totalMs > segmentStartMs
+      ? totalMs
+      : segmentStartMs +
+        Math.max(estimatedSegmentMs, playedMs - segmentStartMs + 50);
+
+  const segmentDuration = Math.max(1, segmentEndMs - segmentStartMs);
+  const localProgress = Math.min(1, Math.max(0, (playedMs - segmentStartMs) / segmentDuration));
+
+  const segmentWeights = weights.slice(absWordStart, absWordEnd);
+  if (segmentWeights.length === 0) return clampWordIndex(absWordStart, words.length);
+
+  const total = segmentWeights.reduce((sum, weight) => sum + weight, 0);
+  let remaining = localProgress * total;
+  for (let i = 0; i < segmentWeights.length; i++) {
+    remaining -= segmentWeights[i]!;
+    if (remaining <= 0) return absWordStart + i;
+  }
+  return clampWordIndex(absWordEnd - 1, words.length);
+}
+
 /** Map one animation-frame of playback telemetry to highlight position. */
 export function resolveSpeakWordSyncFrame(input: SpeakWordSyncInput): SpeakWordSyncResult {
   const {
     pocketBackend,
     pocketPlayedMs,
+    pocketWordAnchors,
+    pocketTotalMs,
     boundaryCharIndex,
     timeProgress,
     wallElapsedMs,
@@ -174,15 +294,36 @@ export function resolveSpeakWordSyncFrame(input: SpeakWordSyncInput): SpeakWordS
   } = input;
 
   if (pocketBackend) {
-    // Map heard audio time to the text estimate — not played/submitted ratio,
-    // which hits 100% after the first streamed chunk and races the highlight ahead.
-    if (pocketPlayedMs != null && pocketPlayedMs > 0 && estimatedMs > 0) {
-      const progress = Math.max(lastProgress, Math.min(1, pocketPlayedMs / estimatedMs));
-      return {
-        progress,
-        elapsedMs: pocketPlayedMs,
-        wordIndex: wordIndexFromProgress(progress, weights, startWordIndex),
-      };
+    // Prefer real per-sentence anchors; fall back to heard-ms / estimate ratio.
+    if (pocketPlayedMs != null && pocketPlayedMs > 0) {
+      if (pocketWordAnchors && pocketWordAnchors.length > 0) {
+        const wordIndex = wordIndexFromPocketAnchors(
+          pocketPlayedMs,
+          pocketWordAnchors,
+          weights,
+          words,
+          startWordIndex,
+          estimatedMs,
+          pocketTotalMs,
+        );
+        const progress = Math.max(
+          lastProgress,
+          progressFromWordIndex(wordIndex, weights, startWordIndex),
+        );
+        return {
+          progress,
+          elapsedMs: pocketPlayedMs,
+          wordIndex,
+        };
+      }
+      if (estimatedMs > 0) {
+        const progress = Math.max(lastProgress, Math.min(1, pocketPlayedMs / estimatedMs));
+        return {
+          progress,
+          elapsedMs: pocketPlayedMs,
+          wordIndex: wordIndexFromProgress(progress, weights, startWordIndex),
+        };
+      }
     }
     return {
       progress: lastProgress,

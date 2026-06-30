@@ -6,8 +6,14 @@ import {
   speakTextFromWordIndex,
   tokenizeSpeakWords,
   wordIndexFromCharIndex,
+  wordIndexFromPocketAnchors,
   wordIndexFromProgress,
 } from '@/audio/speak-word-sync';
+
+const noPocketAnchors = {
+  pocketWordAnchors: null as null,
+  pocketTotalMs: null as null,
+};
 
 describe('buildSpeakLayout', () => {
   it('expands speech substitutions and increases word count', () => {
@@ -92,6 +98,76 @@ describe('clipSpeakRawText', () => {
   });
 });
 
+describe('wordIndexFromPocketAnchors', () => {
+  it('maps anchors by char offset so decimals do not miscount words', () => {
+    const layout = buildSpeakLayout('Earth formed 4.5 billion years ago. Life followed soon.');
+    const lifeCharOffset = layout.spokenText.indexOf('Life');
+    const lifeWordIndex = layout.words.findIndex((w) => w.text === 'Life');
+    expect(lifeCharOffset).toBeGreaterThan(0);
+    expect(lifeWordIndex).toBeGreaterThan(0);
+
+    const anchors = [
+      { ms: 0, charOffset: 0, wordOffset: 3 },
+      { ms: 4000, charOffset: lifeCharOffset, wordOffset: 3 },
+    ];
+
+    expect(
+      wordIndexFromPocketAnchors(4100, anchors, layout.weights, layout.words, 0, 12000, null),
+    ).toBe(lifeWordIndex);
+  });
+
+  it('holds the cursor before a trimmed speech-onset anchor', () => {
+    const layout = buildSpeakLayout('Hello world today.');
+    const anchors = [{ ms: 600, charOffset: 0, wordOffset: 0 }];
+
+    expect(
+      wordIndexFromPocketAnchors(200, anchors, layout.weights, layout.words, 0, 5000, null),
+    ).toBe(0);
+  });
+
+  it('interpolates within dense clause anchors in a paragraph', () => {
+    const layout = buildSpeakLayout(
+      'Cells use ATP for energy. Mitochondria produce most of it. Chloroplasts make sugars in plants.',
+    );
+    const sent2Offset = layout.spokenText.indexOf('Mitochondria');
+    const sent3Offset = layout.spokenText.indexOf('Chloroplasts');
+    const anchors = [
+      { ms: 0, charOffset: 0, wordOffset: 0 },
+      { ms: 3500, charOffset: sent2Offset, wordOffset: 0 },
+      { ms: 7500, charOffset: sent3Offset, wordOffset: 0 },
+    ];
+    const mitIndex = layout.words.findIndex((w) => w.text === 'Mitochondria');
+    const chlorIndex = layout.words.findIndex((w) => w.text === 'Chloroplasts');
+    const midSecond = wordIndexFromPocketAnchors(
+      5000,
+      anchors,
+      layout.weights,
+      layout.words,
+      0,
+      15000,
+      null,
+    );
+    expect(midSecond).toBeGreaterThanOrEqual(mitIndex);
+    expect(midSecond).toBeLessThan(chlorIndex);
+  });
+
+  it('uses finalized total duration for the last segment', () => {
+    const layout = buildSpeakLayout('Short closing line.');
+    const anchors = [{ ms: 0, charOffset: 0, wordOffset: 0 }];
+    const lastWord = layout.words.length - 1;
+    const nearEnd = wordIndexFromPocketAnchors(
+      4800,
+      anchors,
+      layout.weights,
+      layout.words,
+      0,
+      4000,
+      5000,
+    );
+    expect(nearEnd).toBeGreaterThanOrEqual(lastWord - 1);
+  });
+});
+
 describe('resolveSpeakWordSyncFrame', () => {
   it('holds Pocket highlight until audio has actually started playing', () => {
     const layout = buildSpeakLayout('one two three four five six seven eight');
@@ -101,6 +177,7 @@ describe('resolveSpeakWordSyncFrame', () => {
     const waiting = resolveSpeakWordSyncFrame({
       pocketBackend: true,
       pocketPlayedMs: null,
+      ...noPocketAnchors,
       boundaryCharIndex: null,
       timeProgress: 0.45,
       wallElapsedMs: 3600,
@@ -116,6 +193,7 @@ describe('resolveSpeakWordSyncFrame', () => {
     const notYetPlaying = resolveSpeakWordSyncFrame({
       pocketBackend: true,
       pocketPlayedMs: 0,
+      ...noPocketAnchors,
       boundaryCharIndex: null,
       timeProgress: 0.45,
       wallElapsedMs: 3600,
@@ -136,6 +214,7 @@ describe('resolveSpeakWordSyncFrame', () => {
     const synced = resolveSpeakWordSyncFrame({
       pocketBackend: true,
       pocketPlayedMs: 2800,
+      ...noPocketAnchors,
       boundaryCharIndex: null,
       timeProgress: 0.8,
       wallElapsedMs: 6400,
@@ -149,6 +228,7 @@ describe('resolveSpeakWordSyncFrame', () => {
     const clockOnly = resolveSpeakWordSyncFrame({
       pocketBackend: false,
       pocketPlayedMs: null,
+      ...noPocketAnchors,
       boundaryCharIndex: null,
       timeProgress: 0.8,
       wallElapsedMs: 6400,
@@ -170,6 +250,7 @@ describe('resolveSpeakWordSyncFrame', () => {
     const earlyChunkDone = resolveSpeakWordSyncFrame({
       pocketBackend: true,
       pocketPlayedMs: 400,
+      ...noPocketAnchors,
       boundaryCharIndex: null,
       timeProgress: 1,
       wallElapsedMs: 4000,
@@ -182,5 +263,87 @@ describe('resolveSpeakWordSyncFrame', () => {
 
     expect(earlyChunkDone.wordIndex).toBeLessThan(layout.words.length - 1);
     expect(earlyChunkDone.progress).toBeLessThan(0.1);
+  });
+
+  it('uses anchors to avoid estimate overshoot at playback start', () => {
+    const layout = buildSpeakLayout(
+      'First sentence here. Second sentence follows with more words in it.',
+    );
+    const estimatedMs = 4000;
+    const secondOffset = layout.spokenText.indexOf('Second');
+    const anchors = [
+      { ms: 0, charOffset: 0, wordOffset: 0 },
+      { ms: 2500, charOffset: secondOffset, wordOffset: 4 },
+    ];
+
+    const anchored = resolveSpeakWordSyncFrame({
+      pocketBackend: true,
+      pocketPlayedMs: 400,
+      pocketWordAnchors: anchors,
+      pocketTotalMs: null,
+      boundaryCharIndex: null,
+      timeProgress: 0.5,
+      wallElapsedMs: 2000,
+      estimatedMs,
+      words: layout.words,
+      weights: layout.weights,
+      startWordIndex: 0,
+      lastProgress: 0,
+    });
+
+    const estimateOnly = resolveSpeakWordSyncFrame({
+      pocketBackend: true,
+      pocketPlayedMs: 400,
+      ...noPocketAnchors,
+      boundaryCharIndex: null,
+      timeProgress: 0.5,
+      wallElapsedMs: 2000,
+      estimatedMs,
+      words: layout.words,
+      weights: layout.weights,
+      startWordIndex: 0,
+      lastProgress: 0,
+    });
+
+    expect(anchored.wordIndex).toBeLessThan(estimateOnly.wordIndex);
+    expect(anchored.wordIndex).toBeLessThanOrEqual(1);
+  });
+
+  it('re-syncs at sentence anchor boundaries', () => {
+    const layout = buildSpeakLayout('Alpha beta gamma. Delta epsilon zeta.');
+    const deltaOffset = layout.spokenText.indexOf('Delta');
+    const anchors = [
+      { ms: 0, charOffset: 0, wordOffset: 0 },
+      { ms: 2000, charOffset: deltaOffset, wordOffset: 3 },
+    ];
+
+    expect(
+      wordIndexFromPocketAnchors(500, anchors, layout.weights, layout.words, 0, 6000, null),
+    ).toBeLessThan(layout.words.findIndex((w) => w.text === 'Delta'));
+    expect(
+      wordIndexFromPocketAnchors(2100, anchors, layout.weights, layout.words, 0, 6000, null),
+    ).toBeGreaterThanOrEqual(layout.words.findIndex((w) => w.text === 'Delta'));
+  });
+
+  it('falls back to estimate ratio when anchors are unavailable', () => {
+    const layout = buildSpeakLayout('one two three four five six seven eight');
+    const estimatedMs = 8000;
+
+    const fallback = resolveSpeakWordSyncFrame({
+      pocketBackend: true,
+      pocketPlayedMs: 2800,
+      ...noPocketAnchors,
+      boundaryCharIndex: null,
+      timeProgress: 0.8,
+      wallElapsedMs: 6400,
+      estimatedMs,
+      words: layout.words,
+      weights: layout.weights,
+      startWordIndex: 0,
+      lastProgress: 0,
+    });
+
+    expect(fallback.elapsedMs).toBe(2800);
+    expect(fallback.progress).toBeCloseTo(2800 / estimatedMs, 5);
   });
 });

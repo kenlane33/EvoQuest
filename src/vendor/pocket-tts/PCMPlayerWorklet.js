@@ -91,7 +91,7 @@ export class PCMPlayerWorklet extends EventEmitter {
             
             // Stats reporting
             this.frameCount = 0;
-            this.reportInterval = 256; // Report every ~5ms at 48kHz
+            this.reportInterval = 16; // Report every ~3ms at 48kHz for smoother sync
             
             this.port.onmessage = (e) => {
               switch(e.data.type) {

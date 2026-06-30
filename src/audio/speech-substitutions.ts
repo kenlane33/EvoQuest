@@ -117,6 +117,7 @@ const PRONUNCIATION_HINTS: ReadonlyArray<readonly [RegExp, (match: string, ...gr
   // role/function sense (jahb) — Pocket TTS often reads job like biblical Job (Johb)
   [/\bjobs\b/gi, (match) => respellToken(match, 'jahbs')],
   [/\bjob\b/gi, (match) => respellToken(match, 'jahb')],
+  // [/\bCAMA\b/g, (match) => respellTokenCaseInsensitive(match, 'cah ma')],
 ];
 
 function respellToken(original: string, spoken: string): string {
@@ -127,6 +128,9 @@ function respellToken(original: string, spoken: string): string {
     return spoken[0].toUpperCase() + spoken.slice(1);
   }
   return spoken;
+}
+function respellTokenCaseInsensitive(original: string, spoken: string): string {
+  return original.toLowerCase() === original ? spoken.toLowerCase() : spoken;
 }
 
 function applyPronunciationHints(text: string): string {

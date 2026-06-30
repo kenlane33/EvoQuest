@@ -25,6 +25,7 @@ import {
 import { PCMPlayerWorklet } from '@/vendor/pocket-tts/PCMPlayerWorklet.js';
 
 const SAMPLE_RATE = 24_000;
+const SPEECH_ONSET_THRESHOLD = 0.02;
 const WORKER_URL = '/pocket-tts/inference-worker.js';
 const DEFAULT_LANGUAGE = 'english_2026-04';
 
@@ -35,11 +36,19 @@ export type PocketTtsEngineStatus =
   | 'speaking'
   | 'error';
 
+type WorkerChunkMetrics = {
+  chunkStart?: boolean;
+  wordOffset?: number;
+  charOffset?: number;
+  isSilence?: boolean;
+};
+
 type WorkerMessage = {
   type: string;
   error?: string;
   status?: string;
   data?: Float32Array;
+  metrics?: WorkerChunkMetrics;
   voices?: string[];
   defaultVoice?: string | null;
   label?: string;
@@ -53,14 +62,48 @@ type PendingSpeak = {
   reject: (err: Error) => void;
 };
 
+type SpeakWordAnchor = {
+  sampleOffset: number;
+  charOffset: number;
+  wordOffset: number;
+};
+
 type PendingCollect = {
   key: string;
   chunks: Float32Array[];
+  anchors: SpeakWordAnchor[];
+  sampleOffset: number;
   resolve: () => void;
   reject: (err: Error) => void;
 };
 
-type CachedAudio = Float32Array[];
+type CachedAudio = {
+  chunks: Float32Array[];
+  anchors: SpeakWordAnchor[];
+};
+
+function detectSpeechOnsetSamples(pcm: Float32Array): number {
+  for (let i = 0; i < pcm.length; i++) {
+    if (Math.abs(pcm[i]!) >= SPEECH_ONSET_THRESHOLD) return i;
+  }
+  return 0;
+}
+
+function recordAnchorFromChunk(
+  anchors: SpeakWordAnchor[],
+  sampleOffset: number,
+  metrics: WorkerChunkMetrics | undefined,
+  chunk: Float32Array,
+): void {
+  if (!metrics?.chunkStart) return;
+  if (metrics.wordOffset == null && metrics.charOffset == null) return;
+  const onset = detectSpeechOnsetSamples(chunk);
+  anchors.push({
+    sampleOffset: sampleOffset + onset,
+    charOffset: metrics.charOffset ?? 0,
+    wordOffset: metrics.wordOffset ?? 0,
+  });
+}
 
 function ttsCacheKey(voice: string, text: string): string {
   return `${voice}\0${text.trim()}`;
@@ -118,6 +161,8 @@ export class PocketTtsEngine {
   private utteranceTotalSamples = 0;
   private utteranceFinalized = false;
   private lastUtteranceProgress = 0;
+  private utteranceAnchors: SpeakWordAnchor[] = [];
+  private utteranceAudioStartTime: number | null = null;
   private availableVoices: string[] = [];
   private bundleDefaultVoice: string | null = null;
   private voiceListeners = new Set<() => void>();
@@ -161,8 +206,28 @@ export class PocketTtsEngine {
   getUtterancePlayedSamples(): number | null {
     if (!this.pendingSpeak && this.status !== 'speaking') return null;
     if (this.utteranceSubmittedSamples <= 0) return 0;
-    const buffered = this.player?.getPlaybackStatus().worklet.bufferLevelSamples ?? 0;
-    return Math.max(0, this.utteranceSubmittedSamples - buffered);
+
+    // Nothing heard until the worklet actually starts output (firstPlayback).
+    if (this.utteranceAudioStartTime == null || !this.audioContext) {
+      return 0;
+    }
+
+    const clockPlayed = Math.max(
+      0,
+      (this.audioContext.currentTime - this.utteranceAudioStartTime) * SAMPLE_RATE,
+    );
+
+    // While streaming, submitted − buffered counts queued audio as "heard" and races
+    // the highlight ahead by seconds. Use the AudioContext clock until finalized.
+    if (!this.utteranceFinalized) {
+      return Math.min(this.utteranceSubmittedSamples, clockPlayed);
+    }
+
+    const bufferedContext = this.player?.getPlaybackStatus().worklet.bufferLevelSamples ?? 0;
+    const contextRate = this.audioContext.sampleRate;
+    const bufferedSource = Math.round((bufferedContext * SAMPLE_RATE) / contextRate);
+    const bufferPlayed = Math.max(0, this.utteranceSubmittedSamples - bufferedSource);
+    return Math.min(this.utteranceSubmittedSamples, Math.min(clockPlayed, bufferPlayed));
   }
 
   /** Ms of audio heard so far; null when nothing is playing. */
@@ -191,11 +256,40 @@ export class PocketTtsEngine {
     return this.utteranceFinalized;
   }
 
+  /** Real audio→text anchors for the active utterance; null when idle or unavailable. */
+  getUtteranceWordAnchors(): Array<{ ms: number; charOffset: number; wordOffset: number }> | null {
+    if (!this.pendingSpeak && this.status !== 'speaking') return null;
+    if (this.utteranceAnchors.length === 0) return null;
+    return this.utteranceAnchors.map(({ sampleOffset, charOffset, wordOffset }) => ({
+      ms: (sampleOffset / SAMPLE_RATE) * 1000,
+      charOffset,
+      wordOffset,
+    }));
+  }
+
+  /** Total ms of the active utterance once all audio is known; null while streaming. */
+  getUtteranceTotalMs(): number | null {
+    if (!this.pendingSpeak && this.status !== 'speaking') return null;
+    if (!this.utteranceFinalized) return null;
+    return (this.utteranceTotalSamples / SAMPLE_RATE) * 1000;
+  }
+
   private resetUtteranceProgress(): void {
     this.utteranceSubmittedSamples = 0;
     this.utteranceTotalSamples = 0;
     this.utteranceFinalized = false;
     this.lastUtteranceProgress = 0;
+    this.utteranceAnchors = [];
+    this.utteranceAudioStartTime = null;
+  }
+
+  private recordWordAnchor(metrics: WorkerChunkMetrics | undefined, chunk: Float32Array): void {
+    recordAnchorFromChunk(
+      this.utteranceAnchors,
+      this.utteranceSubmittedSamples,
+      metrics,
+      chunk,
+    );
   }
 
   private addUtteranceSamples(count: number): void {
@@ -378,6 +472,9 @@ export class PocketTtsEngine {
         audioContextTime: this.audioContext?.currentTime,
         bufferedSamples: event.detail?.bufferedSamples,
       });
+      if (this.pendingSpeak || this.status === 'speaking') {
+        this.utteranceAudioStartTime = this.audioContext?.currentTime ?? null;
+      }
       ttsMeasure(
         'speak-request',
         'playback-started',
@@ -605,7 +702,7 @@ export class PocketTtsEngine {
     }
 
     await new Promise<void>((resolve, reject) => {
-      this.pendingCollect = { key, chunks: [], resolve, reject };
+      this.pendingCollect = { key, chunks: [], anchors: [], sampleOffset: 0, resolve, reject };
       this.worker!.postMessage({
         type: 'generate',
         data: { text, voice },
@@ -614,19 +711,20 @@ export class PocketTtsEngine {
   }
 
   private async playCached(
-    chunks: CachedAudio,
+    cached: CachedAudio,
     options?: PocketTtsSpeakOptions,
   ): Promise<void> {
     if (options?.signal?.aborted) return;
 
     this.status = 'speaking';
     this.resetUtteranceProgress();
+    this.utteranceAnchors = cached.anchors.map((anchor) => ({ ...anchor }));
     this.player?.reset();
     if (this.player && options?.volume != null) {
       this.player.volume = Math.min(1, Math.max(0, options.volume));
     }
 
-    for (const chunk of chunks) {
+    for (const chunk of cached.chunks) {
       if (options?.signal?.aborted) {
         this.player?.reset();
         this.resetUtteranceProgress();
@@ -723,7 +821,10 @@ export class PocketTtsEngine {
     if (!pending) return;
     this.pendingCollect = null;
     if (pending.chunks.length > 0) {
-      this.audioCache.set(pending.key, pending.chunks);
+      this.audioCache.set(pending.key, {
+        chunks: pending.chunks,
+        anchors: pending.anchors,
+      });
     }
     pending.resolve();
   }
@@ -760,9 +861,18 @@ export class PocketTtsEngine {
           this.markedFirstChunkThisSpeak = true;
         }
         if (this.pendingCollect) {
-          this.pendingCollect.chunks.push(new Float32Array(data));
+          const chunk = new Float32Array(data);
+          recordAnchorFromChunk(
+            this.pendingCollect.anchors,
+            this.pendingCollect.sampleOffset,
+            msg.metrics,
+            chunk,
+          );
+          this.pendingCollect.chunks.push(chunk);
+          this.pendingCollect.sampleOffset += chunk.length;
         } else if (this.player && this.pendingSpeak) {
           const chunk = new Float32Array(data);
+          this.recordWordAnchor(msg.metrics, chunk);
           this.addUtteranceSamples(chunk.length);
           this.player.playAudio(chunk);
         }
@@ -821,6 +931,20 @@ export function getPocketTtsUtteranceProgress(): number | null {
 /** Ms of Pocket audio heard so far; null when idle. */
 export function getPocketTtsUtterancePlayedMs(): number | null {
   return sharedEngine?.getUtterancePlayedMs() ?? null;
+}
+
+/** Per-sentence audio→text anchors for the active utterance; null when idle. */
+export function getPocketTtsUtteranceWordAnchors(): Array<{
+  ms: number;
+  charOffset: number;
+  wordOffset: number;
+}> | null {
+  return sharedEngine?.getUtteranceWordAnchors() ?? null;
+}
+
+/** Total ms of the active utterance once finalized; null while streaming. */
+export function getPocketTtsUtteranceTotalMs(): number | null {
+  return sharedEngine?.getUtteranceTotalMs() ?? null;
 }
 
 /** Wait until queued speech finishes (for play → feedback handoffs). */

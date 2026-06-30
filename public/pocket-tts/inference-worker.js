@@ -563,11 +563,25 @@ function prepareTextPrompt(text) {
 }
 
 const SENTENCE_SPLIT_RE = /[^.!?]+[.!?]+|[^.!?]+$/g;
+const CLAUSE_SPLIT_RE = /[^,;:—–-]+[,;:—–-]+|[^,;:—–-]+$/g;
 
-function splitTextIntoSentences(text) {
-    const matches = text.match(SENTENCE_SPLIT_RE);
-    if (!matches) return [];
-    return matches.map((sentence) => sentence.trim()).filter(Boolean);
+function countWords(text) {
+    return text.split(/\s+/).filter(Boolean).length;
+}
+
+/** Split text with start char offsets in the original string (preserves decimals like 4.5). */
+function splitTextWithOffsets(text, regex) {
+    const segments = [];
+    const re = new RegExp(regex.source, "g");
+    let match;
+    while ((match = re.exec(text)) !== null) {
+        const raw = match[0];
+        const leading = raw.length - raw.trimStart().length;
+        const trimmed = raw.trim();
+        if (!trimmed) continue;
+        segments.push({ text: trimmed, charOffset: match.index + leading });
+    }
+    return segments;
 }
 
 function splitTokenIdsIntoChunks(tokenIds, maxTokens) {
@@ -581,58 +595,87 @@ function splitTokenIdsIntoChunks(tokenIds, maxTokens) {
     return chunks;
 }
 
+function expandLongSegment(segment, wordOffset) {
+    const prep = prepareTextPrompt(segment.text);
+    const tokenIds = tokenizerProcessor.encodeIds(prep.text);
+
+    if (tokenIds.length <= currentMaxTokenPerChunk) {
+        return [{
+            synthText: prep.text,
+            charOffset: segment.charOffset,
+            wordOffset,
+            framesAfterEos: prep.framesAfterEos,
+            wordCount: countWords(segment.text),
+        }];
+    }
+
+    const clauses = splitTextWithOffsets(segment.text, CLAUSE_SPLIT_RE);
+    if (clauses.length > 1) {
+        const specs = [];
+        let wo = wordOffset;
+        for (const clause of clauses) {
+            const sub = expandLongSegment(
+                { text: clause.text, charOffset: segment.charOffset + clause.charOffset },
+                wo,
+            );
+            specs.push(...sub);
+            wo += sub.reduce((sum, spec) => sum + spec.wordCount, 0);
+        }
+        return specs;
+    }
+
+    // Token-window fallback when a single clause still exceeds the budget.
+    const tokenChunks = splitTokenIdsIntoChunks(tokenIds, currentMaxTokenPerChunk);
+    const specs = [];
+    let wo = wordOffset;
+    for (const synthText of tokenChunks) {
+        const chunkPrep = prepareTextPrompt(synthText);
+        const wc = countWords(synthText);
+        specs.push({
+            synthText: chunkPrep.text,
+            charOffset: segment.charOffset,
+            wordOffset: wo,
+            framesAfterEos: chunkPrep.framesAfterEos,
+            wordCount: wc,
+        });
+        wo += wc;
+    }
+    return specs;
+}
+
 function splitIntoBestSentences(text) {
-    const prepared = prepareTextPrompt(text);
-    if (!prepared.text) {
-        return { chunks: [], framesAfterEos: prepared.framesAfterEos };
+    const original = text.trim().replace(/\r/g, " ").replace(/\n/g, " ").replace(/\s+/g, " ");
+    if (!original) {
+        return { chunkSpecs: [], framesAfterEos: 1 };
     }
 
-    const sentences = splitTextIntoSentences(prepared.text);
+    const sentences = splitTextWithOffsets(original, SENTENCE_SPLIT_RE);
     if (!sentences.length) {
-        return { chunks: [prepared.text], framesAfterEos: prepared.framesAfterEos };
+        const prep = prepareTextPrompt(original);
+        return {
+            chunkSpecs: [{
+                synthText: prep.text,
+                charOffset: 0,
+                wordOffset: 0,
+                framesAfterEos: prep.framesAfterEos,
+                wordCount: countWords(original),
+            }],
+            framesAfterEos: prep.framesAfterEos,
+        };
     }
 
-    const chunks = [];
-    let currentChunk = "";
-
-    for (const sentenceText of sentences) {
-        const sentenceTokenIds = tokenizerProcessor.encodeIds(sentenceText);
-        const sentenceTokens = sentenceTokenIds.length;
-
-        if (sentenceTokens > currentMaxTokenPerChunk) {
-            if (currentChunk) {
-                chunks.push(currentChunk.trim());
-                currentChunk = "";
-            }
-            const splitChunks = splitTokenIdsIntoChunks(sentenceTokenIds, currentMaxTokenPerChunk);
-            for (const splitChunk of splitChunks) {
-                if (splitChunk) {
-                    chunks.push(splitChunk.trim());
-                }
-            }
-            continue;
-        }
-
-        if (!currentChunk) {
-            currentChunk = sentenceText;
-            continue;
-        }
-
-        const combined = `${currentChunk} ${sentenceText}`;
-        const combinedTokens = tokenizerProcessor.encodeIds(combined).length;
-        if (combinedTokens > currentMaxTokenPerChunk) {
-            chunks.push(currentChunk.trim());
-            currentChunk = sentenceText;
-        } else {
-            currentChunk = combined;
-        }
+    const chunkSpecs = [];
+    let cumulativeWords = 0;
+    for (const sentence of sentences) {
+        const expanded = expandLongSegment(sentence, cumulativeWords);
+        chunkSpecs.push(...expanded);
+        cumulativeWords += expanded.reduce((sum, spec) => sum + spec.wordCount, 0);
     }
 
-    if (currentChunk) {
-        chunks.push(currentChunk.trim());
-    }
-
-    return { chunks, framesAfterEos: prepared.framesAfterEos };
+    return {
+        chunkSpecs,
+        framesAfterEos: chunkSpecs[0]?.framesAfterEos ?? 1,
+    };
 }
 
 function precomputeFlowBuffers() {
@@ -909,8 +952,8 @@ async function startGeneration(text, voiceName) {
     postMessage({ type: "generation_started", data: { time: performance.now() } });
 
     try {
-        const { chunks, framesAfterEos } = splitIntoBestSentences(text);
-        if (!chunks.length) {
+        const { chunkSpecs, framesAfterEos } = splitIntoBestSentences(text);
+        if (!chunkSpecs.length) {
             throw new Error("No text to generate");
         }
 
@@ -923,7 +966,7 @@ async function startGeneration(text, voiceName) {
         }
         currentVoiceName = voiceName;
 
-        await runGenerationPipeline(voiceName, chunks, framesAfterEos);
+        await runGenerationPipeline(voiceName, chunkSpecs, framesAfterEos);
     } catch (err) {
         console.error("Generation error:", err);
         postMessage({ type: "error", error: err.toString() });
@@ -936,7 +979,7 @@ async function startGeneration(text, voiceName) {
     }
 }
 
-async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
+async function runGenerationPipeline(voiceName, chunkSpecs, framesAfterEos) {
     let mimiState = initStateFromManifest(bundleMetadata.mimi_state_manifest);
     const emptySeq = createTensor("float32", new Float32Array(0), [1, 0, currentLatentDim]);
     const emptyTextEmb = createTensor("float32", new Float32Array(0), [1, 0, currentConditioningDim]);
@@ -954,7 +997,7 @@ async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
     let totalDecodeTime = 0;
     const generationStart = performance.now();
 
-    for (let chunkIdx = 0; chunkIdx < chunks.length; chunkIdx++) {
+    for (let chunkIdx = 0; chunkIdx < chunkSpecs.length; chunkIdx++) {
         if (!isGenerating) break;
 
         if (RESET_FLOW_STATE_EACH_CHUNK && chunkIdx > 0) {
@@ -964,7 +1007,11 @@ async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
             mimiState = initStateFromManifest(bundleMetadata.mimi_state_manifest);
         }
 
-        const chunkText = chunks[chunkIdx];
+        const chunkSpec = chunkSpecs[chunkIdx];
+        const chunkText = chunkSpec.synthText;
+        const chunkWordOffset = chunkSpec.wordOffset;
+        const chunkCharOffset = chunkSpec.charOffset;
+        const chunkFramesAfterEos = chunkSpec.framesAfterEos ?? framesAfterEos;
         let isFirstAudioChunkOfTextChunk = true;
         const tokenIds = tokenizerProcessor.encodeIds(chunkText);
         const textInput = createTensor(
@@ -1014,7 +1061,7 @@ async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
             if (isEos && eosStep == null) {
                 eosStep = step;
             }
-            const shouldStop = eosStep != null && step >= eosStep + framesAfterEos;
+            const shouldStop = eosStep != null && step >= eosStep + chunkFramesAfterEos;
 
             const temperature = 0.7;
             const std = Math.sqrt(temperature);
@@ -1077,7 +1124,7 @@ async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
 
                 chunkDecodedFrames += decodeSize;
                 const audioFloat32 = new Float32Array(decodeResult[mimiDecoderSession.outputNames[0]].data);
-                const isLastChunk = shouldStop && chunkIdx === chunks.length - 1;
+                const isLastChunk = shouldStop && chunkIdx === chunkSpecs.length - 1;
 
                 if (isFirstAudioChunk) {
                     ttsWorkerMark("first-chunk-sent", {
@@ -1097,6 +1144,8 @@ async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
                         isFirst: isFirstAudioChunk,
                         isLast: isLastChunk,
                         chunkStart: isFirstAudioChunkOfTextChunk,
+                        wordOffset: isFirstAudioChunkOfTextChunk ? chunkWordOffset : undefined,
+                        charOffset: isFirstAudioChunkOfTextChunk ? chunkCharOffset : undefined,
                     },
                 }, [audioFloat32.buffer]);
 
@@ -1111,7 +1160,7 @@ async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
             }
         }
 
-        if (chunkEnded && isGenerating && chunkIdx < chunks.length - 1) {
+        if (chunkEnded && isGenerating && chunkIdx < chunkSpecs.length - 1) {
             const gapSamples = Math.max(1, Math.floor(CHUNK_GAP_SEC * currentSampleRate));
             const silence = new Float32Array(gapSamples);
             postMessage({
@@ -1127,6 +1176,7 @@ async function runGenerationPipeline(voiceName, chunks, framesAfterEos) {
                 },
             }, [silence.buffer]);
         }
+
     }
 
     const totalTime = (performance.now() - generationStart) / 1000;

@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   getReadAloudBoundaryCharIndex,
   getReadAloudPlayedMs,
+  getReadAloudTotalMs,
+  getReadAloudWordAnchors,
 } from '@/audio/read-aloud-engine';
 import { shouldUsePocketTts } from '@/audio/read-aloud-bootstrap';
 import type { SpeakWord } from '@/audio/speak-word-sync';
@@ -71,6 +73,8 @@ export function useSpeakWordProgress(
       const frame = resolveSpeakWordSyncFrame({
         pocketBackend: shouldUsePocketTts(),
         pocketPlayedMs: getReadAloudPlayedMs(),
+        pocketWordAnchors: getReadAloudWordAnchors(),
+        pocketTotalMs: getReadAloudTotalMs(),
         boundaryCharIndex: getReadAloudBoundaryCharIndex(),
         timeProgress,
         wallElapsedMs: elapsed,
