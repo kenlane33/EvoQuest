@@ -192,7 +192,7 @@ function SpokenTextHighlight({
 
   if (words.length === 0) {
     return (
-      <div className="rounded-(--r-lg) border border-(--border-light) bg-[color-mix(in_oklab,var(--bg-card-hi)_70%,transparent)] px-3 py-2 text-body leading-relaxed text-(--text-faint)">
+      <div className="oo--tts-spoken-text-empty rounded-(--r-lg) border border-(--border-light) bg-[color-mix(in_oklab,var(--bg-card-hi)_70%,transparent)] px-3 py-2 text-body leading-relaxed text-(--text-faint)">
         No text to speak yet
       </div>
     );
@@ -201,7 +201,7 @@ function SpokenTextHighlight({
   return (
     <div
       ref={scrollRef}
-      className="max-h-[calc(3*1.625*1em+1rem)] overflow-y-auto overscroll-y-contain scroll-smooth rounded-(--r-lg) border border-(--border-light) bg-[color-mix(in_oklab,var(--bg-card-hi)_70%,transparent)] px-3 py-2 text-body leading-relaxed scrollbar-thin"
+      className="oo--tts-spoken-text max-h-[calc(3*1.625*1em+1rem)] overflow-y-auto overscroll-y-contain scroll-smooth rounded-(--r-lg) border border-(--border-light) bg-[color-mix(in_oklab,var(--bg-card-hi)_70%,transparent)] px-3 py-2 text-body leading-relaxed scrollbar-thin"
     >
       <p className="whitespace-pre-wrap wrap-break-word">
         {renderHighlightedPlainText(text, words, activeWordIndex, activeWordRef)}
@@ -657,8 +657,8 @@ function TtsPage() {
           </Card>
         </section>
 
-        <section className="space-y-5">
-          <Card className="glass-md glass-bg-header sticky top-16 z-30 space-y-4 border-(--border-light) shadow-[0_8px_24px_color-mix(in_oklab,var(--bg-deep)_40%,transparent)]">
+        <section className="oo--tts-detail-section space-y-5">
+          <Card className="oo--tts-playback-card glass-md glass-bg-header sticky top-16 z-30 space-y-4 border-(--border-light) shadow-[0_8px_24px_color-mix(in_oklab,var(--bg-deep)_40%,transparent)]">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h2 className="text-headline-md font-bold">Playback</h2>
@@ -669,7 +669,7 @@ function TtsPage() {
               </div>
               <Link
                 to="/settings"
-                className="inline-flex shrink-0 items-center gap-1 rounded-(--r-lg) px-2 py-1.5 text-meta text-(--text-dim) no-underline hover:bg-(--bg-card-active) hover:text-(--text-secondary)"
+                className="xx--tts-settings-link inline-flex shrink-0 items-center gap-1 rounded-(--r-lg) px-2 py-1.5 text-meta text-(--text-dim) no-underline hover:bg-(--bg-card-active) hover:text-(--text-secondary)"
               >
                 <Settings2 size={14} aria-hidden />
                 Settings
@@ -716,7 +716,7 @@ function TtsPage() {
                 onBlur={finishScrub}
                 aria-label="Seek through spoken text by word"
                 aria-valuetext={`Word ${displayWordIndex + 1} of ${wordCount}`}
-                className="w-full accent-(--accent-cyan) disabled:opacity-40"
+                className="xx--tts-playback-seek w-full accent-(--accent-cyan) disabled:opacity-40"
               />
               <div className="flex items-center justify-between gap-3 text-meta tabular-nums text-(--text-faint)">
                 <span>{formatPlaybackClock(elapsedMs)}</span>
@@ -753,6 +753,7 @@ function TtsPage() {
                 label="Play clip"
                 disabled={playbackLocked}
                 className="min-w-38"
+                buttonClassName="xx--tts-playback-play"
               />
               <Button
                 variant="ghost"
@@ -789,7 +790,7 @@ function TtsPage() {
                 disabled={!isActive}
                 onClick={stop}
                 aria-label="Stop playback"
-                className="gap-2"
+                className="xx--tts-playback-stop gap-2"
               >
                 <Square size={14} aria-hidden />
                 Stop
@@ -885,7 +886,7 @@ function TtsPage() {
             </Field>
 
             <div className="flex flex-wrap gap-2">
-              <Button variant="destructive" onClick={deleteSelectedClip}>
+              <Button variant="destructive" className="xx--tts-clip-delete" onClick={deleteSelectedClip}>
                 <Trash2 size={16} />
                 Delete
               </Button>
