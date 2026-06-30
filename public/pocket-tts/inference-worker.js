@@ -44,6 +44,7 @@ let currentConditioningDim = 1024;
 let currentMaxTokenPerChunk = 50;
 
 let predefinedVoiceRecords = {};
+let extraVoiceManifest = {};
 let customVoiceEmbedding = null;
 let currentVoiceName = null;
 let voiceConditioningCache = new Map();
@@ -344,6 +345,45 @@ async function buildVoiceConditionedState(voiceEmb) {
 
     updateStateFromManifestOutputs(flowLmState, result, bundleMetadata.flow_lm_state_manifest);
     return flowLmState;
+}
+
+async function ensureExtraVoiceCached(voiceName, options = {}) {
+    const { force = false, statusText = `Preparing voice (${voiceName})...` } = options;
+    const promptUrl = extraVoiceManifest[voiceName];
+    if (!promptUrl) {
+        throw new Error(`Unknown extra voice: ${voiceName}`);
+    }
+
+    if (!force && voiceConditioningCache.has(voiceName)) {
+        return voiceConditioningCache.get(voiceName);
+    }
+
+    postMessage({ type: "status", status: statusText, state: "loading" });
+    const buffer = await cachedArrayBuffer(promptUrl);
+    const audioData = new Float32Array(buffer);
+    const embedding = await encodeVoiceAudio(audioData);
+    const conditioned = await buildVoiceConditionedState(embedding);
+    voiceConditioningCache.set(voiceName, conditioned);
+    return conditioned;
+}
+
+async function ensureVoiceCached(voiceName, options = {}) {
+    if (voiceConditioningCache.has(voiceName) && !options.force) {
+        return voiceConditioningCache.get(voiceName);
+    }
+    if (predefinedVoiceRecords[voiceName]) {
+        return ensurePredefinedVoiceCached(voiceName, options);
+    }
+    if (extraVoiceManifest[voiceName]) {
+        return ensureExtraVoiceCached(voiceName, options);
+    }
+    throw new Error(`Unknown voice: ${voiceName}`);
+}
+
+function listAvailableVoiceIds() {
+    const bundled = bundleMetadata?.predefined_voices || Object.keys(predefinedVoiceRecords);
+    const extra = Object.keys(extraVoiceManifest);
+    return [...new Set([...bundled, ...extra])].sort((a, b) => a.localeCompare(b));
 }
 
 async function ensurePredefinedVoiceCached(voiceName, options = {}) {
@@ -754,7 +794,7 @@ async function loadBundle(language, { initialLoad = false } = {}) {
 
     postMessage({
         type: "voices_loaded",
-        voices: bundleMetadata.predefined_voices || Object.keys(predefinedVoiceRecords),
+        voices: listAvailableVoiceIds(),
         defaultVoice,
         language,
     });
@@ -785,6 +825,9 @@ self.onmessage = async (e) => {
             if (data?.timelineEnabled) {
                 timelineEnabled = true;
                 ttsWorkerMark("worker-start");
+            }
+            if (data?.extraVoices && typeof data.extraVoices === "object") {
+                extraVoiceManifest = { ...data.extraVoices };
             }
             return;
         }
@@ -837,7 +880,7 @@ self.onmessage = async (e) => {
                 await ensureCustomVoiceCached({ statusText: "Preparing custom voice..." });
                 currentVoiceName = "custom";
             } else {
-                await ensurePredefinedVoiceCached(data.voiceName, {
+                await ensureVoiceCached(data.voiceName, {
                     statusText: `Preparing voice (${data.voiceName})...`,
                 });
                 currentVoiceName = data.voiceName;
@@ -874,7 +917,7 @@ async function startGeneration(text, voiceName) {
         if (voiceName === "custom") {
             await ensureCustomVoiceCached({ statusText: "Preparing custom voice..." });
         } else {
-            await ensurePredefinedVoiceCached(voiceName, {
+            await ensureVoiceCached(voiceName, {
                 statusText: `Preparing voice (${voiceName})...`,
             });
         }

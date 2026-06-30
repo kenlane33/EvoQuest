@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
-import { prepareReadAloud, speakReadAloud, stopReadAloud } from '@/audio/read-aloud-engine';
+import { prepareReadAloud, speakReadAloud, stopReadAloud, beginReadAloudAudioFromUserGesture, ensureReadAloudAudioOutputReady } from '@/audio/read-aloud-engine';
 import { POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
 
 export type PocketTtsStatus = 'idle' | 'loading' | 'playing' | 'error';
@@ -29,6 +29,8 @@ export function usePocketTts({
       const trimmed = text.trim();
       if (!trimmed) return;
 
+      beginReadAloudAudioFromUserGesture();
+
       abortRef.current?.abort();
       const id = ++requestId.current;
       const abort = new AbortController();
@@ -38,6 +40,8 @@ export function usePocketTts({
 
       try {
         await prepareReadAloud(voice);
+        if (requestId.current !== id) return;
+        await ensureReadAloudAudioOutputReady(abort.signal);
         if (requestId.current !== id) return;
         setStatus('playing');
         await speakReadAloud(trimmed, {

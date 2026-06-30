@@ -7,6 +7,21 @@ import { prepareTextForSpeech } from '@/audio/speech-substitutions';
 let speakChain: Promise<void> = Promise.resolve();
 let primed = false;
 
+type WebSpeechBoundaryState = {
+  charIndex: number;
+  text: string;
+};
+
+let activeBoundary: WebSpeechBoundaryState | null = null;
+
+function clearWebSpeechBoundary(): void {
+  activeBoundary = null;
+}
+
+export function getWebSpeechBoundaryCharIndex(): number | null {
+  return activeBoundary?.charIndex ?? null;
+}
+
 function bindAbortSignal(signal: AbortSignal | undefined, onAbort: () => void): () => void {
   if (!signal) return () => {};
   if (signal.aborted) {
@@ -61,6 +76,8 @@ function speakWebSpeechNow(
     const voice = pickEnglishVoice();
     if (voice) utterance.voice = voice;
 
+    activeBoundary = { charIndex: 0, text };
+
     let settled = false;
     const finish = (fn: () => void) => {
       if (settled) return;
@@ -70,16 +87,27 @@ function speakWebSpeechNow(
 
     const onAbort = () => {
       speechSynthesis.cancel();
+      clearWebSpeechBoundary();
       finish(() => reject(new DOMException('Aborted', 'AbortError')));
     };
     const unbind = bindAbortSignal(options?.signal, onAbort);
 
+    utterance.onboundary = (event) => {
+      if (event.name !== 'word') return;
+      activeBoundary = {
+        charIndex: event.charIndex + (event.charLength ?? 0),
+        text,
+      };
+    };
+
     utterance.onend = () => {
       unbind();
+      clearWebSpeechBoundary();
       finish(resolve);
     };
     utterance.onerror = () => {
       unbind();
+      clearWebSpeechBoundary();
       finish(() => reject(new Error('Speech synthesis failed')));
     };
 
@@ -101,6 +129,8 @@ export async function speakWebSpeech(
 
   stopWebSpeech();
 
+  clearWebSpeechBoundary();
+
   const waitFor = speakChain;
   let advance!: () => void;
   speakChain = new Promise<void>((resolve) => {
@@ -119,6 +149,7 @@ export async function speakWebSpeech(
 export function stopWebSpeech(): void {
   if (!isWebSpeechAvailable()) return;
   speechSynthesis.cancel();
+  clearWebSpeechBoundary();
 }
 
 export async function waitForWebSpeechIdle(): Promise<void> {

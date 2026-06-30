@@ -14,10 +14,10 @@ describe('prepareTextForSpeech', () => {
 
   it('speaks mnemonic equals signs and arrows', () => {
     expect(prepareTextForSpeech('ENDO=INSIDE. SYM=TOGETHER.')).toBe(
-      'ENDO equals INSIDE. SYM equals TOGETHER.',
+      'ENDO equals INSIDE. S Y M equals TOGETHER.',
     );
     expect(prepareTextForSpeech('A=WITHOUT, BIO=LIFE')).toBe(
-      'A equals WITHOUT, BIO equals LIFE',
+      'A equals WITHOUT, B I O equals LIFE',
     );
     expect(prepareTextForSpeech('PHENO → PHONE')).toBe('PHENO to PHONE');
     expect(prepareTextForSpeech('Hypotonic → turgid; hypertonic → plasmolyzed.')).toBe(
@@ -32,6 +32,18 @@ describe('prepareTextForSpeech', () => {
     expect(prepareTextForSpeech('CH₂O')).toBe('CH2O');
   });
 
+  it('reads clock times naturally', () => {
+    expect(prepareTextForSpeech('Meet at 10:00.')).toBe('Meet at ten.');
+    expect(prepareTextForSpeech('Starts at 10:30.')).toBe('Starts at ten thirty.');
+    expect(prepareTextForSpeech('Arrive by 9:05.')).toBe('Arrive by nine oh five.');
+    expect(prepareTextForSpeech('Ends at 12:45.')).toBe('Ends at twelve forty five.');
+    expect(prepareTextForSpeech('From 10:00 to 10:30')).toBe('From ten to ten thirty');
+  });
+
+  it('still reads digit ratios as "to"', () => {
+    expect(prepareTextForSpeech('3:1 phenotypic ratio')).toBe('3 to 1 phenotypic ratio');
+  });
+
   it('handles temperature, percent, and ampersand', () => {
     expect(prepareTextForSpeech('Optimum ~45°C')).toBe('Optimum about 45 degrees Celsius');
     expect(prepareTextForSpeech('~10% energy transfer')).toBe('about 10 percent energy transfer');
@@ -41,8 +53,28 @@ describe('prepareTextForSpeech', () => {
   });
 
   it('reads central dogma notation', () => {
-    expect(prepareTextForSpeech('DNA → RNA → protein')).toBe('DNA to RNA to protein');
+    expect(prepareTextForSpeech('DNA → RNA → protein')).toBe('D N A to R N A to protein');
     expect(prepareTextForSpeech('read 5′→3′')).toBe('read 5 prime to 3 prime');
+  });
+
+  it('spells out likely acronyms letter by letter', () => {
+    expect(prepareTextForSpeech('Chloroplasts produce ATP.')).toBe(
+      'Chloroplasts produce A T P.',
+    );
+    expect(prepareTextForSpeech('Translate mRNA at the ribosome.')).toBe(
+      'Translate m R N A at the rybosome.',
+    );
+    expect(prepareTextForSpeech('siRNA silences genes.')).toBe('s i R N A silences genes.');
+    expect(prepareTextForSpeech('The pH scale measures acidity.')).toBe(
+      'The p H scale measures acidity.',
+    );
+    expect(prepareTextForSpeech('PCR amplifies DNA.')).toBe('P C R amplifies D N A.');
+  });
+
+  it('does not spell out common short words or long tokens', () => {
+    expect(prepareTextForSpeech('It is in the US or UK.')).toBe('It is in the US or U K.');
+    expect(prepareTextForSpeech('PHENO to PHONE')).toBe('PHENO to PHONE');
+    expect(prepareTextForSpeech('Keep going every day.')).toBe('Keep going every day.');
   });
 
   it('preserves plain prose', () => {
@@ -54,13 +86,13 @@ describe('prepareTextForSpeech', () => {
   it('disambiguates biology terms with single-token respellings (no prosodic breaks)', () => {
     expect(prepareTextForSpeech('Ribosomes read codons.')).toBe('Rybosomes read codons.');
     expect(prepareTextForSpeech('Translate mRNA at the ribosome.')).toBe(
-      'Translate mRNA at the rybosome.',
+      'Translate m R N A at the rybosome.',
     );
     expect(prepareTextForSpeech('RIBOSOME = PROTEIN PRINTER')).toBe(
       'RYBOSOME equals PROTEIN PRINTER',
     );
     expect(prepareTextForSpeech('Mitochondria produce ATP.')).toBe(
-      'Mydoughchondria produce ATP.',
+      'Mydoughchondria produce A T P.',
     );
     expect(prepareTextForSpeech('The mitochondrial matrix')).toBe('The mydoughchondrial matrix');
     expect(prepareTextForSpeech('Enter the mitochondrion')).toBe('Enter the mydoughchondrion');

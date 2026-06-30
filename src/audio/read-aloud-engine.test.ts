@@ -26,6 +26,8 @@ const speakWeb = vi.fn(mockSpeakWeb);
 
 vi.mock('@/audio/pocket-tts-engine', () => ({
   getPocketTtsEngine: () => ({ speak: speakPocket }),
+  beginPocketTtsAudioFromUserGesture: vi.fn(),
+  ensurePocketTtsAudioOutputReady: vi.fn(async () => {}),
   preloadPocketTtsText: vi.fn(),
   stopPocketTtsEngine: stopPocket,
   waitForPocketTtsIdle: vi.fn(async () => {}),

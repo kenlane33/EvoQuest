@@ -10,6 +10,7 @@ type ToggleFieldProps = {
   onChange: (checked: boolean) => void;
   /** Card style (onboarding) vs plain row (settings). */
   variant?: 'plain' | 'card';
+  className?: string;
 };
 
 export function ToggleField({
@@ -18,6 +19,7 @@ export function ToggleField({
   checked,
   onChange,
   variant = 'plain',
+  className,
 }: ToggleFieldProps) {
   return (
     <label
@@ -25,6 +27,7 @@ export function ToggleField({
         'flex cursor-pointer items-center justify-between gap-4',
         variant === 'card' &&
           'rounded-(--r-xl) border border-(--border-light) bg-(--bg-card) p-4',
+        className,
       )}
     >
       <div className={description ? 'text-left' : undefined}>

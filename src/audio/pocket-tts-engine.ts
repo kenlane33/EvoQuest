@@ -3,7 +3,8 @@
  * Based on KevinAHM/pocket-tts-web — models load from Hugging Face on first use.
  */
 
-import { POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
+import { POCKET_TTS_DEFAULT_VOICE, POCKET_TTS_EXTRA_VOICES } from '@/audio/pocket-tts';
+import { isPocketTtsAvailable } from '@/audio/read-aloud';
 import {
   POCKET_TTS_BUNDLE_BASE,
   POCKET_TTS_MODEL_CACHE_NAME,
@@ -103,6 +104,8 @@ export class PocketTtsEngine {
   private audioContext: AudioContext | null = null;
   /** Deferred until first playback — avoids iOS AudioWorklet failures during background bootstrap. */
   private audioInitPromise: Promise<void> | null = null;
+  /** Resume kicked off during the last user gesture; awaited before playback. */
+  private gestureResumePromise: Promise<void> | null = null;
   private activeVoice = POCKET_TTS_DEFAULT_VOICE;
   private pendingSpeak: PendingSpeak | null = null;
   private pendingCollect: PendingCollect | null = null;
@@ -111,6 +114,10 @@ export class PocketTtsEngine {
   /** Serializes speak calls so chained handoffs wait for playback to finish. */
   private speakChain: Promise<void> = Promise.resolve();
   private markedFirstChunkThisSpeak = false;
+  private utteranceSubmittedSamples = 0;
+  private utteranceTotalSamples = 0;
+  private utteranceFinalized = false;
+  private lastUtteranceProgress = 0;
   private availableVoices: string[] = [];
   private bundleDefaultVoice: string | null = null;
   private voiceListeners = new Set<() => void>();
@@ -148,6 +155,62 @@ export class PocketTtsEngine {
 
   isSpeaking(): boolean {
     return this.pendingSpeak !== null || this.status === 'speaking';
+  }
+
+  /** Samples heard so far for the active utterance; null when nothing is playing. */
+  getUtterancePlayedSamples(): number | null {
+    if (!this.pendingSpeak && this.status !== 'speaking') return null;
+    if (this.utteranceSubmittedSamples <= 0) return 0;
+    const buffered = this.player?.getPlaybackStatus().worklet.bufferLevelSamples ?? 0;
+    return Math.max(0, this.utteranceSubmittedSamples - buffered);
+  }
+
+  /** Ms of audio heard so far; null when nothing is playing. */
+  getUtterancePlayedMs(): number | null {
+    const played = this.getUtterancePlayedSamples();
+    if (played == null) return null;
+    return (played / SAMPLE_RATE) * 1000;
+  }
+
+  /** 0–1 through the active utterance; null when nothing is playing. */
+  getUtteranceAudioProgress(): number | null {
+    if (!this.pendingSpeak && this.status !== 'speaking') return null;
+    if (this.utteranceSubmittedSamples <= 0) return 0;
+
+    const played = this.getUtterancePlayedSamples() ?? 0;
+    const total = this.utteranceFinalized
+      ? Math.max(this.utteranceTotalSamples, this.utteranceSubmittedSamples)
+      : Math.max(this.utteranceSubmittedSamples, played + (this.player?.getPlaybackStatus().worklet.bufferLevelSamples ?? 0));
+    if (total <= 0) return 0;
+    const raw = Math.min(1, played / total);
+    this.lastUtteranceProgress = Math.max(this.lastUtteranceProgress, raw);
+    return this.lastUtteranceProgress;
+  }
+
+  isUtteranceFinalized(): boolean {
+    return this.utteranceFinalized;
+  }
+
+  private resetUtteranceProgress(): void {
+    this.utteranceSubmittedSamples = 0;
+    this.utteranceTotalSamples = 0;
+    this.utteranceFinalized = false;
+    this.lastUtteranceProgress = 0;
+  }
+
+  private addUtteranceSamples(count: number): void {
+    if (count <= 0) return;
+    this.utteranceSubmittedSamples += count;
+    if (this.utteranceFinalized) {
+      this.utteranceTotalSamples = this.utteranceSubmittedSamples;
+    } else {
+      this.utteranceTotalSamples = Math.max(this.utteranceTotalSamples, this.utteranceSubmittedSamples);
+    }
+  }
+
+  private finalizeUtteranceSamples(): void {
+    this.utteranceTotalSamples = Math.max(this.utteranceTotalSamples, this.utteranceSubmittedSamples);
+    this.utteranceFinalized = true;
   }
 
   getError(): string | null {
@@ -198,6 +261,91 @@ export class PocketTtsEngine {
     ttsLogReadySummary();
   }
 
+  /**
+   * Create/resume the AudioContext synchronously during a user gesture.
+   * Worklet setup still completes async; call this before the first await in speak().
+   */
+  beginAudioFromUserGesture(): void {
+    if (typeof window === 'undefined') return;
+    if (!this.audioContext) {
+      this.audioContext = new AudioContext({
+        sampleRate: SAMPLE_RATE,
+        latencyHint: 'interactive',
+      });
+      ttsMark('audio-context', { state: this.audioContext.state });
+    }
+    if (this.audioContext.state === 'suspended') {
+      this.gestureResumePromise = this.audioContext.resume().then(() => undefined);
+    } else {
+      this.gestureResumePromise = Promise.resolve();
+    }
+    if (!this.player && !this.audioInitPromise) {
+      this.audioInitPromise = this.initAudio();
+    }
+  }
+
+  /**
+   * Ensure audio output is running before submitting PCM — may wait for a tap
+   * when model load outlasts the original click (uncached cold start).
+   */
+  async ensureAudioOutputReady(signal?: AbortSignal): Promise<void> {
+    await this.ensureAudioPlayer();
+    if (this.gestureResumePromise) {
+      try {
+        await this.gestureResumePromise;
+      } catch {
+        /* resume rejected — fall through to retry / gesture wait */
+      }
+    }
+    await this.resumeAudioOutput();
+    if (this.isAudioOutputRunning()) return;
+    await this.waitForUserGestureToResumeAudio(signal);
+    if (!this.isAudioOutputRunning()) {
+      throw new Error('Audio output blocked — tap Play again to hear speech.');
+    }
+  }
+
+  private isAudioOutputRunning(): boolean {
+    return this.audioContext?.state === 'running';
+  }
+
+  private waitForUserGestureToResumeAudio(signal?: AbortSignal): Promise<void> {
+    if (typeof window === 'undefined') {
+      return Promise.resolve();
+    }
+    if (signal?.aborted) {
+      return Promise.reject(new DOMException('Aborted', 'AbortError'));
+    }
+
+    return new Promise<void>((resolve, reject) => {
+      const onGesture = () => {
+        cleanup();
+        this.beginAudioFromUserGesture();
+        void this.resumeAudioOutput().then(resolve, reject);
+      };
+
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        onGesture();
+      };
+
+      const onAbort = () => {
+        cleanup();
+        reject(new DOMException('Aborted', 'AbortError'));
+      };
+
+      const cleanup = () => {
+        window.removeEventListener('pointerdown', onGesture, true);
+        window.removeEventListener('keydown', onKeyDown, true);
+        signal?.removeEventListener('abort', onAbort);
+      };
+
+      window.addEventListener('pointerdown', onGesture, true);
+      window.addEventListener('keydown', onKeyDown, true);
+      signal?.addEventListener('abort', onAbort, { once: true });
+    });
+  }
+
   private async ensureAudioPlayer(): Promise<void> {
     if (this.player) return;
     if (this.audioInitPromise) {
@@ -214,11 +362,14 @@ export class PocketTtsEngine {
   }
 
   private async initAudio(): Promise<void> {
-    this.audioContext = new AudioContext({
-      sampleRate: SAMPLE_RATE,
-      latencyHint: 'interactive',
-    });
-    ttsMark('audio-context', { state: this.audioContext.state });
+    if (this.player) return;
+    if (!this.audioContext) {
+      this.audioContext = new AudioContext({
+        sampleRate: SAMPLE_RATE,
+        latencyHint: 'interactive',
+      });
+      ttsMark('audio-context', { state: this.audioContext.state });
+    }
     this.player = new PCMPlayerWorklet(this.audioContext, {
       sourceSampleRate: SAMPLE_RATE,
     });
@@ -279,6 +430,7 @@ export class PocketTtsEngine {
             bundleBase: POCKET_TTS_BUNDLE_BASE,
             modelCacheName: POCKET_TTS_MODEL_CACHE_NAME,
             timelineEnabled: ttsTimelineEnabled(),
+            extraVoices: POCKET_TTS_EXTRA_VOICES,
           },
         });
         this.worker!.postMessage({
@@ -379,12 +531,13 @@ export class PocketTtsEngine {
     await this.prepareForSpeak(voice, trimmed);
     if (options?.signal?.aborted) return;
 
+    await this.ensureAudioOutputReady(options?.signal);
+
     const key = ttsCacheKey(voice, trimmed);
     const cached = this.audioCache.get(key);
     if (cached) {
       ttsMark('speak-cached', { chars: trimmed.length, voice });
       this.markedFirstChunkThisSpeak = false;
-      await this.ensureAudioPlayer();
       await this.playCached(cached, options);
       return;
     }
@@ -392,14 +545,11 @@ export class PocketTtsEngine {
     ttsMark('speak-request', { chars: trimmed.length, voice });
     this.markedFirstChunkThisSpeak = false;
 
-    await this.ensureAudioPlayer();
     this.status = 'speaking';
+    this.resetUtteranceProgress();
     this.player?.reset();
     if (this.player && options?.volume != null) {
       this.player.volume = Math.min(1, Math.max(0, options.volume));
-    }
-    if (this.audioContext?.state === 'suspended') {
-      await this.audioContext.resume();
     }
 
     let unbindAbort = () => {};
@@ -410,6 +560,7 @@ export class PocketTtsEngine {
         const onAbort = () => {
           this.worker?.postMessage({ type: 'stop' });
           this.player?.reset();
+          this.resetUtteranceProgress();
           this.rejectPending();
         };
         unbindAbort = bindAbortSignal(options?.signal, onAbort);
@@ -469,22 +620,23 @@ export class PocketTtsEngine {
     if (options?.signal?.aborted) return;
 
     this.status = 'speaking';
+    this.resetUtteranceProgress();
     this.player?.reset();
     if (this.player && options?.volume != null) {
       this.player.volume = Math.min(1, Math.max(0, options.volume));
-    }
-    if (this.audioContext?.state === 'suspended') {
-      await this.audioContext.resume();
     }
 
     for (const chunk of chunks) {
       if (options?.signal?.aborted) {
         this.player?.reset();
+        this.resetUtteranceProgress();
         this.status = 'ready';
         return;
       }
+      this.addUtteranceSamples(chunk.length);
       this.player?.playAudio(new Float32Array(chunk));
     }
+    this.finalizeUtteranceSamples();
 
     if (this.player?.notifyStreamEnded) {
       this.player.notifyStreamEnded();
@@ -496,6 +648,7 @@ export class PocketTtsEngine {
         this.pendingSpeak = { resolve, reject };
         const onAbort = () => {
           this.player?.reset();
+          this.resetUtteranceProgress();
           this.rejectPending();
         };
         unbindAbort = bindAbortSignal(options?.signal, onAbort);
@@ -508,9 +661,17 @@ export class PocketTtsEngine {
     }
   }
 
+  private async resumeAudioOutput(): Promise<void> {
+    if (this.audioContext?.state === 'suspended') {
+      await this.audioContext.resume();
+    }
+    await this.player?.resume();
+  }
+
   stop(): void {
     this.worker?.postMessage({ type: 'stop' });
     this.player?.reset();
+    this.resetUtteranceProgress();
     this.rejectPending();
     this.rejectCollect();
     if (this.status === 'speaking') {
@@ -601,7 +762,9 @@ export class PocketTtsEngine {
         if (this.pendingCollect) {
           this.pendingCollect.chunks.push(new Float32Array(data));
         } else if (this.player && this.pendingSpeak) {
-          this.player.playAudio(new Float32Array(data));
+          const chunk = new Float32Array(data);
+          this.addUtteranceSamples(chunk.length);
+          this.player.playAudio(chunk);
         }
         break;
       case 'stream_ended':
@@ -610,6 +773,7 @@ export class PocketTtsEngine {
           break;
         }
         ttsMark('stream-ended');
+        this.finalizeUtteranceSamples();
         if (this.pendingSpeak && this.player) {
           if (this.player.notifyStreamEnded) {
             this.player.notifyStreamEnded();
@@ -649,6 +813,16 @@ export function stopPocketTtsEngine(): void {
   sharedEngine?.stop();
 }
 
+/** 0–1 progress through the active Pocket utterance; null when idle. */
+export function getPocketTtsUtteranceProgress(): number | null {
+  return sharedEngine?.getUtteranceAudioProgress() ?? null;
+}
+
+/** Ms of Pocket audio heard so far; null when idle. */
+export function getPocketTtsUtterancePlayedMs(): number | null {
+  return sharedEngine?.getUtterancePlayedMs() ?? null;
+}
+
 /** Wait until queued speech finishes (for play → feedback handoffs). */
 export async function waitForPocketTtsIdle(maxMs = 15000): Promise<void> {
   if (typeof window === 'undefined') return;
@@ -665,6 +839,18 @@ export async function waitForPocketTtsIdle(maxMs = 15000): Promise<void> {
 export function preloadPocketTts(voice = POCKET_TTS_DEFAULT_VOICE): void {
   if (typeof window === 'undefined') return;
   void startReadAloudBootstrap(voice);
+}
+
+/** Unlock Pocket audio output during a click/keypress — before any await in speak(). */
+export function beginPocketTtsAudioFromUserGesture(): void {
+  if (!isPocketTtsAvailable()) return;
+  getPocketTtsEngine().beginAudioFromUserGesture();
+}
+
+/** Await running audio output; waits for a tap if the first gesture expired during model load. */
+export async function ensurePocketTtsAudioOutputReady(signal?: AbortSignal): Promise<void> {
+  if (!isPocketTtsAvailable()) return;
+  await getPocketTtsEngine().ensureAudioOutputReady(signal);
 }
 
 /** Preload spoken text when the engine is idle (e.g. next question). */

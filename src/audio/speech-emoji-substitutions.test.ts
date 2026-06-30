@@ -8,7 +8,7 @@ import { prepareTextForSpeech } from '@/audio/speech-substitutions';
 describe('replaceEmojisForSpeech', () => {
   it('speaks robot and DNA emoji', () => {
     expect(replaceEmojisForSpeech('Cells 🤖 use 🧬')).toBe('Cells  robot  use  DNA ');
-    expect(prepareTextForSpeech('Cells 🤖 use 🧬')).toBe('Cells robot use DNA');
+    expect(prepareTextForSpeech('Cells 🤖 use 🧬')).toBe('Cells robot use D N A');
   });
 
   it('handles variation selectors', () => {

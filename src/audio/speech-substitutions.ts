@@ -147,6 +147,101 @@ function collapseWhitespace(text: string): string {
   return text.replace(/\s+/g, ' ').trim();
 }
 
+const ONES_UNDER_TWENTY = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+  'eleven',
+  'twelve',
+  'thirteen',
+  'fourteen',
+  'fifteen',
+  'sixteen',
+  'seventeen',
+  'eighteen',
+  'nineteen',
+] as const;
+
+const TENS_WORDS = ['', '', 'twenty', 'thirty', 'forty', 'fifty'] as const;
+
+function numberUnder100ToWords(n: number): string {
+  if (n < 20) return ONES_UNDER_TWENTY[n] ?? String(n);
+  const tens = Math.floor(n / 10);
+  const ones = n % 10;
+  const tensWord = TENS_WORDS[tens] ?? String(tens * 10);
+  return ones === 0 ? tensWord : `${tensWord} ${ONES_UNDER_TWENTY[ones]}`;
+}
+
+function hourToWords(hour: number): string {
+  const hour12 = hour % 12 || 12;
+  return numberUnder100ToWords(hour12);
+}
+
+function formatClockTimeForSpeech(hour: number, minute: number): string {
+  const hourWord = hourToWords(hour);
+  if (minute === 0) return hourWord;
+  if (minute < 10) return `${hourWord} oh ${numberUnder100ToWords(minute)}`;
+  return `${hourWord} ${numberUnder100ToWords(minute)}`;
+}
+
+/** HH:MM clock times — must run before digit-colon-digit ratio rules. */
+function expandClockTimes(text: string): string {
+  return text.replace(/\b(\d{1,2}):(\d{2})\b/g, (match, hourStr: string, minuteStr: string) => {
+    const hour = Number(hourStr);
+    const minute = Number(minuteStr);
+    if (hour > 23 || minute > 59) return match;
+    return formatClockTimeForSpeech(hour, minute);
+  });
+}
+
+/** Short all-caps tokens that are common English words, not abbreviations. */
+const ACRONYM_BLOCKLIST = new Set([
+  'AM', 'AN', 'AS', 'AT', 'BE', 'BY', 'DO', 'GO', 'HE', 'IF', 'IN', 'IS', 'IT', 'ME', 'MY',
+  'NO', 'OF', 'OK', 'ON', 'OR', 'SO', 'TO', 'UP', 'US', 'WE',
+]);
+
+const VOWEL_RE = /[aeiouAEIOU]/;
+
+/** Pocket TTS has no spell-out mode — space-separate letters for letter-by-letter reading. */
+function expandAcronymLetters(token: string): string {
+  return [...token].join(' ');
+}
+
+/**
+ * Heuristic acronym detection for biology/education text (2–5 letters).
+ * Signals: all caps, no vowels, bio-style mixed case (mRNA), or short all-caps token.
+ */
+function isLikelyAcronym(token: string): boolean {
+  if (!/^[A-Za-z]{2,5}$/.test(token)) return false;
+  if (ACRONYM_BLOCKLIST.has(token.toUpperCase())) return false;
+
+  if (/^[a-z]{1,2}[A-Z]{2,}[a-z]*$/.test(token) || /^[a-z][A-Z]$/.test(token)) {
+    return true;
+  }
+
+  if (token !== token.toUpperCase()) return false;
+
+  if (!VOWEL_RE.test(token)) return true;
+  if (token.length <= 3) return true;
+
+  return false;
+}
+
+/** Expand likely acronyms to spaced letters (DNA → D N A). Runs after symbol substitutions. */
+function expandAcronyms(text: string): string {
+  return text.replace(/\b([A-Za-z]{2,5})\b/g, (match) =>
+    isLikelyAcronym(match) ? expandAcronymLetters(match) : match,
+  );
+}
+
 /** Normalize text for Pocket TTS — safe to call repeatedly. */
 export function prepareTextForSpeech(text: string): string {
   const trimmed = text.trim();
@@ -154,9 +249,11 @@ export function prepareTextForSpeech(text: string): string {
 
   let out = expandUnicodeScript(trimmed);
   out = replaceEmojisForSpeech(out);
+  out = expandClockTimes(out);
   for (const [pattern, replacement] of SPEECH_SUBSTITUTIONS) {
     out = out.replace(pattern, replacement);
   }
+  out = expandAcronyms(out);
   out = applyPronunciationHints(out);
   return collapseWhitespace(out);
 }

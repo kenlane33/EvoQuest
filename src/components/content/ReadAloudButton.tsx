@@ -11,6 +11,7 @@ type ReadAloudButtonProps = {
   error: string | null;
   onToggle: () => void;
   className?: string;
+  buttonClassName?: string;
   label?: string;
   /** When true, control is inactive (e.g. voice model still loading). */
   disabled?: boolean;
@@ -22,6 +23,7 @@ export function ReadAloudButton({
   error,
   onToggle,
   className,
+  buttonClassName,
   label = 'Read it',
   disabled: disabledExternal = false,
 }: ReadAloudButtonProps) {
@@ -36,7 +38,7 @@ export function ReadAloudButton({
         onClick={onToggle}
         disabled={disabled || busy}
         aria-label={playing ? 'Stop reading' : label}
-        className="gap-2 h-9"
+        className={cn('gap-2 h-9', buttonClassName)}
       >
         {busy ? (
           <Loader2 size={16} className="animate-spin" aria-hidden />

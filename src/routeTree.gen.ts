@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as TtsRouteImport } from './routes/tts'
 import { Route as T2RouteImport } from './routes/t2'
 import { Route as T1RouteImport } from './routes/t1'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -30,6 +31,11 @@ import { Route as ContentFormatRouteImport } from './routes/content/format'
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TtsRoute = TtsRouteImport.update({
+  id: '/tts',
+  path: '/tts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const T2Route = T2RouteImport.update({
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/t1': typeof T1Route
   '/t2': typeof T2Route
+  '/tts': typeof TtsRoute
   '/welcome': typeof WelcomeRoute
   '/content/format': typeof ContentFormatRoute
   '/content/import': typeof ContentImportRoute
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/t1': typeof T1Route
   '/t2': typeof T2Route
+  '/tts': typeof TtsRoute
   '/welcome': typeof WelcomeRoute
   '/content/format': typeof ContentFormatRoute
   '/content/import': typeof ContentImportRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/t1': typeof T1Route
   '/t2': typeof T2Route
+  '/tts': typeof TtsRoute
   '/welcome': typeof WelcomeRoute
   '/content/format': typeof ContentFormatRoute
   '/content/import': typeof ContentImportRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/t1'
     | '/t2'
+    | '/tts'
     | '/welcome'
     | '/content/format'
     | '/content/import'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/t1'
     | '/t2'
+    | '/tts'
     | '/welcome'
     | '/content/format'
     | '/content/import'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/t1'
     | '/t2'
+    | '/tts'
     | '/welcome'
     | '/content/format'
     | '/content/import'
@@ -239,6 +251,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   T1Route: typeof T1Route
   T2Route: typeof T2Route
+  TtsRoute: typeof TtsRoute
   WelcomeRoute: typeof WelcomeRoute
   ContentFormatRoute: typeof ContentFormatRoute
   ContentImportRoute: typeof ContentImportRoute
@@ -258,6 +271,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tts': {
+      id: '/tts'
+      path: '/tts'
+      fullPath: '/tts'
+      preLoaderRoute: typeof TtsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/t2': {
@@ -383,6 +403,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   T1Route: T1Route,
   T2Route: T2Route,
+  TtsRoute: TtsRoute,
   WelcomeRoute: WelcomeRoute,
   ContentFormatRoute: ContentFormatRoute,
   ContentImportRoute: ContentImportRoute,

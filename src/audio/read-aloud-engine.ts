@@ -4,6 +4,10 @@
 
 import {
   getPocketTtsEngine,
+  getPocketTtsUtterancePlayedMs,
+  getPocketTtsUtteranceProgress,
+  beginPocketTtsAudioFromUserGesture,
+  ensurePocketTtsAudioOutputReady,
   preloadPocketTtsText,
   stopPocketTtsEngine,
   waitForPocketTtsIdle,
@@ -19,6 +23,7 @@ import {
 } from '@/audio/read-aloud-bootstrap';
 import {
   isWebSpeechAvailable,
+  getWebSpeechBoundaryCharIndex,
   primeWebSpeechVoices,
   speakWebSpeech,
   stopWebSpeech,
@@ -98,6 +103,7 @@ export async function speakReadAloud(
   text: string,
   options?: ReadAloudSpeakOptions,
 ): Promise<void> {
+  beginReadAloudAudioFromUserGesture();
   if (options?.signal?.aborted) return;
 
   preemptReadAloud();
@@ -124,6 +130,8 @@ export async function speakReadAloud(
     if (session.signal.aborted) return;
 
     if (shouldUsePocketTts()) {
+      await ensureReadAloudAudioOutputReady(speakOptions.signal);
+      if (session.signal.aborted) return;
       await speakPocket(text, speakOptions);
       return;
     }
@@ -148,8 +156,42 @@ export async function prepareReadAloud(voice = POCKET_TTS_DEFAULT_VOICE): Promis
   await startReadAloudBootstrap(voice);
 }
 
+/** Call synchronously from a user gesture before the first await in speak(). */
+export function beginReadAloudAudioFromUserGesture(): void {
+  beginPocketTtsAudioFromUserGesture();
+}
+
+/** Re-verify audio output after long model load; may wait for a fresh tap. */
+export async function ensureReadAloudAudioOutputReady(signal?: AbortSignal): Promise<void> {
+  await ensurePocketTtsAudioOutputReady(signal);
+}
+
 export function stopReadAloud(): void {
   preemptReadAloud();
+}
+
+/** 0–1 progress through active Pocket TTS audio; null when idle or on Web Speech fallback. */
+export function getReadAloudAudioProgress(): number | null {
+  if (!shouldUsePocketTts()) return null;
+  return getPocketTtsUtteranceProgress();
+}
+
+/** Ms of Pocket audio heard so far; null when idle or on Web Speech fallback. */
+export function getReadAloudPlayedMs(): number | null {
+  if (!shouldUsePocketTts()) return null;
+  return getPocketTtsUtterancePlayedMs();
+}
+
+/** Whether the active Pocket utterance has received all audio chunks. */
+export function isReadAloudUtteranceFinalized(): boolean {
+  if (!shouldUsePocketTts()) return false;
+  return getPocketTtsEngine().isUtteranceFinalized();
+}
+
+/** Web Speech word-boundary char index for the active utterance; null when using Pocket TTS. */
+export function getReadAloudBoundaryCharIndex(): number | null {
+  if (shouldUsePocketTts()) return null;
+  return getWebSpeechBoundaryCharIndex();
 }
 
 export async function waitForReadAloudIdle(maxMs = 15_000): Promise<void> {

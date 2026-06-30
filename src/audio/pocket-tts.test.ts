@@ -22,6 +22,9 @@ describe('formatPocketTtsVoiceLabel', () => {
   it('title-cases underscore ids', () => {
     expect(formatPocketTtsVoiceLabel('bill_boerst')).toBe('Bill Boerst');
     expect(formatPocketTtsVoiceLabel('peter_yearsley')).toBe('Peter Yearsley');
+    expect(formatPocketTtsVoiceLabel('a_janelle_risa')).toBe('A Janelle Risa');
+    expect(formatPocketTtsVoiceLabel('alan_davis_drake')).toBe('Alan Davis Drake');
+    expect(formatPocketTtsVoiceLabel('amy_koenig')).toBe('Amy Koenig');
   });
 });
 
