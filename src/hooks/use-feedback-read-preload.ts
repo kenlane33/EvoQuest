@@ -6,7 +6,7 @@ import {
   buildFeedbackReadBundle,
   feedbackDescReadText,
 } from '@/audio/feedback-read-text';
-import { preloadReadAloudText } from '@/audio/read-aloud-engine';
+import { preloadReadAloudText } from '@/tts';
 import { useAppStore } from '@/store/app-store';
 import type { KnowledgeUnit, QuizTemplate } from '@/types';
 

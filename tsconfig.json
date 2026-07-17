@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/vendor/**/*.js", "scripts/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/tts/engine/vendor/**/*.js", "scripts/**/*.ts"],
   "exclude": ["plan/**", "dist/**", "node_modules"],
   "compilerOptions": {
     "target": "ES2022",

@@ -1,5 +1,5 @@
 import type { TeachBlock } from '@/types';
-import type { QuestionSpeakSlot } from '@/components/audio/question-speak-context';
+import type { QuestionSpeakSlot } from '@/tts';
 import { SpeakButton } from '@/components/content/SpeakButton';
 import { cn } from '@/lib/cn';
 import { MarkdownContent } from '@/components/content/MarkdownContent';

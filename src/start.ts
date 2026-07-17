@@ -1,5 +1,5 @@
 import { createStart, createMiddleware } from '@tanstack/react-start';
-import { isPocketTtsProxyPath, proxyPocketTtsRequest } from '@/server/pocket-tts-proxy';
+import { isPocketTtsProxyPath, proxyPocketTtsRequest } from '@/tts/server/pocket-tts-proxy';
 
 /** Proxy Pocket TTS ONNX assets from Hugging Face (same-origin for the browser). */
 const pocketTtsProxyMiddleware = createMiddleware().server(async ({ request, next }) => {

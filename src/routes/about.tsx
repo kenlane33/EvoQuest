@@ -3,7 +3,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { ChevronLeft } from 'lucide-react';
 import { Card } from '@/components/common/Card';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { devMark } from '@/lib/dev-mark';
 
 export const Route = createFileRoute('/about')({

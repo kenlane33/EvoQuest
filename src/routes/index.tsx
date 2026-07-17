@@ -5,7 +5,7 @@ import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
 import { AchievementGrid } from '@/components/achievements/AchievementGrid';
 import { Button } from '@/components/common/Button';
 import { MasteryOverview } from '@/components/home/MasteryOverview';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import {
   BIOLOGY_EOC_SELECTION,
   revisitSelection,

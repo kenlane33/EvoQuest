@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { getQuizReadText } from '@/audio/quiz-read-text';
-import { preloadReadAloudText } from '@/audio/read-aloud-engine';
+import { preloadReadAloudText } from '@/tts';
 import { isTextEntryFocused } from '@/lib/text-entry-focus';
 import { useAppStore } from '@/store/app-store';
 import type { KnowledgeUnit, QuizTemplate } from '@/types';

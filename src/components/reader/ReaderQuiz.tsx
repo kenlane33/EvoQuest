@@ -3,7 +3,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Check, ChevronLeft, Pause, Play, RotateCcw, Volume2, X } from 'lucide-react';
-import { usePocketTts } from '@/audio/use-pocket-tts';
+import { usePocketTts } from '@/tts';
 import { cn } from '@/lib/cn';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';

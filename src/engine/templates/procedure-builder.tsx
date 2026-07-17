@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';
-import { speakReadAloud } from '@/audio/read-aloud-engine';
+import { speakReadAloud } from '@/tts';
 import { orderMatchesProcedure } from '@/engine/procedure/scoring';
 import type { TemplateRegistration } from '@/engine/templates/registry';
 import { cn } from '@/lib/cn';

@@ -6,7 +6,7 @@ import { BackLink } from '@/components/common/BackLink';
 import { Card } from '@/components/common/Card';
 import { CONTENT_MODULES } from '@/content';
 import { flattenUnits } from '@/engine/world';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { devMark } from '@/lib/dev-mark';
 
 export const Route = createFileRoute('/content/')({

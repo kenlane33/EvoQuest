@@ -4,7 +4,7 @@ import {
   STORAGE_KEYS,
   type StorageKey,
 } from '@/storage/keys';
-import { POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
+import { POCKET_TTS_DEFAULT_VOICE } from '@/tts';
 import type { HeadlineFontId } from '@/lib/google-fonts';
 import { HEADLINE_FONT_IDS } from '@/lib/google-fonts';
 import { HINT_COUNTDOWN_MS, HINT_REVEAL_MS } from '@/types/schemas';

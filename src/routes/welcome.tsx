@@ -10,7 +10,7 @@ import { ToggleField } from '@/components/common/ToggleField';
 import { EtymologyCard } from '@/components/etymology/EtymologyCard';
 import { useDevPageLabel } from '@/components/dev/DevPageLabel';
 import { HintRevealer } from '@/components/hint/HintRevealer';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';
 

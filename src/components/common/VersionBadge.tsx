@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { clearTtsCache } from '@/audio/read-aloud-engine';
+import { clearTtsCache } from '@/tts';
 import { buttonPressClasses } from '@/components/common/Button';
 import { ClearProgressConfirm } from '@/components/common/ClearProgressConfirm';
 import { cn } from '@/lib/cn';

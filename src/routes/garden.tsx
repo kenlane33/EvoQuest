@@ -6,7 +6,7 @@ import { Card } from '@/components/common/Card';
 import { EtymologyCard } from '@/components/etymology/EtymologyCard';
 import { CONTENT_MODULES } from '@/content';
 import { flattenUnits } from '@/engine/world';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';
 

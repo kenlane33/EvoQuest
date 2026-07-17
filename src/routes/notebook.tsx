@@ -7,7 +7,7 @@ import { Card } from '@/components/common/Card';
 import { loadKey } from '@/storage/reader';
 import { STORAGE_KEYS } from '@/storage/keys';
 import type { LabArtifact } from '@/types';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { devMark } from '@/lib/dev-mark';
 
 export const Route = createFileRoute('/notebook')({

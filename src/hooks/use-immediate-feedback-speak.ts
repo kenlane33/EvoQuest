@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import {
   canAutoReadAloud,
   REACTION_SPEAK_TIMEOUT_MS,
-} from '@/audio/read-aloud';
-import { prepareReadAloud, speakReadAloud } from '@/audio/read-aloud-engine';
+} from '@/tts';
+import { prepareReadAloud, speakReadAloud } from '@/tts';
 import { useAppStore } from '@/store/app-store';
 
 /** Speak reaction + answer reveal as soon as the player answers (pre-cached when ready). */

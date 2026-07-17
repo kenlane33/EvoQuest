@@ -3,9 +3,9 @@
 import { memo, useCallback, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { Loader2, Square, Volume2 } from 'lucide-react';
-import type { QuestionSpeakSlot } from '@/components/audio/question-speak-context';
-import { useQuestionSpeakOptional } from '@/components/audio/question-speak-context';
-import { speakReadAloud, stopReadAloud } from '@/audio/read-aloud-engine';
+import type { QuestionSpeakSlot } from '@/tts';
+import { useQuestionSpeakOptional } from '@/tts';
+import { speakReadAloud, stopReadAloud } from '@/tts';
 import { cn } from '@/lib/cn';
 import { useAppStore } from '@/store/app-store';
 

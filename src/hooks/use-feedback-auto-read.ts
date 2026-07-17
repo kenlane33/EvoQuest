@@ -5,8 +5,8 @@ import {
   feedbackDescReadText,
   type FeedbackReadBundle,
 } from '@/audio/feedback-read-text';
-import { canAutoReadAloud } from '@/audio/read-aloud';
-import { speakReadAloud, waitForReadAloudIdle } from '@/audio/read-aloud-engine';
+import { canAutoReadAloud } from '@/tts';
+import { speakReadAloud, waitForReadAloudIdle } from '@/tts';
 import { useAppStore } from '@/store/app-store';
 
 /**

@@ -5,7 +5,7 @@ import { BackLink } from '@/components/common/BackLink';
 import { Card } from '@/components/common/Card';
 import { getUnitById } from '@/content/catalog';
 import { isTrouble } from '@/engine/scoring';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';
 

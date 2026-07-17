@@ -11,11 +11,11 @@ import {
   EMOJI_SEQUENCE_RE,
   findUnmappedEmojis,
   knownEmojiSpeechKeys,
-} from '@/audio/speech-emoji-substitutions';
+} from '@/tts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SCAN_DIRS = ['src', 'public/content', 'plan'];
-const SKIP_FILES = new Set(['src/audio/speech-emoji-substitutions.ts']);
+const SKIP_FILES = new Set(['src/tts/text/speech-emoji-substitutions.ts']);
 const EXT = /\.(ts|tsx|json|md|mdx)$/;
 
 type EmojiHit = { emoji: string; files: Set<string>; count: number };

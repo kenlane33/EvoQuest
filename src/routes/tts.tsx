@@ -1,31 +1,26 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { ChevronLeft, Plus, RotateCcw, RotateCw, Settings2, Square, Trash2 } from 'lucide-react';
-import { formatPocketTtsVoiceLabel, POCKET_TTS_DEFAULT_VOICE } from '@/audio/pocket-tts';
-import type { SpeakWord } from '@/audio/speak-word-sync';
 import {
-  buildSpeakLayout,
+  POCKET_TTS_DEFAULT_VOICE,
   clipSpeakRawText,
-  clampWordIndex,
-  estimateMsAtWordIndex,
-  sliderValueFromWordIndex,
-  speakTextFromWordIndex,
-  wordIndexFromMs,
-  wordIndexFromSlider,
-} from '@/audio/speak-word-sync';
-import { usePocketTts } from '@/audio/use-pocket-tts';
-import { ReadAloudButton } from '@/components/content/ReadAloudButton';
+  formatPocketTtsVoiceLabel,
+  formatPlaybackClock,
+  ReadAloudButton,
+  resolvePocketTtsVoice,
+  SpokenTextHighlight,
+  usePocketTtsVoices,
+  useReadAloudPlayer,
+} from '@/tts';
 import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';
 import { ToggleField } from '@/components/common/ToggleField';
 import { useLocalStorage, readStoredValue } from '@/hooks/use-local-storage';
-import { usePocketTtsVoices, resolvePocketTtsVoice } from '@/hooks/use-pocket-tts-voices';
-import { useReadAloudBootstrap } from '@/hooks/use-read-aloud-bootstrap';
-import { useSpeakWordProgress } from '@/hooks/use-speak-word-progress';
 import { cn } from '@/lib/cn';
 import { ulid } from '@/lib/id';
+import { insertTextAtSelection, normalizePastedText } from '@/lib/normalize-pasted-text';
 import { useAppStore } from '@/store/app-store';
 
 export const Route = createFileRoute('/tts')({
@@ -36,8 +31,6 @@ const CLIPS_STORAGE_KEY = 'evo-quest.v1.tts-workbench-clips';
 const SELECTED_CLIP_STORAGE_KEY = 'evo-quest.v1.tts-workbench-selected-id';
 /** @deprecated Migrated to CLIPS + SELECTED_CLIP keys; read once on hydrate. */
 const LEGACY_WORKBENCH_KEY = 'evo-quest.v1.tts-workbench';
-/** Idle time after the last seek before (re)starting audio. */
-const SEEK_COMMIT_DELAY_MS = 200;
 
 type TtsClip = {
   id: string;
@@ -88,7 +81,7 @@ function normalizeClips(clips: TtsClipStored[], defaultVoice: string): TtsClip[]
 }
 
 function harvestTitleFromText(fullText: string): { title: string; body: string } {
-  const normalized = fullText.replace(/\r\n/g, '\n');
+  const normalized = normalizePastedText(fullText);
   const firstBreak = normalized.indexOf('\n');
   if (firstBreak === -1) {
     return { title: normalized.trim(), body: '' };
@@ -106,136 +99,6 @@ function defaultNameForTitle(title: string, currentName: string): string {
   return currentName;
 }
 
-function formatPlaybackClock(ms: number): string {
-  const totalSec = Math.max(0, Math.floor(ms / 1000));
-  const min = Math.floor(totalSec / 60);
-  const sec = totalSec % 60;
-  return `${min}:${String(sec).padStart(2, '0')}`;
-}
-
-function scrollElementToVerticalCenter(
-  container: HTMLElement,
-  element: HTMLElement,
-  behavior: ScrollBehavior = 'smooth',
-): void {
-  const containerRect = container.getBoundingClientRect();
-  const elementRect = element.getBoundingClientRect();
-  const delta = elementRect.top - containerRect.top - (containerRect.height - elementRect.height) / 2;
-  container.scrollTo({ top: container.scrollTop + delta, behavior });
-}
-
-function spokenWordHighlightClass(distance: number): string {
-  // if (distance === 0) {
-  //   return 'rounded-[0.2em] bg-[color-mix(in_oklab,var(--accent-cyan)_22%,transparent)] text-(--text-primary) font-semibold';
-  // }
-  if (distance <= 2) return 'text-(--text-secondary)';
-  if (distance <= 3) return 'text-(--text-dim)';
-  return 'text-(--text-faint)';
-}
-
-function renderHighlightedPlainText(
-  text: string,
-  words: SpeakWord[],
-  activeWordIndex: number | null,
-  activeWordRef?: React.RefObject<HTMLSpanElement | null>,
-  onWordClick?: (wordIndex: number) => void,
-) {
-  if (activeWordIndex == null || words.length === 0) {
-    return text;
-  }
-
-  const active = clampWordIndex(activeWordIndex, words.length);
-  const parts: React.ReactNode[] = [];
-  let cursor = 0;
-
-  words.forEach((word, index) => {
-    if (word.start > cursor) {
-      parts.push(text.slice(cursor, word.start));
-    }
-    const distance = Math.abs(index - active);
-    parts.push(
-      <span
-        key={`${word.start}-${word.text}`}
-        ref={index === active ? activeWordRef : undefined}
-        role={onWordClick ? 'button' : undefined}
-        tabIndex={onWordClick ? 0 : undefined}
-        onClick={
-          onWordClick
-            ? (event) => {
-                event.stopPropagation();
-                onWordClick(index);
-              }
-            : undefined
-        }
-        onKeyDown={
-          onWordClick
-            ? (event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  onWordClick(index);
-                }
-              }
-            : undefined
-        }
-        className={cn(
-          spokenWordHighlightClass(distance),
-          distance === 0 ? 'oo--spoken-text-word' : undefined,
-          onWordClick &&
-            'cursor-pointer rounded-[0.2em] hover:bg-[color-mix(in_oklab,var(--accent-cyan)_12%,transparent)]',
-        )}
-      >
-        {word.text}
-      </span>,
-    );
-    cursor = word.start + word.text.length;
-  });
-
-  if (cursor < text.length) {
-    parts.push(text.slice(cursor));
-  }
-
-  return parts;
-}
-
-function SpokenTextHighlight({
-  text,
-  words,
-  activeWordIndex,
-  onWordClick,
-}: {
-  text: string;
-  words: SpeakWord[];
-  activeWordIndex: number;
-  onWordClick?: (wordIndex: number) => void;
-}) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const activeWordRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    if (!scrollRef.current || !activeWordRef.current) return;
-    scrollElementToVerticalCenter(scrollRef.current, activeWordRef.current);
-  }, [activeWordIndex, text]);
-
-  if (words.length === 0) {
-    return (
-      <div className="oo--tts-spoken-text-empty rounded-(--r-lg) border border-(--border-light) bg-[color-mix(in_oklab,var(--bg-card-hi)_70%,transparent)] px-3 py-2 text-body leading-relaxed text-(--text-faint)">
-        No text to speak yet
-      </div>
-    );
-  }
-
-  return (
-    <div
-      ref={scrollRef}
-      className="oo--tts-spoken-text max-h-[calc(3*1.625*1em+1rem)] overflow-y-auto overscroll-y-contain scroll-smooth rounded-(--r-lg) border border-(--border-light) bg-[color-mix(in_oklab,var(--bg-card-hi)_70%,transparent)] px-3 py-2 text-body leading-relaxed scrollbar-thin"
-    >
-      <p className="whitespace-pre-wrap wrap-break-word">
-        {renderHighlightedPlainText(text, words, activeWordIndex, activeWordRef, onWordClick)}
-      </p>
-    </div>
-  );
-}
-
 function TtsPage() {
   const [workbench, setWorkbench, clipsHydrated] = useLocalStorage<TtsWorkbenchClipsState>(
     CLIPS_STORAGE_KEY,
@@ -247,6 +110,8 @@ function TtsPage() {
   );
   const hydrated = clipsHydrated && selectedHydrated;
   const migrationDoneRef = useRef(false);
+  const clipTextRef = useRef<HTMLTextAreaElement>(null);
+  const pendingClipTextCaretRef = useRef<number | null>(null);
   const clips = workbench.clips;
   const settings = useAppStore((s) => s.settings);
   const selectedClip = useMemo(
@@ -254,7 +119,6 @@ function TtsPage() {
     [clips, selectedClipId],
   );
   const clipVoice = selectedClip?.voice ?? settings.reading.voice;
-  const bootstrap = useReadAloudBootstrap(true, clipVoice);
   const { voices: pocketVoices, status: pocketVoicesStatus } = usePocketTtsVoices({
     enabled: true,
     voice: clipVoice,
@@ -267,225 +131,49 @@ function TtsPage() {
       ),
     [clipVoice, pocketVoices],
   );
-  const { status, error, speak, stop } = usePocketTts({
+
+  const rawSpeakText = selectedClip ? clipSpeakRawText(selectedClip) : '';
+  const player = useReadAloudPlayer({
+    text: rawSpeakText,
     voice: resolvedClipVoice,
     volume: settings.audio.volume,
+    enabled: true,
+    resetKey: selectedClip?.id,
   });
-  const [cursorWordIndex, setCursorWordIndex] = useState(0);
-  const [playbackAnchorWordIndex, setPlaybackAnchorWordIndex] = useState(0);
-  const [isScrubbing, setIsScrubbing] = useState(false);
-  const scrubRef = useRef(false);
-  const scrubWordRef = useRef(0);
-  const wasPlayingBeforeScrubRef = useRef(false);
-  const seekTimerRef = useRef<number | null>(null);
-  const pendingTargetWordRef = useRef<number | null>(null);
+
+  const {
+    speakLayout,
+    status,
+    error,
+    bootstrap,
+    canPlay,
+    playbackLocked,
+    voiceLoading,
+    displayWordIndex,
+    sliderPct,
+    wordCount,
+    elapsedMs,
+    estimatedMs,
+    canRestart,
+    spokenTextDiffers,
+    stop,
+    cancelPendingSeek,
+    handlePlaybackToggle,
+    handleRestart,
+    handleWordClick,
+    handleSliderPointerDown,
+    handleSliderChange,
+    finishScrub,
+    seekBySeconds,
+  } = player;
+
+  const { spokenText, words: speakWords } = speakLayout;
+  const modelBootstrapping = bootstrap.status === 'loading';
 
   const sortedClips = useMemo(
     () => [...clips].sort((a, b) => b.updatedAt - a.updatedAt),
     [clips],
   );
-
-  const speakLayout = useMemo(
-    () =>
-      selectedClip
-        ? buildSpeakLayout(clipSpeakRawText(selectedClip))
-        : buildSpeakLayout(''),
-    [selectedClip],
-  );
-  const { spokenText, words: speakWords, weights: speakWeights, estimatedMs: fullEstimatedMs } =
-    speakLayout;
-  const wordCount = speakWords.length;
-  const { elapsedMs, estimatedMs, estWordIndex } = useSpeakWordProgress(
-    spokenText,
-    speakWords,
-    status,
-    playbackAnchorWordIndex,
-  );
-  const canPlay = Boolean(spokenText);
-  const isActive = status === 'loading' || status === 'playing';
-  const modelBootstrapping = bootstrap.status === 'loading';
-  const modelReady = bootstrap.status === 'ready';
-  const playbackLocked = modelBootstrapping || !modelReady;
-  const displayWordIndex =
-    status === 'playing' && !isScrubbing ? estWordIndex : cursorWordIndex;
-  const sliderPct = sliderValueFromWordIndex(displayWordIndex, wordCount);
-  const voiceLoading =
-    (modelBootstrapping || (status === 'loading' && !isScrubbing)) && !isScrubbing;
-  const spokenTextDiffers = selectedClip ? speakLayout.spokenText !== speakLayout.rawText : false;
-
-  const cancelPendingSeek = useCallback(() => {
-    if (seekTimerRef.current != null) {
-      window.clearTimeout(seekTimerRef.current);
-      seekTimerRef.current = null;
-    }
-    pendingTargetWordRef.current = null;
-  }, []);
-
-  useEffect(() => {
-    cancelPendingSeek();
-    setCursorWordIndex(0);
-    setPlaybackAnchorWordIndex(0);
-    setIsScrubbing(false);
-    scrubRef.current = false;
-    scrubWordRef.current = 0;
-  }, [cancelPendingSeek, selectedClip?.id]);
-
-  useEffect(() => {
-    return () => {
-      if (seekTimerRef.current != null) {
-        window.clearTimeout(seekTimerRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    setCursorWordIndex((index) => clampWordIndex(index, wordCount));
-  }, [wordCount]);
-
-  useEffect(() => {
-    if (status === 'playing' && !isScrubbing) {
-      setCursorWordIndex(estWordIndex);
-    }
-  }, [estWordIndex, isScrubbing, status]);
-
-  const seekToWord = useCallback(
-    (wordIndex: number) => {
-      const clamped = clampWordIndex(wordIndex, wordCount);
-      setPlaybackAnchorWordIndex(clamped);
-      setCursorWordIndex(clamped);
-    },
-    [wordCount],
-  );
-
-  const speakFromWord = useCallback(
-    (wordIndex: number) => {
-      if (playbackLocked) return;
-      const clamped = clampWordIndex(wordIndex, wordCount);
-      const text = speakTextFromWordIndex(spokenText, speakWords, clamped);
-      if (!text) return;
-      if (isActive) stop();
-      seekToWord(clamped);
-      void speak(text);
-    },
-    [isActive, playbackLocked, seekToWord, speak, spokenText, speakWords, stop, wordCount],
-  );
-
-  const scheduleResume = useCallback(
-    (wordIndex: number) => {
-      pendingTargetWordRef.current = wordIndex;
-      if (seekTimerRef.current != null) {
-        window.clearTimeout(seekTimerRef.current);
-      }
-      seekTimerRef.current = window.setTimeout(() => {
-        const target = pendingTargetWordRef.current;
-        seekTimerRef.current = null;
-        pendingTargetWordRef.current = null;
-        if (target != null) {
-          speakFromWord(target);
-        }
-      }, SEEK_COMMIT_DELAY_MS);
-    },
-    [speakFromWord],
-  );
-
-  const handleSliderPointerDown = useCallback(() => {
-    if (!canPlay || wordCount === 0) return;
-    cancelPendingSeek();
-    wasPlayingBeforeScrubRef.current = isActive;
-    scrubRef.current = true;
-    scrubWordRef.current = cursorWordIndex;
-    setIsScrubbing(true);
-    if (isActive) stop();
-  }, [cancelPendingSeek, canPlay, cursorWordIndex, isActive, stop, wordCount]);
-
-  const handleSliderChange = useCallback(
-    (value: number) => {
-      if (!canPlay || wordCount === 0) return;
-      const index = wordIndexFromSlider(value, wordCount);
-      scrubWordRef.current = index;
-      setCursorWordIndex(index);
-      setPlaybackAnchorWordIndex(index);
-    },
-    [canPlay, wordCount],
-  );
-
-  const finishScrub = useCallback(() => {
-    if (!scrubRef.current || !canPlay || wordCount === 0) return;
-    scrubRef.current = false;
-    setIsScrubbing(false);
-    const index = scrubWordRef.current;
-    seekToWord(index);
-    if (wasPlayingBeforeScrubRef.current) {
-      scheduleResume(index);
-    }
-  }, [canPlay, scheduleResume, seekToWord, wordCount]);
-
-  const handlePlaybackToggle = useCallback(() => {
-    if (playbackLocked && !isActive) return;
-    if (isActive) {
-      cancelPendingSeek();
-      stop();
-      return;
-    }
-    speakFromWord(cursorWordIndex);
-  }, [cancelPendingSeek, cursorWordIndex, isActive, playbackLocked, speakFromWord, stop]);
-
-  const playbackMs = useMemo(() => {
-    if (status === 'playing') {
-      return (
-        estimateMsAtWordIndex(speakWeights, playbackAnchorWordIndex, fullEstimatedMs) + elapsedMs
-      );
-    }
-    return estimateMsAtWordIndex(speakWeights, displayWordIndex, fullEstimatedMs);
-  }, [
-    displayWordIndex,
-    elapsedMs,
-    fullEstimatedMs,
-    playbackAnchorWordIndex,
-    speakWeights,
-    status,
-  ]);
-
-  const canRestart =
-    displayWordIndex > 0 || playbackAnchorWordIndex > 0 || elapsedMs > 0;
-
-  const commitSeek = useCallback(
-    (wordIndex: number) => {
-      if (!canPlay || wordCount === 0 || playbackLocked) return;
-      const clamped = clampWordIndex(wordIndex, wordCount);
-      seekToWord(clamped);
-      if (isActive || pendingTargetWordRef.current != null) {
-        scheduleResume(clamped);
-      }
-    },
-    [canPlay, isActive, playbackLocked, scheduleResume, seekToWord, wordCount],
-  );
-
-  const seekBySeconds = useCallback(
-    (deltaSec: number) => {
-      if (!canPlay || wordCount === 0) return;
-      const baseMs =
-        pendingTargetWordRef.current != null
-          ? estimateMsAtWordIndex(speakWeights, pendingTargetWordRef.current, fullEstimatedMs)
-          : playbackMs;
-      const targetMs = Math.max(0, Math.min(fullEstimatedMs, baseMs + deltaSec * 1000));
-      commitSeek(wordIndexFromMs(targetMs, speakWeights, fullEstimatedMs));
-    },
-    [canPlay, commitSeek, fullEstimatedMs, playbackMs, speakWeights, wordCount],
-  );
-
-  const handleWordClick = useCallback(
-    (wordIndex: number) => {
-      commitSeek(wordIndex);
-    },
-    [commitSeek],
-  );
-
-  const handleRestart = useCallback(() => {
-    cancelPendingSeek();
-    if (isActive) stop();
-    seekToWord(0);
-  }, [cancelPendingSeek, isActive, seekToWord, stop]);
 
   const updateClip = useCallback(
     (clipId: string, patch: Partial<TtsClip>) => {
@@ -586,6 +274,48 @@ function TtsPage() {
     },
     [selectedClip, updateClip],
   );
+
+  const handleClipTextPaste = useCallback(
+    (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+      const raw = e.clipboardData.getData('text');
+      if (!raw || !selectedClip) return;
+
+      const pasted = normalizePastedText(raw);
+      if (!pasted) return;
+
+      const textarea = e.currentTarget;
+      const start = textarea.selectionStart ?? selectedClip.text.length;
+      const end = textarea.selectionEnd ?? start;
+
+      if (selectedClip.noTitle) {
+        e.preventDefault();
+        const { text, caret } = insertTextAtSelection(selectedClip.text, pasted, start, end);
+        pendingClipTextCaretRef.current = caret;
+        updateClip(selectedClip.id, { text });
+        return;
+      }
+
+      const fieldsEmpty = !selectedClip.title.trim() && !selectedClip.text.trim();
+      if (fieldsEmpty) {
+        e.preventDefault();
+        handlePasteText(pasted);
+        return;
+      }
+
+      e.preventDefault();
+      const { text, caret } = insertTextAtSelection(selectedClip.text, pasted, start, end);
+      pendingClipTextCaretRef.current = caret;
+      updateClip(selectedClip.id, { text });
+    },
+    [handlePasteText, selectedClip, updateClip],
+  );
+
+  useEffect(() => {
+    const caret = pendingClipTextCaretRef.current;
+    if (caret === null || !clipTextRef.current) return;
+    pendingClipTextCaretRef.current = null;
+    clipTextRef.current.setSelectionRange(caret, caret);
+  }, [selectedClip?.text]);
 
   if (!hydrated) {
     return (
@@ -814,7 +544,6 @@ function TtsPage() {
                 label="Play clip"
                 playingLabel="Pause clip"
                 disabled={playbackLocked}
-                // className="min-w-38"
                 buttonClassName="xx--tts-playback-play"
               />
               <Button
@@ -827,7 +556,6 @@ function TtsPage() {
                 <Square size={14} aria-hidden />
                 Restart
               </Button>
-              {/* spacer */}
               <div className="flex-1" />
               <Button
                 variant="outline"
@@ -898,14 +626,10 @@ function TtsPage() {
 
             <Field label="Text">
               <textarea
+                ref={clipTextRef}
                 value={selectedClip.text}
                 onChange={(e) => updateClip(selectedClip.id, { text: e.target.value })}
-                onPaste={(e) => {
-                  const pasted = e.clipboardData.getData('text');
-                  if (!pasted || selectedClip.noTitle) return;
-                  e.preventDefault();
-                  handlePasteText(pasted);
-                }}
+                onPaste={handleClipTextPaste}
                 rows={12}
                 placeholder="Paste or type text here…"
                 className={cn(
@@ -915,7 +639,7 @@ function TtsPage() {
               />
               {!selectedClip.noTitle ? (
                 <p className="mt-2 text-meta text-(--text-faint)">
-                  Pasting multi-line text uses the first line as the title.
+                  Pasting into an empty clip uses the first line as the title.
                 </p>
               ) : null}
             </Field>

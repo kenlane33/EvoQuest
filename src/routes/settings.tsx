@@ -8,6 +8,7 @@ import { ClearProgressConfirm } from '@/components/common/ClearProgressConfirm';
 import { ToggleField } from '@/components/common/ToggleField';
 import { Card } from '@/components/common/Card';
 import { cn } from '@/lib/cn';
+import { insertTextAtSelection, normalizePastedText } from '@/lib/normalize-pasted-text';
 import {
   BODY_FONT_OPTIONS,
   HEADLINE_FONT_OPTIONS,
@@ -18,14 +19,14 @@ import { useAppStore } from '@/store/app-store';
 import type { Settings } from '@/types';
 import { HINT_COUNTDOWN_SEC, HINT_REVEAL_SEC } from '@/types/schemas';
 import { useDevPageLabelsEnabled } from '@/components/dev/DevPageLabel';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import {
   usePocketTtsVoices,
-} from '@/hooks/use-pocket-tts-voices';
-import { formatPocketTtsVoiceLabel } from '@/audio/pocket-tts';
-import { getPocketTtsFallbackReason } from '@/audio/read-aloud-bootstrap';
-import { isPocketTtsAvailable } from '@/audio/read-aloud';
-import { useReadAloudBootstrap } from '@/hooks/use-read-aloud-bootstrap';
+} from '@/tts';
+import { formatPocketTtsVoiceLabel } from '@/tts';
+import { getPocketTtsFallbackReason } from '@/tts';
+import { isPocketTtsAvailable } from '@/tts';
+import { useReadAloudBootstrap } from '@/tts';
 import { devMark } from '@/lib/dev-mark';
 
 export const Route = createFileRoute('/settings')({
@@ -50,6 +51,8 @@ function SettingsPage() {
   const [devPageLabels, setDevPageLabels] = useDevPageLabelsEnabled();
   const [tryReadText, setTryReadText] = useState('');
   const [tryReadNonce, setTryReadNonce] = useState(0);
+  const tryReadTextRef = useRef<HTMLTextAreaElement>(null);
+  const pendingTryReadCaretRef = useRef<number | null>(null);
 
   const trimmedTryRead = tryReadText.trim();
   const pageReadText = trimmedTryRead || SETTINGS_PAGE_READ_TEXT;
@@ -74,6 +77,13 @@ function SettingsPage() {
     autoRead: Boolean(trimmedTryRead),
     autoReadKey: trimmedTryRead ? `settings-try-${tryReadNonce}` : undefined,
   });
+
+  useEffect(() => {
+    const caret = pendingTryReadCaretRef.current;
+    if (caret === null || !tryReadTextRef.current) return;
+    pendingTryReadCaretRef.current = null;
+    tryReadTextRef.current.setSelectionRange(caret, caret);
+  }, [tryReadText]);
 
   useEffect(() => {
     for (const font of BODY_FONT_OPTIONS) {
@@ -469,14 +479,25 @@ function SettingsPage() {
           </Field>
           <Field label="Try read-aloud">
             <textarea
+              ref={tryReadTextRef}
               value={tryReadText}
               onChange={(e) => setTryReadText(e.target.value)}
-              onPaste={() => {
+              onPaste={(e) => {
+                const raw = e.clipboardData.getData('text');
+                if (!raw) return;
+                const pasted = normalizePastedText(raw);
+                if (!pasted) return;
+                e.preventDefault();
+                const start = e.currentTarget.selectionStart ?? tryReadText.length;
+                const end = e.currentTarget.selectionEnd ?? start;
+                const { text, caret } = insertTextAtSelection(tryReadText, pasted, start, end);
+                pendingTryReadCaretRef.current = caret;
+                setTryReadText(text);
                 queueMicrotask(() => setTryReadNonce((n) => n + 1));
               }}
               rows={4}
               placeholder="Paste text here to hear it…"
-              className="w-full resize-y rounded-(--r-lg) border border-(--border-light) bg-(--bg-card-hi) px-4 py-3 text-body text-(--text-primary) outline-none placeholder:text-(--text-faint) focus:border-(--accent-cyan)"
+              className="w-full resize-y whitespace-pre-wrap wrap-break-word rounded-(--r-lg) border border-(--border-light) bg-(--bg-card-hi) px-4 py-3 text-body leading-relaxed text-(--text-primary) outline-none placeholder:text-(--text-faint) focus:border-(--accent-cyan)"
             />
             <p className="mt-2 text-meta text-(--text-faint)">
               Not saved. With auto-read on, pasted text is spoken; use Read it in the

@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { achievementSpeakText } from '@/audio/achievement-read-text';
-import { canAutoReadAloud } from '@/audio/read-aloud';
-import { prepareReadAloud, speakReadAloud, stopReadAloud } from '@/audio/read-aloud-engine';
+import { canAutoReadAloud } from '@/tts';
+import { prepareReadAloud, speakReadAloud, stopReadAloud } from '@/tts';
 import type { EarnedAchievement } from '@/engine/achievements/detect';
 import { useAppStore } from '@/store/app-store';
 

@@ -6,7 +6,7 @@ import { AchievementGrid } from '@/components/achievements/AchievementGrid';
 import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';
 import { CalibrationPanel } from '@/components/journeys/CalibrationPanel';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { computeMasteryOverview } from '@/engine/progress/coverage';
 import { devMark } from '@/lib/dev-mark';
 import { useAppStore } from '@/store/app-store';

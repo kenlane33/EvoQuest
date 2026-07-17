@@ -2,22 +2,27 @@
 
 import { useEffect } from 'react';
 import '@/engine/templates';
-import { preloadReadAloud } from '@/audio/read-aloud-engine';
-import { primeWebSpeechVoices } from '@/audio/web-speech-engine';
-import { useValidateStoredPocketTtsVoice } from '@/hooks/use-pocket-tts-voices';
+import {
+  preloadReadAloud,
+  primeWebSpeechVoices,
+  GlobalReadAloudBar,
+} from '@/tts';
+import { AppReadAloudProvider } from '@/components/audio/AppReadAloudProvider';
 import { AppHeader } from '@/components/common/AppHeader';
 import { VersionBadge } from '@/components/common/VersionBadge';
 import { DevPageLabelProvider } from '@/components/dev/DevPageLabel';
-import { GlobalReadAloudBar } from '@/components/audio/GlobalReadAloudBar';
-import { PageReadAloudProvider } from '@/components/audio/page-read-aloud-context';
 import { ensureFlushHooks } from '@/storage';
 import { useAppStore } from '@/store/app-store';
 import { applyBodyFont, applyHeadlineFont } from '@/lib/google-fonts';
+import { useRouterState } from '@tanstack/react-router';
 
 export function AppHydrator({ children }: { children: React.ReactNode }) {
   const hydrated = useAppStore((s) => s.hydrated);
   const loadFromStorage = useAppStore((s) => s.loadFromStorage);
   const settings = useAppStore((s) => s.settings);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onPlayRoute = pathname.startsWith('/play/');
+  const onHome = pathname === '/';
 
   useEffect(() => {
     loadFromStorage();
@@ -41,8 +46,6 @@ export function AppHydrator({ children }: { children: React.ReactNode }) {
     }
   }, [settings]);
 
-  useValidateStoredPocketTtsVoice(settings.reading.enabled);
-
   useEffect(() => {
     primeWebSpeechVoices();
   }, []);
@@ -63,11 +66,11 @@ export function AppHydrator({ children }: { children: React.ReactNode }) {
         </div>
       ) : (
         <DevPageLabelProvider>
-          <PageReadAloudProvider>
+          <AppReadAloudProvider>
             <AppHeader />
             {children}
-            <GlobalReadAloudBar />
-          </PageReadAloudProvider>
+            <GlobalReadAloudBar onHome={onHome} onPlayRoute={onPlayRoute} />
+          </AppReadAloudProvider>
         </DevPageLabelProvider>
       )}
     </>

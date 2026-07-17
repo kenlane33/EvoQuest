@@ -14,7 +14,7 @@ import {
 } from '@/content/authoring';
 import '@/engine/templates';
 import { REGISTRY } from '@/engine/templates/registry';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { devMark } from '@/lib/dev-mark';
 
 export const Route = createFileRoute('/content/format')({

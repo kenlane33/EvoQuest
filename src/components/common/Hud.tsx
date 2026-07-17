@@ -3,8 +3,8 @@
 import { useEffect, useRef } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Flame, Heart, Settings } from 'lucide-react';
-import { AutoReadToggle } from '@/components/audio/AutoReadToggle';
-import { VoicePickerButton } from '@/components/audio/VoicePickerButton';
+import { AutoReadToggle } from '@/tts';
+import { VoicePickerButton } from '@/tts';
 import { buttonPressClasses } from '@/components/common/Button';
 import { MenuHomeButton } from '@/components/common/MenuHomeButton';
 import { useElapsedSec } from '@/hooks/use-elapsed-sec';
@@ -96,7 +96,7 @@ export function Hud({ current, total, score, streak, startedAt, onProgressClick,
           <div {...devMark('hud.autoread')}>
             <AutoReadToggle compact />
           </div>
-          <VoicePickerButton compact devId="hud.voice" />
+          <VoicePickerButton compact triggerProps={devMark('hud.voice')} />
           <Link
             to="/settings"
             {...devMark('hud.settings')}

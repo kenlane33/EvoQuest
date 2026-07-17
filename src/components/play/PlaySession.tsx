@@ -15,14 +15,14 @@ import {
   feedbackDescReadText,
 } from '@/audio/feedback-read-text';
 import { getQuizReadText } from '@/audio/quiz-read-text';
-import { canAutoReadAloud, REACTION_SPEAK_TIMEOUT_MS } from '@/audio/read-aloud';
-import { stopReadAloud } from '@/audio/read-aloud-engine';
+import { canAutoReadAloud, REACTION_SPEAK_TIMEOUT_MS } from '@/tts';
+import { stopReadAloud } from '@/tts';
 import { teachToPlainText } from '@/audio/teach-text';
 import { SpeakButton } from '@/components/content/SpeakButton';
 import {
   QuestionSpeakProvider,
   useQuestionSpeak,
-} from '@/components/audio/question-speak-context';
+} from '@/tts';
 import { TeachPanel } from '@/components/content/TeachPanel';
 import { HintRevealer } from '@/components/hint/HintRevealer';
 import {
@@ -33,7 +33,7 @@ import { useAchievementMomentSpeak } from '@/hooks/use-achievement-moment-speak'
 import { useFeedbackAutoRead } from '@/hooks/use-feedback-auto-read';
 import { useFeedbackReadPreload } from '@/hooks/use-feedback-read-preload';
 import { useImmediateFeedbackSpeak } from '@/hooks/use-immediate-feedback-speak';
-import { usePageReadAloud } from '@/hooks/use-page-read-aloud';
+import { usePageReadAloud } from '@/tts';
 import { calibrationNote, shouldAskConfidence } from '@/engine/calibration';
 import { ConfidencePrompt } from '@/components/play/ConfidencePrompt';
 import { ContinueCountdownButton } from '@/components/play/ContinueCountdownButton';
@@ -87,7 +87,7 @@ import type {
   SessionState,
   SpeedRevealData,
 } from '@/types';
-import { useReadAloudBootstrap } from '@/hooks/use-read-aloud-bootstrap';
+import { useReadAloudBootstrap } from '@/tts';
 import { useDebouncedSessionSnapshot } from '@/hooks/use-debounced-session-snapshot';
 import { useAppStore } from '@/store/app-store';
 

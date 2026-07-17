@@ -2,8 +2,8 @@
 
 import { Link, useRouterState } from '@tanstack/react-router';
 import { Settings } from 'lucide-react';
-import { AutoReadToggle } from '@/components/audio/AutoReadToggle';
-import { VoicePickerButton } from '@/components/audio/VoicePickerButton';
+import { AutoReadToggle } from '@/tts';
+import { VoicePickerButton } from '@/tts';
 import { buttonPressClasses } from '@/components/common/Button';
 import { MenuHomeButton } from '@/components/common/MenuHomeButton';
 import { cn } from '@/lib/cn';
